@@ -1,5 +1,4 @@
 # NanoVault
-# QLC Chain Wallet
 
 NanoVault is a fully client-side signing wallet for sending and receiving [Nano](https://github.com/nanocurrency/raiblocks) 
 on your [desktop](https://github.com/cronoh/nanovault/releases) or [in your browser](https://nanovault.io)
