@@ -8,12 +8,13 @@ import {WorkPoolService} from "../../services/work-pool.service";
 import {AddressBookService} from "../../services/address-book.service";
 import {ApiService} from "../../services/api.service";
 import {LedgerService, LedgerStatus} from "../../ledger.service";
+import {LangService} from "../../services/lang.service";
 import BigNumber from "bignumber.js";
 
 @Component({
   selector: 'app-configure-app',
   templateUrl: './configure-app.component.html',
-  styleUrls: ['./configure-app.component.css']
+  styleUrls: ['./configure-app.component.scss']
 })
 export class ConfigureAppComponent implements OnInit {
   wallet = this.walletService.wallet;
@@ -25,6 +26,12 @@ export class ConfigureAppComponent implements OnInit {
   ];
   selectedDenomination = this.denominations[0].value;
 
+  languages = [
+    { name: 'English', value: 'en' },
+    { name: 'Chinese', value: 'cn' }
+  ];
+  selectedLang = this.languages[0].value;
+
   storageOptions = [
     { name: 'Browser Local Storage', value: 'localStorage' },
     { name: 'None', value: 'none' },
@@ -35,37 +42,7 @@ export class ConfigureAppComponent implements OnInit {
     { name: 'None', value: '' },
     { name: 'USD - US Dollar', value: 'USD' },
     { name: 'BTC - Bitcoin', value: 'BTC' },
-    { name: 'AUD - Australian Dollar', value: 'AUD' },
-    { name: 'BRL - Brazilian Real', value: 'BRL' },
-    { name: 'CAD - Canadian Dollar', value: 'CAD' },
-    { name: 'CHF - Swiss Franc', value: 'CHF' },
-    { name: 'CLP - Chilean Peso', value: 'CLP' },
-    { name: 'CNY - Chinese Yuan', value: 'CNY' },
-    { name: 'CZK - Czech Koruna', value: 'CZK' },
-    { name: 'DKK - Danish Krown', value: 'DKK' },
-    { name: 'EUR - Euro', value: 'EUR' },
-    { name: 'GBP - British Pound', value: 'GBP' },
-    { name: 'HKD - Hong Kong Dollar', value: 'HKD' },
-    { name: 'HUF - Hungarian Forint', value: 'HUF' },
-    { name: 'IDR - Indonesian Rupiah', value: 'IDR' },
-    { name: 'ILS - Israeli New Shekel', value: 'ILS' },
-    { name: 'INR - Indian Rupee', value: 'INR' },
-    { name: 'JPY - Japanese Yen', value: 'JPY' },
-    { name: 'KRW - South Korean Won', value: 'KRW' },
-    { name: 'MXN - Mexican Peso', value: 'MXN' },
-    { name: 'MYR - Malaysian Ringgit', value: 'MYR' },
-    { name: 'NOK - Norwegian Krone', value: 'NOK' },
-    { name: 'NZD - New Zealand Dollar', value: 'NZD' },
-    { name: 'PHP - Philippine Piso', value: 'PHP' },
-    { name: 'PKR - Pakistani Rupee', value: 'PKR' },
-    { name: 'PLN - Polish Zloty', value: 'PLN' },
-    { name: 'RUB - Russian Ruble', value: 'RUB' },
-    { name: 'SEK - Swedish Krona', value: 'SEK' },
-    { name: 'SGD - Singapore Dollar', value: 'SGD' },
-    { name: 'THB - Thai Baht', value: 'THB' },
-    { name: 'TRY - Turkish Lira', value: 'TRY' },
-    { name: 'TWD - New Taiwan Dollar', value: 'TWD' },
-    { name: 'ZAR - South African Rand', value: 'ZAR' },
+    { name: 'CNY - Chinese Yuan', value: 'CNY' }
   ];
   selectedCurrency = this.currencies[0].value;
 
@@ -99,6 +76,7 @@ export class ConfigureAppComponent implements OnInit {
     { name: 'State Blocks', value: true },
   ];
   selectedBlockOption = this.blockOptions[0].value;
+  langService: LangService;
 
   constructor(
     private walletService: WalletService,
@@ -109,7 +87,10 @@ export class ConfigureAppComponent implements OnInit {
     private api: ApiService,
     private ledgerService: LedgerService,
     private workPool: WorkPoolService,
-    private price: PriceService) { }
+    private price: PriceService,
+    private lang:LangService) { 
+      this.langService = lang;
+    }
 
   async ngOnInit() {
     this.loadFromSettings();
@@ -117,6 +98,9 @@ export class ConfigureAppComponent implements OnInit {
 
   loadFromSettings() {
     const settings = this.appSettings.settings;
+
+    const matchingLang = this.languages.find(d => d.value === settings.lang);
+    this.selectedLang = matchingLang.value || this.languages[0].value;
 
     const matchingCurrency = this.currencies.find(d => d.value === settings.displayCurrency);
     this.selectedCurrency = matchingCurrency.value || this.currencies[0].value;
@@ -137,50 +121,37 @@ export class ConfigureAppComponent implements OnInit {
     this.selectedPoWOption = matchingPowOption ? matchingPowOption.value : this.powOptions[0].value;
     }
 
-  async updateDisplaySettings() {
+  async updateAppSettings() {
+    const newStorage = this.selectedStorage;
+    const resaveWallet = this.appSettings.settings.walletStore !== newStorage;
     const newCurrency = this.selectedCurrency;
     const reloadFiat = this.appSettings.settings.displayCurrency !== newCurrency;
-    this.appSettings.setAppSetting('displayDenomination', this.selectedDenomination);
-    this.notifications.sendSuccess(`App display settings successfully updated!`);
-
-    if (reloadFiat) {
-      // Reload prices with our currency, then call to reload fiat balances.
-      await this.price.getPrice(newCurrency);
-      this.appSettings.setAppSetting('displayCurrency', newCurrency);
-      this.walletService.reloadFiatBalances();
-    }
-
-  }
-
-  async updateWalletSettings() {
-    const newStorage = this.selectedStorage;
-    let newPoW = this.selectedPoWOption;
-
-    const resaveWallet = this.appSettings.settings.walletStore !== newStorage;
-
-    if (this.appSettings.settings.powSource !== newPoW) {
-      if (newPoW === 'clientWebGL' && !this.pow.hasWebGLSupport()) {
-        this.notifications.sendWarning(`WebGL support not available, set PoW to Best`);
-        newPoW = 'best';
-      }
-      if (newPoW === 'clientCPU' && !this.pow.hasWorkerSupport()) {
-        this.notifications.sendWarning(`CPU Worker support not available, set PoW to Best`);
-        newPoW = 'best';
-      }
-    }
+    const newLang = this.selectedLang;
+    const reloadLang = this.appSettings.settings.lang !== newLang;
 
     const newSettings = {
       walletStore: newStorage,
       lockOnClose: new Number(this.selectedLockOption),
       lockInactivityMinutes: new Number(this.selectedInactivityMinutes),
-      powSource: newPoW,
+      displayDenomination: this.selectedDenomination,
+      lang: newLang
     };
 
     this.appSettings.setAppSettings(newSettings);
-    this.notifications.sendSuccess(`App wallet settings successfully updated!`);
+    this.notifications.sendSuccess(`App settings successfully updated!`);
+
+    if (reloadLang) {
+      this.langService.changeLang(newLang); // If swapping the storage engine, resave the wallet
+    }
 
     if (resaveWallet) {
       this.walletService.saveWalletExport(); // If swapping the storage engine, resave the wallet
+    }
+    if (reloadFiat) {
+      // Reload prices with our currency, then call to reload fiat balances.
+      await this.price.getPrice(newCurrency);
+      this.appSettings.setAppSetting('displayCurrency', newCurrency);
+      this.walletService.reloadFiatBalances();
     }
   }
 

@@ -1,0 +1,42 @@
+@import "~scss/mixins";
+.accountDetails {
+
+	a .address {
+		color: $text;
+	}	
+	a:hover .address {
+		color: $default;
+	}
+}
+
+.rowAccountDetails {
+	margin-top: 25px;
+	margin-bottom: 25px;
+	h1 {
+		@include latoBold;
+		font-size: $fontSizeTitle;
+		margin-bottom: 15px;
+		word-break: break-all;
+		word-wrap: break-word;
+	}
+	h3 {
+		@include lato;
+		font-size: $fontSize;
+		word-break: break-all;
+		word-wrap: break-word;
+	}
+	.icon {
+		margin: 0 5px 0 0;
+	}
+	.qrcode {
+		height: 133px;
+		width: 133px;
+		background-image: url('~assets/img/qr-big.png');
+		margin: 0 auto;
+	}
+	p {
+		@include latoBold;
+		text-transform: uppercase;
+		font-size: 12px;
+	}
+}

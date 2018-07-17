@@ -1,0 +1,149 @@
+@import "~scss/mixins";
+.wallet-bar a {
+  color: #fff;
+}
+
+i {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.wallet i {
+  background: url('~assets/img/qlc-icon-wallet.svg');
+}
+.wallet.locked i {
+  background: url('~assets/img/qlc-icon-wallet-red.svg');
+}
+.wallet.unlocked i {
+  background: url('~assets/img/qlc-icon-wallet-green.svg');
+}
+a.nav-link:focus ,
+a.nav-link:hover,
+a.nav-link {
+  height: 100%;
+  position: relative;
+  
+  div {
+    margin-top: 50px;
+    padding: 0 10px 0 8px;
+    outline: 0;
+    @media(max-width: 991px) {
+      margin-top: 20px;
+      padding: 0 0px 0 0px;
+      text-align: left;
+    }
+    @media(max-width: 767px) {
+      margin-top: 13px;
+      padding: 0 5px 0 5px;
+      text-align: left;
+    }
+  }
+  
+  img { 
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  p {
+    display: inline-block;
+    margin: 0;
+    color: white;
+    @media (max-width: 1199px) and (min-width: 992px) {
+      
+    }
+  }
+  color: white;
+  padding-left: 0;
+  padding-right: 0;
+  padding: 0.1rem 1.5rem;
+  @media (min-width: 992px) {
+    padding: 1.282rem 0.55rem !important;
+    
+  }
+  text-align: center;
+  @media(max-width: 767px) {
+    padding: 0.6rem 0.55rem !important;
+  }
+  &.active {
+    color: white;
+    background-color: $default;
+    &:hover {
+    }
+    @media(min-width: 991px) {
+      
+      &:after {
+        width: 100%;
+        height: 4px;
+        background-color: $light;
+        content: " ";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+    }
+  }
+  @media(min-width: 991px) {
+      
+    &:after {
+      width: 100%;
+      height: 4px;
+      background-color: $default;
+      content: " ";
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      transform: translateX(-50%);
+    }
+  }
+  &.locked {
+    color: white;
+    background-color: transparent;
+    &:hover {
+    }
+    @media(min-width: 991px) {
+      
+      &:after {
+        width: 100%;
+        height: 4px;
+        background-color: $red;
+        content: " ";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+    }
+  }
+  &.unlocked {
+    color: white;
+    background-color: transparent;
+    &:hover {
+    }
+    @media(min-width: 991px) {
+      
+      &:after {
+        width: 100%;
+        height: 4px;
+        background-color: $green;
+        content: " ";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+    }
+  }
+}

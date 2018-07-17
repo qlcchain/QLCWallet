@@ -10,13 +10,14 @@ import {WorkPoolService} from "./services/work-pool.service";
 import {Router} from "@angular/router";
 import {RepresentativeService} from "./services/representative.service";
 import {NodeService} from "./services/node.service";
+import {LangService} from './services/lang.service';
 import Nano from "hw-app-nano";
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   @HostListener('window:resize', ['$event']) onResize (e) {
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit {
   windowHeight = 1000;
   showSearchBar = false;
   searchData = '';
+  langService: LangService;
 
   constructor(
     private walletService: WalletService,
@@ -42,7 +44,10 @@ export class AppComponent implements OnInit {
     private representative: RepresentativeService,
     private router: Router,
     private workPool: WorkPoolService,
-    public price: PriceService) { }
+    public price: PriceService,
+    private lang:LangService) { 
+      this.langService = lang;
+    }
 
   async ngOnInit() {
     this.windowHeight = window.innerHeight;

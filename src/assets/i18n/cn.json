@@ -1,0 +1,14 @@
+{
+    "NAV": {
+      "accounts": "CN - Accounts",
+      "send": "CN - Send",
+      "SOLUTION": "Solution",
+      "TOKEN": "Token",
+      "ROADMAP": "Roadmap",
+      "TEAM": "Team",
+      "ROADSHOW": "Roadshow",
+      "WHITELIST": "Whitelist",
+      "MVP": "MVP",
+      "WHITEPAPER": "Whitepaper"
+    }
+}

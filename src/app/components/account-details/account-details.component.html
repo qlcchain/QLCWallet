@@ -1,226 +1,150 @@
-<div class="uk-animation-slide-left-small" uk-grid>
-  <div class="uk-width-1-1">
-
-    <h2>Account Details</h2>
-
-    <div class="uk-card uk-card-default uk-margin">
-      <div class="uk-card-header uk-visible-toggle">
-
-        <div uk-grid>
-
-          <div class="uk-width-expand">
-
-            <div *ngIf="showEditAddressBook" uk-grid>
-              <div class=" uk-width-1-1">
-                <div class="uk-margin">
-                  <div class="uk-inline uk-width-1-1">
-                    <a class="uk-form-icon uk-form-icon-flip uk-text-success" (click)="saveAddressBook()" uk-icon="icon: check" uk-tooltip title="Save Changes"></a>
-                    <a class="uk-form-icon uk-form-icon-flip uk-text-danger" style="margin-right: 26px;" (click)="showEditAddressBook = false" uk-tooltip title="Cancel Changes - Set the label to blank to delete" uk-icon="icon: close"></a>
-                    <input class="uk-input" (keyup.enter)="saveAddressBook()" [(ngModel)]="addressBookModel" placeholder="Account Label (Set to blank to delete)" type="text" style="padding-right: 60px;">
+<div class="container accountDetails">
+  
+  <div class="row">
+    <div class="col-lg-6 px-0 pr-lg-3">
+      <div class="col-12 px-0">
+        <h1>Account Details</h1>
+      </div>	
+      <div class="col-12">
+        <div class="row defaultTable">
+          <div class="col-12">
+            <div class="row align-items-center rowTitles">
+              <div class="col-12 pl-0">Account</div>
+            </div>
+            <div class="row rowDefault rowAccountDetails">
+              <div class="col-md-7 px-0">
+                <h1 *ngIf="addressBookEntry">{{ addressBookEntry }}</h1>
+                <h1 *ngIf="!addressBookEntry">{{ accountID }}</h1>
+                <h3 *ngIf="addressBookEntry">{{ accountID }}</h3>
+                <div class="row">
+                  <div class="col-12 px-0 d-block d-md-none py-4 text-center">
+                    <a href="#" class="icon-text-link"><span class="icon edit"></span> Edit name</a>
+                    <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> Copy address</a>
                   </div>
                 </div>
               </div>
+              <div class="col-md-5 px-0 text-center">
+                <div class="qrcode"><img *ngIf="qrCodeImage" [src]="qrCodeImage"></div>
+              </div>
+              
             </div>
-            <div *ngIf="!showEditAddressBook" uk-grid>
-              <div class="uk-width-1-1">
-                <div *ngIf="addressBookEntry">
-                    <h3 class="uk-card-title">{{ addressBookEntry }}</h3>
-                    <div class="uk-text-small uk-text-truncate">{{ accountID }}</div>
-                </div>
-
-                <div *ngIf="!addressBookEntry">
-                  <h3 class="uk-card-title uk-text-truncate" style="margin-bottom: 0;">{{ accountID }}</h3>
+            <div class="row rowDefault rowAccountDetails">
+              <div class="col-md-7 px-0 d-none d-md-block">
+                <div class="row">
+                  <a href="#" class="icon-text-link"><span class="icon edit"></span> Edit name</a>
+                  <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> Copy address</a>
                 </div>
               </div>
+              <div class="col-md-5 px-0 text-center">
+                <p>SCAN TO RECEIVE</p>
+              </div>
             </div>
-
-          </div>
-          <div class="uk-width-auto">
-            <ul class="uk-hidden-hover uk-iconnav">
-              <li><span uk-icon="icon: pencil;" title="Edit Account Label" uk-tooltip (click)="showEditAddressBook = !showEditAddressBook" title="Edit Account Label"></span></li>
-              <li><a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()" uk-icon="icon: copy" title="Copy Account Address" uk-tooltip></a></li>
-            </ul>
           </div>
         </div>
       </div>
-      <div class="uk-card-body uk-padding-remove uk-form-horizontal">
-
-        <div class="uk-padding-small" style="" uk-grid>
-
-          <div class="uk-width-3-5@s uk-width-3-4@m">
-            <div uk-grid>
-              <div class="uk-width-1-1">
-                <div uk-grid>
-                  <div class="uk-width-1-3 uk-text-right">
-                    Account Balance
-                  </div>
-                  <div class="uk-width-1-3 uk-text-right">
-                    {{ account.balance || 0 | rai: settings.settings.displayDenomination }}
-                    <span *ngIf="account.balanceRaw && account.balanceRaw > 0" style="display: block; font-size: 12px;" class="uk-text-muted">+{{ account.balanceRaw.toString(10) }} raw</span>
-                  </div>
-                  <div class="uk-width-1-3 uk-text-left">
-                    {{ account.balanceFiat | fiat: settings.settings.displayCurrency }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="uk-width-1-1">
-                <div uk-grid>
-                  <div class="uk-width-1-3 uk-text-right">
-                    Pending Deposits
-                  </div>
-                  <div class="uk-width-1-3 uk-text-right">
-                    {{ account.pending || 0 | rai: settings.settings.displayDenomination }}
-                    <span *ngIf="account.pendingRaw && account.pendingRaw > 0" style="display: block; font-size: 12px;" class="uk-text-muted">+{{ account.pendingRaw.toString(10) }} raw</span>
-                  </div>
-                  <div class="uk-width-1-3 uk-text-left">
-                    {{ account.pendingFiat | fiat: settings.settings.displayCurrency }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="uk-width-1-1" *ngIf="account.representative">
-                <div uk-grid>
-                  <div class="uk-width-1-3 uk-text-right">
-                    Representative
-                  </div>
-                  <div class="uk-width-2-3 uk-text-left">
-                    <div *ngIf="showEditRepresentative">
-                      <div uk-grid>
-                        <div class=" uk-width-1-1">
-                          <div class="uk-margin">
-                            <div class="uk-inline uk-width-1-1">
-                              <a class="uk-form-icon uk-form-icon-flip uk-text-success" (click)="saveRepresentative()" uk-icon="icon: check" uk-tooltip title="Save New Representative"></a>
-                              <a class="uk-form-icon uk-form-icon-flip uk-text-danger" style="margin-right: 26px;" (click)="showEditRepresentative = false" uk-icon="icon: close" uk-tooltip title="Cancel Changes"></a>
-
-                              <input class="uk-input" (keyup.enter)="saveRepresentative()" (blur)="validateRepresentative()" (keyup)="searchRepresentatives()" (focus)="searchRepresentatives()" [(ngModel)]="representativeModel" placeholder="New Representative Account" type="text" style="padding-right: 60px;">
-
-                              <div *ngIf="(representativeResults$ | async).length" [hidden]="!showRepresentatives" class="uk-animation-slide-down-small uk-width-1-1 uk-card uk-card-default uk-card-body uk-position-absolute" style="z-index: 15000">
-                                <ul class="uk-nav uk-nav-default">
-                                  <li class="uk-nav-header">Representative List Results</li>
-                                  <li class="uk-nav-divider"></li>
-                                  <li *ngFor="let rep of representativeResults$ | async">
-                                    <a (click)="selectRepresentative(rep.id)">
-                                      {{ rep.name }}
-                                      <span *ngIf="rep.trusted" uk-icon="icon: star;" class="uk-text-success"></span>
-                                      <span *ngIf="rep.warn" uk-icon="icon: warning;" class="uk-text-warning"></span>
-                                    </a>
-                                  </li>
-                                </ul>
-                              </div>
-
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div *ngIf="!showEditRepresentative">
-                      <div uk-grid>
-                        <div class="uk-width-expand uk-text-truncate ">
-                          <span *ngIf="repLabel" class="uk-label">{{ repLabel }}</span> {{ account.representative }}
-                        </div>
-                        <div class="uk-width-auto" style="padding-left: 10px;" *ngIf="walletAccount && account.representative">
-                          <ul class="uk-hidden-hover uk-iconnav">
-                            <li><a uk-icon="icon: pencil;" title="Change Representative" uk-tooltip (click)="showEditRepresentative = true"></a></li>
-                          </ul>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                  <!--<div class="uk-width-1-3 uk-text-left"></div>-->
-                </div>
-              </div>
-
+    </div>
+    
+    <div class="col-lg-6 px-0 pl-lg-3">
+      <div class="col-12 px-0 d-block d-lg-none">
+        <div class="seperator"></div>
+      </div>
+      <div class="col-12 px-0">
+        <h1>Balances</h1>
+      </div>	
+      <div class="col-12">
+        <div class="row defaultTable">
+          <div class="col-12">
+            <div class="row align-items-center rowTitles">
+              <div class="col-4 pl-0">Token</div>
+              <div class="col-5 text-right">Balance</div>
+              <div class="col-3 pr-0 text-right">Value</div>
+            </div>
+            <div class="row align-items-center rowContent">
+              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn1"></span>QN1</div>
+              <div class="col-5 text-right">1,282,366.54</div>
+              <div class="col-3 pr-0 totalvalue text-right">-</div>
+            </div>
+            <div class="row align-items-center rowContent">
+              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn2"></span>QN2</div>
+              <div class="col-5 text-right">282,366.54</div>
+              <div class="col-3 pr-0 totalvalue text-right">-</div>
+            </div>
+            <div class="row align-items-center rowContent">
+              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn3"></span>QN3</div>
+              <div class="col-5 text-right">366.54</div>
+              <div class="col-3 pr-0 totalvalue text-right">-</div>
+            </div>
+            <div class="row align-items-center rowContent">
+              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn4"></span>QN4</div>
+              <div class="col-5 text-right">66.54004041</div>
+              <div class="col-3 pr-0 totalvalue text-right">-</div>
+            </div>
+            <div class="row align-items-center rowFooter">
+              <div class="col-12 pl-0 pr-0 text-right">-</div>
             </div>
           </div>
-          <div class="uk-width-2-5@s uk-width-1-4@m uk-text-center">
-            <img *ngIf="qrCodeImage" [src]="qrCodeImage"><br />
-            <span class="uk-text-small">Scan to receive Nano</span>
-          </div>
         </div>
-
-        <div uk-grid style="margin-top: 25px;">
-          <div class="uk-width-1-1">
-            <h3 class="uk-heading-divider uk-text-center" style="margin-bottom: 0;">Recent Transactions<span></span></h3>
-
-
-            <table class="uk-table uk-table-striped uk-table-small" style="margin-top: 0;">
-              <thead>
-              <tr>
-                <th class="uk-width-1-6@m uk-width-1-6">Date</th>
-                <th class="uk-width-2-5@m uk-width-1-3">Account</th>
-                <th class="uk-width-1-5@m uk-width-1-4">Amount</th>
-                <th class="uk-width-1-5@m uk-width-1-4">Hash</th>
-              </tr>
-              </thead>
-              <tbody>
-
-              <tr *ngFor="let pending of pendingBlocks" class="uk-text-muted">
-                <td class="uk-text-truncate" *ngIf="pending.timestamp">{{ pending.timestamp | date: 'short' }}</td>
-                <td class="uk-text-truncate uk-text-muted" *ngIf="!pending.timestamp">N/A</td>
-                <td class="uk-visible-toggle">
-                  <div uk-grid>
-                    <div class="uk-width-expand uk-text-truncate">
-                      <a [routerLink]="'/account/' + pending.account" class="uk-link-text" title="View Account Details" uk-tooltip>
-                        <span *ngIf="pending.addressBookName" class="uk-margin-small-right uk-label uk-label-default">{{ pending.addressBookName }}</span> {{ pending.account }}
-                      </a>
-                    </div>
-                    <div class="uk-width-auto" style="padding-left: 10px;">
-                      <ul class="uk-hidden-hover uk-iconnav">
-                        <li><a ngxClipboard [cbContent]="pending.account" (cbOnSuccess)="copied()" uk-icon="icon: copy" title="Copy Account Address" uk-tooltip></a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </td>
-                <td class="uk-text-muted">
-                  +{{ pending.amount | rai: settings.settings.displayDenomination }}*
-                </td>
-                <td class="uk-text-truncate"><a [routerLink]="'/transaction/' + pending.hash" class="uk-link-text" title="View Block Details" uk-tooltip>{{ pending.hash }}</a></td>
-              </tr>
-
-              <tr *ngFor="let history of accountHistory">
-                <td class="uk-text-truncate" *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</td>
-                <td class="uk-text-truncate uk-text-muted" *ngIf="!history.timestamp">N/A</td>
-                <td class="uk-visible-toggle">
-                  <div uk-grid>
-                    <div class="uk-width-expand uk-text-truncate">
-                      <a [routerLink]="'/account/' + (history.link_as_account || history.account)" class="uk-link-text" title="View Account Details" uk-tooltip>
-                        <span *ngIf="history.addressBookName" class="uk-margin-small-right uk-label uk-label-default">{{ history.addressBookName }}</span> {{ history.link_as_account || history.account }}
-                      </a>
-                    </div>
-                    <div class="uk-width-auto" style="padding-left: 10px;">
-                      <ul class="uk-hidden-hover uk-iconnav">
-                        <li><a ngxClipboard [cbContent]="history.link_as_account || history.account" (cbOnSuccess)="copied()" uk-icon="icon: copy" title="Copy Account Address" uk-tooltip></a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </td>
-                <td [ngClass]="{ 'uk-text-success': history.type == 'receive' || history.subtype == 'receive' || history.type == 'open' || history.subtype == 'open', 'uk-text-danger': history.type == 'send' || history.subtype == 'send' }">
-                  {{ (history.type == 'send' || history.subtype == 'send') ? '-' : '+' }}{{ history.amount | rai: settings.settings.displayDenomination }}
-                </td>
-                <td class="uk-text-truncate"><a [routerLink]="'/transaction/' + history.hash" class="uk-link-text" title="View Block Details" uk-tooltip>{{ history.hash }}</a></td>
-              </tr>
-              <tr *ngIf="!accountHistory.length && !pendingBlocks.length">
-                <td colspan="4" style="text-align: center;">No account history</td>
-              </tr>
-              <tr *ngIf="accountHistory.length + 1 >= pageSize && pageSize <= maxPageSize">
-                <td colspan="4" style="text-align: center;">
-                  <a (click)="loadMore()" class="uk-link-text">Load More Results</a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-
       </div>
     </div>
-
-    <div class="uk-width-1-1 uk-text-center uk-text-muted uk-text-small" *ngIf="pendingBlocks.length">
-      * Pending Transaction
+  </div>
+  <div class="seperator"></div>
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+      <h1>Pending Transactions</h1>
     </div>
-
+  </div>
+  <div class="row defaultTable">
+    <div class="col-12">
+      <div class="row align-items-center rowTitles">
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">Date</div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">Account</div>
+        <div class="col-3 col-md-2 price text-right">Amount</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">Token</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">Hash</div>
+      </div>
+      <div *ngFor="let pending of pendingBlocks" class="row align-items-center rowContent">
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="!pending.timestamp">N/A</span><span *ngIf="pending.timestamp">{{ pending.timestamp | date: 'short' }}</span></div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate ">
+          <a [routerLink]="'/account/' + pending.account">
+            <span *ngIf="pending.addressBookName" class="name">{{ pending.addressBookName }}</span> 
+            <span class="address">{{ pending.account }}</span>
+          </a>
+        </div>
+        <div class="col-3 col-md-2 price text-right positive_change">+{{ pending.amount | rai: settings.settings.displayDenomination }}</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right positive_change">QN1</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="seperator"></div>
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+      <h1>Recent Transactions</h1>
+    </div>
+  </div>
+  <div class="row defaultTable">
+    <div class="col-12">
+      <div class="row align-items-center rowTitles">
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">Date</div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">Account</div>
+        <div class="col-3 col-md-2 price text-right">Amount</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">Token</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">Hash</div>
+      </div>
+      <div class="row align-items-center rowContent" *ngFor="let history of accountHistory">
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</span><span *ngIf="!history.timestamp">N/A</span></div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate">
+          <a [routerLink]="'/account/' + (history.link_as_account || history.account)">
+            <span class="name" *ngIf="history.addressBookName">{{ history.addressBookName }}</span> 
+            <span class="address">{{ history.link_as_account || history.account }}</span>
+          </a>
+        </div>
+        <div class="col-3 col-md-2 price text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ (history.type == 'send' || history.subtype == 'send') ? '-' : '+' }}{{ history.amount | rai: settings.settings.displayDenomination }}</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">QN1</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate"><a [routerLink]="'/transaction/' + history.hash">{{ history.hash }}</a></div>
+      </div>
+    </div>
   </div>
 </div>
+
+

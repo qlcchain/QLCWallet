@@ -1,4 +1,4 @@
-<div class="uk-width-1-1 uk-background-secondary wallet-bar">
+<!--<div class="uk-width-1-1 uk-background-secondary wallet-bar">
   <div class="uk-margin-left" style="padding-top: 6px; padding-bottom: 6px; color: #FFF;">
     <div uk-grid>
       <div class="uk-width-1-1">
@@ -43,6 +43,11 @@
     </div>
   </div>
 </div>
+-->
+
+<a  (click)="modal.show()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()" class="nav-link wallet locked"><div><i></i><p>Wallet Locked</p></div></a>
+<a  (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()" class="nav-link wallet unlocked"><div><i></i><p>Wallet Unlocked</p></div></a>
+<a routerLink="/configure-wallet" *ngIf="!walletService.isConfigured()" class="nav-link wallet"><div><i></i><p>Configure Wallet</p></div></a>
 
 <div id="unlock-wallet-modal" uk-modal>
   <div class="uk-modal-dialog">

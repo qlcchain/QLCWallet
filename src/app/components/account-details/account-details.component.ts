@@ -16,7 +16,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 @Component({
   selector: 'app-account-details',
   templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.css']
+  styleUrls: ['./account-details.component.scss']
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
   nano = 1000000000000000000000000;

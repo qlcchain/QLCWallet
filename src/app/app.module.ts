@@ -1,9 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 
 import { AppComponent } from './app.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, HttpClient} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {WelcomeComponent} from "./welcome/welcome.component";
 import {AppRoutingModule} from "./app-routing.module";
@@ -27,6 +29,7 @@ import {ManageWalletComponent} from "./components/manage-wallet/manage-wallet.co
 import {WorkPoolService} from "./services/work-pool.service";
 import {ConfigureAppComponent} from "./components/configure-app/configure-app.component";
 import {AppSettingsService} from "./services/app-settings.service";
+import { LangService } from './services/lang.service';
 import {WebsocketService} from "./services/websocket.service";
 import {NanoBlockService} from "./services/nano-block.service";
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
@@ -44,6 +47,13 @@ import {ManageRepresentativesComponent} from "./components/manage-representative
 import {NodeService} from "./services/node.service";
 import {LedgerService} from "./ledger.service";
 
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NavComponent } from './components/nav/nav.component';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -69,14 +79,24 @@ import {LedgerService} from "./ledger.service";
     CurrencySymbolPipe,
     RepresentativesComponent,
     ManageRepresentativesComponent,
+    NavComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+    }),
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    ClipboardModule
+    ClipboardModule,
+    TooltipModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   providers: [
     UtilService,
@@ -87,6 +107,7 @@ import {LedgerService} from "./ledger.service";
     ModalService,
     WorkPoolService,
     AppSettingsService,
+    LangService,
     WebsocketService,
     NanoBlockService,
     PriceService,

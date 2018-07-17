@@ -1,0 +1,279 @@
+@import "~scss/mixins";
+nav {
+	>div>button.navbar-toggler {
+	    border-color: transparent !important;
+	    border-radius: 0;
+	    outline: 0;
+	}
+	border-color: fade-out($red, .95);
+	background-color: $darkest;
+	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.1);
+	color: white;
+	@include latoBold;
+	font-size: $fontSize;
+	&.navbar {
+		padding-top: 0;
+		padding-bottom: 0;
+		@media(max-width: 991px) {
+			padding-top: 15px;
+			padding-bottom: 15px;
+		}
+	}
+	a {
+		cursor: pointer;
+	}
+	.navbar-brand {
+		margin: 0 20px 0 20px;
+		padding: 0;
+		line-height: 1;
+
+		width: 187px;
+		img {
+			width: 100%;
+			margin-top: 5px;
+		}
+		h2 {
+			@include lato;
+			color: $superLight;
+			font-size: $fontSizeMin;
+			font-size: 10px;
+			margin: 7px 0 0 0;
+			letter-spacing: 0.4px;
+			font-weight: 500;
+			text-transform: uppercase;
+		}
+	}
+	.navbar-toggle {
+		font-size: 12px;
+		font-weight: 700;
+	}
+	
+	.navbar-nav {
+		
+    	@media(max-width: 991px) {
+			padding-top: 30px;
+    		padding-bottom: 60px;
+		}
+		> li.wallet {
+			margin-left: 215px;
+			@media(max-width: 992px) {
+				margin-left: 0;
+			}
+			@media (max-width: 1199px) and (min-width: 992px) {
+				margin-left: 30px;
+			}
+		}
+		> li.nav-item {
+			height: 110px;
+			@media(max-width: 991px) {
+				height: 60px;
+				text-align: left;
+			}
+			i {
+				height: 16px;
+				width: 16px;
+				display: inline-block;
+				margin-right: 10px;
+				vertical-align: middle;
+			}
+			> .dropdown-menu {
+				margin-top:0;
+				background-color: $darkest;
+				border-radius: 0;
+    			border: none;
+				> .dropdown-item {
+					color: white;
+					font-size: $fontSize;
+					padding: 1rem 1.5rem;
+				}
+				> .dropdown-item:hover, .dropdown-item:focus, .dropdown-item:active, .dropdown-item.active {
+					background-color: $default;
+					border-radius: 0;
+    				border: none;
+    				outline: none;
+				}
+			}
+			.account i {
+				background: url('~assets/img/qlc-icon-accounts.svg');
+			}
+			.send i {
+				background: url('~assets/img/qlc-icon-send.svg');
+			}
+			.addressbook i {
+				background: url('~assets/img/qlc-icon-addressbook.svg');
+			}
+			.settings i {
+				background: url('~assets/img/qlc-icon-settings.svg');
+			}
+			.settings .more {
+				height: 20px;
+				width: 20px;
+				display: inline-block;
+				margin-left: 10px;
+				vertical-align: middle;
+				background: url('~assets/img/qlc-icon-arrow-down.svg');
+				@media(max-width: 992px) {
+					float: right;
+				}
+			}
+			.settings div {
+				@media(min-width: 992px) {
+					padding: 0 2px 0 8px !important;
+				}
+				
+			}
+			.wallet i {
+				background: url('~assets/img/qlc-icon-wallet.svg');
+			}
+			.wallet.locked i {
+				background: url('~assets/img/qlc-icon-wallet-red.svg');
+			}
+			.wallet.unlocked i {
+				background: url('~assets/img/qlc-icon-wallet-green.svg');
+			}
+			&.nav-item-hide {
+				@media (max-width: 1200px) and (min-width: 992px) {
+					display: none;
+				}
+			}
+			> a.nav-link:focus ,
+			> a.nav-link:hover,
+			> a.nav-link {
+				height: 100%;
+
+				div {
+					margin-top: 50px;
+					padding: 0 10px 0 8px;
+					outline: 0;
+					@media(max-width: 991px) {
+						margin-top: 20px;
+						padding: 0 0px 0 0px;
+						text-align: left;
+					}
+					@media(max-width: 767px) {
+						margin-top: 13px;
+						padding: 0 5px 0 5px;
+						text-align: left;
+					}
+				}
+				
+				img { 
+					height: 20px;
+					display: inline-block;
+					margin-right: 10px;
+				}
+				
+				p {
+					display: inline-block;
+					margin: 0;
+					color: white;
+					@media (max-width: 1199px) and (min-width: 992px) {
+						
+					}
+				}
+				color: white;
+				padding: 0.1rem 1.5rem;
+				@media (min-width: 992px) {
+					padding: 1.282rem 0.55rem;
+						
+				}
+				text-align: center;
+				@media(max-width: 767px) {
+					padding: 0.6rem 0.55rem;
+				}
+				&:hover {
+				}
+				&.active {
+					color: white;
+					background-color: $default;
+					&:hover {
+					}
+					@media(min-width: 991px) {
+
+						&:after {
+							width: 100%;
+							height: 4px;
+							background-color: $light;
+							content: " ";
+							position: absolute;
+							bottom: -4px;
+							left: 50%;
+							-webkit-transform: translateX(-50%);
+							-ms-transform: translateX(-50%);
+							transform: translateX(-50%);
+						}
+					}
+				}
+				&.locked {
+					color: white;
+					background-color: transparent;
+					&:hover {
+					}
+					@media(min-width: 991px) {
+
+						&:after {
+							width: 100%;
+							height: 4px;
+							background-color: $red;
+							content: " ";
+							position: absolute;
+							bottom: -4px;
+							left: 50%;
+							-webkit-transform: translateX(-50%);
+							-ms-transform: translateX(-50%);
+							transform: translateX(-50%);
+						}
+					}
+				}
+			}
+		}
+	}
+	@media (min-width: 1200px) {
+		.navbar-nav > li.nav-item > a.nav-link,
+		.navbar-nav > li.nav-item > a.nav-link:focus {
+		}
+	}
+	@media (min-width: 992px) {
+		border-color: fade-out(white, .7);
+		.navbar-brand {
+			color: fade-out(white, .3);
+			&:focus,
+			&:hover {
+			}
+		}
+		.navbar-nav > li.nav-item > a.nav-link,
+		.navbar-nav > li.nav-item > a.nav-link:focus {
+			position: relative;
+			&:hover {
+
+				&:after {
+					width: 100%;
+					height: 4px;
+					background-color: $light;
+					content: " ";
+					position: absolute;
+					bottom: -4px;
+					left: 50%;
+					-webkit-transform: translateX(-50%);
+					-ms-transform: translateX(-50%);
+					transform: translateX(-50%);
+				}
+			}
+
+		}
+		&.navbar-shrink {
+			border-color: fade-out($red, .95);
+			.navbar-brand {
+				&:focus,
+				&:hover {
+					color: darken($green, .1);
+				}
+			}
+			.navbar-nav > li.nav-item > a.nav-link,
+			.navbar-nav > li.nav-item > a.nav-link:focus {
+				&:hover {
+				}
+			}
+		}
+	}
+}

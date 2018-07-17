@@ -1,0 +1,110 @@
+
+.mobile-break {
+	
+	@media (max-width: 576px) {
+		margin-top: 15px;
+	}
+}
+.seperator {
+	height: 30px;
+	width: 100%;
+}
+.rowTitles {
+	@include latoBold;
+	font-size: $fontSizeMed;
+	text-transform: uppercase;
+	padding-left: 20px;
+	padding-right: 20px;
+	height: 54px;
+	color: $textLight;
+	border-bottom: 1px solid #edeef4;
+}
+.rowFooter {
+	@include latoBold;
+	font-size: 13px;
+	text-transform: uppercase;
+	height: 54px;
+	color: $text;
+	padding-left: 20px;
+	padding-right: 20px;
+	background-color: $accountHeaderBg;
+}
+.rowDefault {
+	@include lato;
+	font-size: 13px;
+	padding-left: 20px;
+	padding-right: 20px;
+	color: $text;
+}
+.rowButtons {
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 15px;
+}
+.rowContent {
+	@include lato;
+	font-size: 13px;
+	height: 58px;
+	padding-left: 20px;
+	padding-right: 20px;
+	color: $text;
+	border-bottom: 1px solid #edeef4;
+
+
+		
+	.name {
+		@include latoBold;
+		color: $default;
+		font-size: 14px;
+	}
+	.address {
+		@include latoBold;
+	}
+}
+.rowContent.autoH {
+	height: auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.rowContent.autoHP {
+	height: auto;
+}
+.rowContent:hover {
+	background: #f9f9fb;
+}
+.rowContent.autoHP:hover {
+	height: auto;
+	background: transparent;
+}
+.warning {
+	@include latoBold;
+	color: $red;
+	font-size: 15px;
+}
+.boldbig {
+	@include latoBold;
+	font-size: 15px;
+}
+.positive_change {
+	color: $green;
+}
+.negative_change {
+	color: $red;
+}
+.no_change {
+	color: $text;
+}
+.defaultTable {
+	margin-top: 20px;
+	box-shadow: 0 0 16px 0 rgba(0,0,0,0.08);
+	background-color: white;
+}
+
+
+
+.dataName {
+	@include latoBold;
+	text-transform: uppercase;
+	color: $textLight;
+	font-size: 12px;
+}
