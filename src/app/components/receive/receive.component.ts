@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js";
 import {UtilService} from "../../services/util.service";
 import {WorkPoolService} from "../../services/work-pool.service";
 import {AppSettingsService} from "../../services/app-settings.service";
-import {NanoBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/nano-block.service";
 const nacl = window['nacl'];
 
 @Component({
@@ -29,7 +29,7 @@ export class ReceiveComponent implements OnInit {
     private api: ApiService,
     private workPool: WorkPoolService,
     public settings: AppSettingsService,
-    private nanoBlock: NanoBlockService,
+    private nanoBlock: QLCBlockService,
     private util: UtilService) { }
 
   async ngOnInit() {

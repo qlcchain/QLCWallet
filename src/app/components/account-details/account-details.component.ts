@@ -4,7 +4,7 @@ import {AddressBookService} from "../../services/address-book.service";
 import {ApiService} from "../../services/api.service";
 import {NotificationService} from "../../services/notification.service";
 import {WalletService} from "../../services/wallet.service";
-import {NanoBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/nano-block.service";
 import {AppSettingsService} from "../../services/app-settings.service";
 import {PriceService} from "../../services/price.service";
 import {UtilService} from "../../services/util.service";
@@ -58,7 +58,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private wallet: WalletService,
     private util: UtilService,
     public settings: AppSettingsService,
-    private nanoBlock: NanoBlockService) { }
+    private nanoBlock: QLCBlockService) { }
 
   async ngOnInit() {
     this.routerSub = this.route.events.subscribe(event => {

@@ -6,7 +6,7 @@ import {AddressBookService} from './address-book.service';
 import * as CryptoJS from 'crypto-js';
 import {WorkPoolService} from './work-pool.service';
 import {WebsocketService} from './websocket.service';
-import {NanoBlockService} from './nano-block.service';
+import {QLCBlockService} from './nano-block.service';
 import {NotificationService} from './notification.service';
 import {AppSettingsService} from './app-settings.service';
 import {PriceService} from './price.service';
@@ -77,7 +77,7 @@ export class WalletService {
     private price: PriceService,
     private workPool: WorkPoolService,
     private websocket: WebsocketService,
-    private nanoBlock: NanoBlockService,
+    private nanoBlock: QLCBlockService,
     private ledgerService: LedgerService,
     private notifications: NotificationService)
   {

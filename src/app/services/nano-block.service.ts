@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
-import {ApiService} from './api.service';
-import {UtilService} from './util.service';
+import { ApiService } from './api.service';
+import { UtilService } from './util.service';
 import * as blake from 'blakejs';
-import {WorkPoolService} from './work-pool.service';
+import { WorkPoolService } from './work-pool.service';
 import BigNumber from 'bignumber.js';
-import {NotificationService} from './notification.service';
-import {AppSettingsService} from './app-settings.service';
-import {WalletService} from './wallet.service';
-import {LedgerService} from '../ledger.service';
+import { NotificationService } from './notification.service';
+import { AppSettingsService } from './app-settings.service';
+import { WalletService } from './wallet.service';
+import { LedgerService } from '../ledger.service';
 const nacl = window['nacl'];
 
 const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000006';
 
 @Injectable()
-export class NanoBlockService {
-  representativeAccount = 'xrb_3rw4un6ys57hrb39sy1qx8qy5wukst1iiponztrz9qiz6qqa55kxzx4491or'; // NanoVault Representative
+export class QLCBlockService {
+  // FIXME: chaneg to QLC genesis
+  representativeAccount = 'qlc_16s9kn7qmjx3jjiw6td7wbth95ifjjirsqdkqady15jh8scww4urw6gg8zd5'; // QLC Representative
 
   constructor(
     private api: ApiService,
@@ -24,15 +25,20 @@ export class NanoBlockService {
     private ledgerService: LedgerService,
     public settings: AppSettingsService) { }
 
-  async generateChange(walletAccount, representativeAccount, ledger = false) {
-    const toAcct = await this.api.accountInfo(walletAccount.id);
-    if (!toAcct) throw new Error(`Account must have an open block first`);
+  async generateChange(walletAccount, tokenTypeHash, representativeAccount, ledger = false) {
+    const toAcct = await this.getAccountInfo(walletAccount.id, tokenTypeHash);
+    if (!toAcct) {
+      throw new Error(`Account of ${toAcct.token} must have an open block first`);
+    }
 
     let blockData;
     const balance = new BigNumber(toAcct.balance);
     const balanceDecimal = balance.toString(10);
     let balancePadded = balance.toString(16);
-    while (balancePadded.length < 32) balancePadded = '0' + balancePadded; // Left pad with 0's
+    while (balancePadded.length < 32) {
+      balancePadded = '0' + balancePadded; // Left pad with 0's
+    }
+
     const link = '0000000000000000000000000000000000000000000000000000000000000000';
 
     let signature = null;
@@ -53,8 +59,6 @@ export class NanoBlockService {
         this.sendLedgerDeniedNotification();
         return;
       }
-    } else {
-      signature = this.signChangeBlock(walletAccount, toAcct, representativeAccount, balancePadded, link);
     }
 
     if (!this.workPool.workExists(toAcct.frontier)) {
@@ -68,9 +72,14 @@ export class NanoBlockService {
       representative: representativeAccount,
       balance: balanceDecimal,
       link: link,
+      token_hash: tokenTypeHash,
       signature: signature,
       work: await this.workPool.getWork(toAcct.frontier),
     };
+
+    if (!signature) {
+      blockData.signature = this.signStateBlock(blockData, walletAccount.id.keyPair);
+    }
 
     const processResponse = await this.api.process(blockData);
     if (processResponse && processResponse.hash) {
@@ -83,14 +92,18 @@ export class NanoBlockService {
     }
   }
 
-  async generateSend(walletAccount, toAccountID, rawAmount, ledger = false) {
-    const fromAccount = await this.api.accountInfo(walletAccount.id);
-    if (!fromAccount) throw new Error(`Unable to get account information for ${walletAccount.id}`);
+  async generateSend(walletAccount, toAccountID, tokenTypeHash, rawAmount, ledger = false) {
+    const fromAccount = await this.getAccountInfo(walletAccount.id, tokenTypeHash);
+    if (!fromAccount) {
+      throw new Error(`Unable to get account information for ${walletAccount.id}`);
+    }
 
     const remaining = new BigNumber(fromAccount.balance).minus(rawAmount);
     const remainingDecimal = remaining.toString(10);
     let remainingPadded = remaining.toString(16);
-    while (remainingPadded.length < 32) remainingPadded = '0' + remainingPadded; // Left pad with 0's
+    while (remainingPadded.length < 32) {
+      remainingPadded = '0' + remainingPadded; // Left pad with 0's
+    }
 
     let blockData;
     const representative = fromAccount.representative || this.representativeAccount;
@@ -114,8 +127,6 @@ export class NanoBlockService {
         this.sendLedgerDeniedNotification();
         return;
       }
-    } else {
-      signature = this.signSendBlock(walletAccount, fromAccount, representative, remainingPadded, toAccountID);
     }
 
     if (!this.workPool.workExists(fromAccount.frontier)) {
@@ -128,13 +139,20 @@ export class NanoBlockService {
       previous: fromAccount.frontier,
       representative: representative,
       balance: remainingDecimal,
+      token_type: tokenTypeHash,
       link: this.util.account.getAccountPublicKey(toAccountID),
       work: await this.workPool.getWork(fromAccount.frontier),
       signature: signature,
     };
 
+    if (!signature) {
+      blockData.signature = this.signStateBlock(blockData, walletAccount.id.keyPair);
+    }
+
     const processResponse = await this.api.process(blockData);
-    if (!processResponse || !processResponse.hash) throw new Error(processResponse.error || `Node returned an error`);
+    if (!processResponse || !processResponse.hash) {
+      throw new Error(processResponse.error || `Node returned an error`);
+    }
 
     walletAccount.frontier = processResponse.hash;
     this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
@@ -144,7 +162,12 @@ export class NanoBlockService {
   }
 
   async generateReceive(walletAccount, sourceBlock, ledger = false) {
-    const toAcct = await this.api.accountInfo(walletAccount.id);
+    const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
+    const srcAmount = new BigNumber(srcBlockInfo.blocks[sourceBlock].amount);
+    const tokenTypeHash = srcBlockInfo.blocks[sourceBlock].token_hash;
+
+    const toAcct = await this.getAccountInfo(walletAccount.id, tokenTypeHash);
+
     let blockData: any = {};
     let workBlock = null;
 
@@ -153,12 +176,12 @@ export class NanoBlockService {
     const previousBlock = toAcct.frontier || '0000000000000000000000000000000000000000000000000000000000000000';
     const representative = toAcct.representative || this.representativeAccount;
 
-    const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
-    const srcAmount = new BigNumber(srcBlockInfo.blocks[sourceBlock].amount);
     const newBalance = openEquiv ? srcAmount : new BigNumber(toAcct.balance).plus(srcAmount);
     const newBalanceDecimal = newBalance.toString(10);
     let newBalancePadded = newBalance.toString(16);
-    while (newBalancePadded.length < 32) newBalancePadded = '0' + newBalancePadded; // Left pad with 0's
+    while (newBalancePadded.length < 32) {
+      newBalancePadded = '0' + newBalancePadded; // Left pad with 0's
+    }
 
     // We have everything we need, we need to obtain a signature
     let signature = null;
@@ -185,8 +208,6 @@ export class NanoBlockService {
         this.notifications.sendWarning(`Transaction denied on Ledger device`);
         return;
       }
-    } else {
-      signature = this.signOpenBlock(walletAccount, previousBlock, sourceBlock, newBalancePadded, representative);
     }
 
     workBlock = openEquiv ? this.util.account.getAccountPublicKey(walletAccount.id) : previousBlock;
@@ -196,10 +217,15 @@ export class NanoBlockService {
       previous: previousBlock,
       representative: representative,
       balance: newBalanceDecimal,
+      token_type: tokenTypeHash,
       link: sourceBlock,
       signature: signature,
       work: null
     };
+
+    if (!signature) {
+      blockData.signature = this.signStateBlock(blockData, walletAccount.id.keyPair);
+    }
 
     if (!this.workPool.workExists(workBlock)) {
       this.notifications.sendInfo(`Generating Proof of Work...`);
@@ -217,51 +243,25 @@ export class NanoBlockService {
     }
   }
 
-  signOpenBlock(walletAccount, previousBlock, sourceBlock, newBalancePadded, representative) {
-    const context = blake.blake2bInit(32, null);
-    blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(walletAccount.id)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(previousBlock));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(representative)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(newBalancePadded));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(sourceBlock));
-    const hashBytes = blake.blake2bFinal(context);
+  async getAccountInfo(account, tokenHash) {
+    const info = await this.api.accountInfo(account);
+    const frontiers = info.frontiers;
 
-    const privKey = walletAccount.keyPair.secretKey;
-    const signed = nacl.sign.detached(hashBytes, privKey);
-    const signature = this.util.hex.fromUint8(signed);
-
-    return signature;
+    return frontiers ? frontiers.filter(frontier => frontier.token_hash === tokenHash) : null;
   }
 
-  signSendBlock(walletAccount, fromAccount, representative, remainingPadded, toAccountID) {
+  signStateBlock(stateBlock, keyPair) {
     const context = blake.blake2bInit(32, null);
     blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(walletAccount.id)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(fromAccount.frontier));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(representative)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(remainingPadded));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(toAccountID)));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.account)));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.previous));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.representative)));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.balance));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.link));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token_hash));
     const hashBytes = blake.blake2bFinal(context);
 
-    // Sign the hash bytes with the account priv key bytes
-    const signed = nacl.sign.detached(hashBytes, walletAccount.keyPair.secretKey);
-    const signature = this.util.hex.fromUint8(signed);
-
-    return signature;
-  }
-
-  signChangeBlock(walletAccount, toAcct, representativeAccount, balancePadded, link) {
-    const context = blake.blake2bInit(32, null);
-    blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(walletAccount.id)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(toAcct.frontier));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(representativeAccount)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(balancePadded));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(link));
-    const hashBytes = blake.blake2bFinal(context);
-
-    const privKey = walletAccount.keyPair.secretKey;
+    const privKey = keyPair.secretKey;
     const signed = nacl.sign.detached(hashBytes, privKey);
     const signature = this.util.hex.fromUint8(signed);
 

@@ -31,7 +31,7 @@ import {ConfigureAppComponent} from "./components/configure-app/configure-app.co
 import {AppSettingsService} from "./services/app-settings.service";
 import { LangService } from './services/lang.service';
 import {WebsocketService} from "./services/websocket.service";
-import {NanoBlockService} from "./services/nano-block.service";
+import {QLCBlockService} from "./services/nano-block.service";
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
 import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
 import {PriceService} from "./services/price.service";
@@ -109,7 +109,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppSettingsService,
     LangService,
     WebsocketService,
-    NanoBlockService,
+    QLCBlockService,
     PriceService,
     PowService,
     RepresentativeService,

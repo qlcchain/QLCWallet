@@ -12,7 +12,7 @@ import {WorkPoolService} from "../../services/work-pool.service";
 import {AppSettingsService} from "../../services/app-settings.service";
 import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
 import {PriceService} from "../../services/price.service";
-import {NanoBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/nano-block.service";
 
 const nacl = window['nacl'];
 
@@ -57,7 +57,7 @@ export class SendComponent implements OnInit {
     private addressBookService: AddressBookService,
     private notificationService: NotificationService,
     private nodeApi: ApiService,
-    private nanoBlock: NanoBlockService,
+    private nanoBlock: QLCBlockService,
     public price: PriceService,
     private workPool: WorkPoolService,
     public settings: AppSettingsService,

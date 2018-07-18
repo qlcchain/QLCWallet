@@ -7,7 +7,7 @@ import {RepresentativeService} from "../../services/representative.service";
 import {AppSettingsService} from "../../services/app-settings.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {NotificationService} from "../../services/notification.service";
-import {NanoBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/nano-block.service";
 
 @Component({
   selector: 'app-representatives',
@@ -35,7 +35,7 @@ export class RepresentativesComponent implements OnInit {
     public wallet: WalletService,
     private api: ApiService,
     private notifications: NotificationService,
-    private nanoBlock: NanoBlockService,
+    private nanoBlock: QLCBlockService,
     private util: UtilService,
     private representativeService: RepresentativeService,
     public settings: AppSettingsService) { }
