@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {WalletService} from "../services/wallet.service";
+import {WalletService} from '../services/wallet.service';
 
 @Component({
   selector: 'app-welcome',
@@ -8,7 +8,7 @@ import {WalletService} from "../services/wallet.service";
 })
 export class WelcomeComponent implements OnInit {
 
-  donationAccount = `xrb_318syypnqcgdouy3p3ekckwmnmmyk5z3dpyq48phzndrmmspyqdqjymoo8hj`;
+  donationAccount = `qlc_3jxu1xnuaazcrxhxjyt6zjmnzb41yg68zjw978krduct66keiyqbq9y5qbs6`;
 
   wallet = this.walletService.wallet;
 
