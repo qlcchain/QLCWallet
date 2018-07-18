@@ -1,18 +1,18 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import {WalletService} from "./services/wallet.service";
-import {AddressBookService} from "./services/address-book.service";
-import {AppSettingsService} from "./services/app-settings.service";
-import {WebsocketService} from "./services/websocket.service";
-import {PriceService} from "./services/price.service";
-import {NotificationService} from "./services/notification.service";
-import {PowService} from "./services/pow.service";
-import {WorkPoolService} from "./services/work-pool.service";
-import {Router} from "@angular/router";
-import {RepresentativeService} from "./services/representative.service";
-import {NodeService} from "./services/node.service";
-import {LangService} from './services/lang.service';
-import Nano from "hw-app-nano";
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import { Component, HostListener, OnInit } from '@angular/core';
+import { WalletService } from './services/wallet.service';
+import { AddressBookService } from './services/address-book.service';
+import { AppSettingsService } from './services/app-settings.service';
+import { WebsocketService } from './services/websocket.service';
+import { PriceService } from './services/price.service';
+import { NotificationService } from './services/notification.service';
+import { PowService } from './services/pow.service';
+import { WorkPoolService } from './services/work-pool.service';
+import { Router } from '@angular/router';
+import { RepresentativeService } from './services/representative.service';
+import { NodeService } from './services/node.service';
+import { LangService } from './services/lang.service';
+import Nano from 'hw-app-nano';
+import TransportU2F from '@ledgerhq/hw-transport-u2f';
 
 @Component({
   selector: 'app-root',
@@ -20,9 +20,6 @@ import TransportU2F from "@ledgerhq/hw-transport-u2f";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  @HostListener('window:resize', ['$event']) onResize (e) {
-    this.windowHeight = e.target.innerHeight;
-  };
   wallet = this.walletService.wallet;
   node = this.nodeService.node;
   nanoPrice = this.price.price;
@@ -32,6 +29,10 @@ export class AppComponent implements OnInit {
   showSearchBar = false;
   searchData = '';
   langService: LangService;
+
+  @HostListener('window:resize', ['$event']) onResize(e) {
+    this.windowHeight = e.target.innerHeight;
+  }
 
   constructor(
     private walletService: WalletService,
@@ -45,9 +46,9 @@ export class AppComponent implements OnInit {
     private router: Router,
     private workPool: WorkPoolService,
     public price: PriceService,
-    private lang:LangService) { 
-      this.langService = lang;
-    }
+    private lang: LangService) {
+    this.langService = lang;
+  }
 
   async ngOnInit() {
     this.windowHeight = window.innerHeight;
@@ -67,15 +68,15 @@ export class AppComponent implements OnInit {
     }
 
     // When the page closes, determine if we should lock the wallet
-    window.addEventListener("beforeunload",  (e) => {
+    window.addEventListener('beforeunload', (e) => {
       if (this.wallet.locked) return; // Already locked, nothing to worry about
-      if (this.settings.settings.lockOnClose == 1) {
+      if (this.settings.settings.lockOnClose === 1) {
         this.walletService.lockWallet();
       }
     });
-    window.addEventListener("unload",  (e) => {
+    window.addEventListener('unload', (e) => {
       if (this.wallet.locked) return; // Already locked, nothing to worry about
-      if (this.settings.settings.lockOnClose == 1) {
+      if (this.settings.settings.lockOnClose === 1) {
         this.walletService.lockWallet();
       }
     });
@@ -120,7 +121,7 @@ export class AppComponent implements OnInit {
     } else if (searchData.length === 64) {
       this.router.navigate(['transaction', searchData]);
     } else {
-      this.notifications.sendWarning(`Invalid Nano account or transaction hash!`)
+      this.notifications.sendWarning(`Invalid Nano account or transaction hash!`);
     }
     this.searchData = '';
   }

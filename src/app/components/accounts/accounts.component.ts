@@ -3,7 +3,7 @@ import {WalletService} from "../../services/wallet.service";
 import {NotificationService} from "../../services/notification.service";
 import {ModalService} from "../../services/modal.service";
 import {AppSettingsService} from "../../services/app-settings.service";
-import {LedgerService, LedgerStatus} from "../../ledger.service";
+import {LedgerService, LedgerStatus} from "../../services/ledger.service";
 
 @Component({
   selector: 'app-accounts',

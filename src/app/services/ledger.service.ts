@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import Nano from "hw-app-nano";
-import TransportU2F from "@ledgerhq/hw-transport-u2f";
-import {Subject} from "rxjs/Subject";
-import {ApiService} from "./services/api.service";
-import {NotificationService} from "./services/notification.service";
+import Nano from 'hw-app-nano';
+import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import {Subject} from 'rxjs/Subject';
+import {ApiService} from './api.service';
+import {NotificationService} from './notification.service';
 
 export const STATUS_CODES = {
   /**
@@ -27,9 +27,9 @@ export const STATUS_CODES = {
 };
 
 export const LedgerStatus = {
-  NOT_CONNECTED: "not-connected",
-  LOCKED: "locked",
-  READY: "ready",
+  NOT_CONNECTED: 'not-connected',
+  LOCKED: 'locked',
+  READY: 'ready',
 };
 
 
@@ -170,7 +170,7 @@ export class LedgerService {
     const cacheData = {
       representative: blockData.contents.representative,
       balance: blockData.contents.balance,
-      previousBlock: blockData.contents.previous === "0000000000000000000000000000000000000000000000000000000000000000" ? null : blockData.contents.previous,
+      previousBlock: blockData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000' ? null : blockData.contents.previous,
       sourceBlock: blockData.contents.link,
     };
 
@@ -209,7 +209,7 @@ export class LedgerService {
   }
 
   async checkLedgerStatus() {
-    if (this.ledger.status != LedgerStatus.READY) {
+    if (this.ledger.status !== LedgerStatus.READY) {
       return;
     }
 
