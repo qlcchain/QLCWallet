@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import {AppSettingsService} from "./app-settings.service";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {AppSettingsService} from './app-settings.service';
 
 @Injectable()
 export class WebsocketService {

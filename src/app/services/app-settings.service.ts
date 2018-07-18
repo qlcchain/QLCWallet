@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import set = Reflect.set;
 
-export type WalletStore = 'localStorage'|'none';
-export type PoWSource = 'server'|'clientCPU'|'clientWebGL'|'best';
+export type WalletStore = 'localStorage' | 'none';
+export type PoWSource = 'server' | 'clientCPU' | 'clientWebGL' | 'best';
 
 interface AppSettings {
   displayDenomination: string;
@@ -16,10 +16,10 @@ interface AppSettings {
 
 @Injectable()
 export class AppSettingsService {
-  storeKey = `nanovault-appsettings`;
+  storeKey = `qlcwallet-appsettings`;
 
   settings: AppSettings = {
-    displayDenomination: 'mnano',
+    displayDenomination: 'mqlc',
     walletStore: 'localStorage',
     displayCurrency: 'USD',
     lockOnClose: 1,
@@ -55,8 +55,10 @@ export class AppSettingsService {
   }
 
   setAppSettings(settingsObject) {
-    for (let key in settingsObject) {
-      if (!settingsObject.hasOwnProperty(key)) continue;
+    for (const key in settingsObject) {
+      if (!settingsObject.hasOwnProperty(key)) {
+        continue;
+      }
       this.settings[key] = settingsObject[key];
     }
 
@@ -66,7 +68,7 @@ export class AppSettingsService {
   clearAppSettings() {
     localStorage.removeItem(this.storeKey);
     this.settings = {
-      displayDenomination: 'mnano',
+      displayDenomination: 'mqlc',
       walletStore: 'localStorage',
       displayCurrency: 'USD',
       lockOnClose: 1,

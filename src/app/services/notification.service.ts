@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import * as Rx from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-type NotificationType = 'info'|'success'|'warning'|'error';
+type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
 @Injectable()
 export class NotificationService {
 
-  notifications$ = new Rx.BehaviorSubject(null);
-  removeNotification$ = new Rx.BehaviorSubject(null);
+  notifications$ = new BehaviorSubject(null);
+  removeNotification$ = new BehaviorSubject(null);
 
   constructor() { }
 
@@ -22,16 +22,16 @@ export class NotificationService {
     this.removeNotification$.next(identifier);
   }
 
-  sendInfo(message:string, options = {}) {
+  sendInfo(message: string, options = {}) {
     this.sendNotification('info', message, options);
   }
-  sendSuccess(message:string, options = {}) {
+  sendSuccess(message: string, options = {}) {
     this.sendNotification('success', message, options);
   }
-  sendWarning(message:string, options = {}) {
+  sendWarning(message: string, options = {}) {
     this.sendNotification('warning', message, options);
   }
-  sendError(message:string, options = {}) {
+  sendError(message: string, options = {}) {
     this.sendNotification('error', message, options);
   }
 

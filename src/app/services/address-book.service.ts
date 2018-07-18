@@ -1,9 +1,13 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {
+  Injectable
+} from '@angular/core';
+import {
+  BehaviorSubject
+} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class AddressBookService {
-  storeKey = `nanovault-addressbook`;
+  storeKey = `qlcwallet-addressbook`;
 
   addressBook = [];
 
@@ -25,13 +29,18 @@ export class AddressBookService {
 
   async saveAddress(account, name) {
     const existingName = this.addressBook.find(a => a.name.toLowerCase() === name.toLowerCase());
-    if (existingName) throw new Error(`Name already exists in the address book`);
+    if (existingName) {
+      throw new Error(`Name already exists in the address book`);
+    }
 
     const existingAccount = this.addressBook.find(a => a.account.toLowerCase() === account.toLowerCase());
     if (existingAccount) {
       existingAccount.name = name;
     } else {
-      this.addressBook.push({ account, name });
+      this.addressBook.push({
+        account,
+        name
+      });
     }
     this.saveAddressBook();
     this.addressBook$.next(this.addressBook);
@@ -40,7 +49,9 @@ export class AddressBookService {
 
   deleteAddress(account) {
     const existingAccountIndex = this.addressBook.findIndex(a => a.account.toLowerCase() === account.toLowerCase());
-    if (existingAccountIndex === -1) return;
+    if (existingAccountIndex === -1) {
+      return;
+    }
 
     this.addressBook.splice(existingAccountIndex, 1);
 
@@ -71,8 +82,10 @@ export class AddressBookService {
     this.addressBook$.next(this.addressBook);
   }
 
-  getAccountName(account: string): string|null {
-    if (!account || !account.length) return null;
+  getAccountName(account: string): string | null {
+    if (!account || !account.length) {
+      return null;
+    }
     const match = this.addressBook.find(a => a.account.toLowerCase() === account.toLowerCase());
     return match && match.name || null;
   }

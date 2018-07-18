@@ -1,6 +1,6 @@
 {
   "name": "qlcwallet",
-  "version": "0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "Wallet for interacting with QLC Chain",
   "author": "QLC Chain Team",

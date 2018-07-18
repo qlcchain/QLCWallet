@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import {UtilService} from "./util.service";
-import {ApiService} from "./api.service";
+import {UtilService} from './util.service';
+import {ApiService} from './api.service';
 import {BigNumber} from 'bignumber.js';
-import {AddressBookService} from "./address-book.service";
+import {AddressBookService} from './address-book.service';
 import * as CryptoJS from 'crypto-js';
-import {WorkPoolService} from "./work-pool.service";
-import {WebsocketService} from "./websocket.service";
-import {NanoBlockService} from "./nano-block.service";
-import {NotificationService} from "./notification.service";
-import {AppSettingsService} from "./app-settings.service";
-import {PriceService} from "./price.service";
-import {LedgerService} from "../ledger.service";
+import {WorkPoolService} from './work-pool.service';
+import {WebsocketService} from './websocket.service';
+import {NanoBlockService} from './nano-block.service';
+import {NotificationService} from './notification.service';
+import {AppSettingsService} from './app-settings.service';
+import {PriceService} from './price.service';
+import {LedgerService} from '../ledger.service';
 
-export type WalletType = "seed" | "ledger" | "privateKey";
+export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
 export interface WalletAccount {
   id: string;
@@ -47,7 +47,7 @@ export interface FullWallet {
 @Injectable()
 export class WalletService {
   nano = 1000000000000000000000000;
-  storeKey = `nanovault-wallet`;
+  storeKey = `qlc-wallet`;
 
   wallet: FullWallet = {
     type: 'seed',
@@ -86,7 +86,7 @@ export class WalletService {
 
       // Find out if this is a send, with our account as a destination or not
       const walletAccountIDs = this.wallet.accounts.map(a => a.id);
-      if (transaction.block.type == 'send' && walletAccountIDs.indexOf(transaction.block.destination) !== -1) {
+      if (transaction.block.type === 'send' && walletAccountIDs.indexOf(transaction.block.destination) !== -1) {
         // Perform an automatic receive
         const walletAccount = this.wallet.accounts.find(a => a.id === transaction.block.destination);
         if (walletAccount) {
@@ -97,7 +97,7 @@ export class WalletService {
           this.addPendingBlock(walletAccount.id, transaction.hash, transaction.amount);
           await this.processPendingBlocks();
         }
-      } else if (transaction.block.type == 'state') {
+      } else if (transaction.block.type === 'state') {
         await this.processStateBlock(transaction);
       }
 
@@ -133,7 +133,7 @@ export class WalletService {
   }
 
   getWalletAccount(accountID) {
-    return this.wallet.accounts.find(a => a.id == accountID);
+    return this.wallet.accounts.find(a => a.id === accountID);
   }
 
   async loadStoredWallet() {
@@ -228,6 +228,7 @@ export class WalletService {
     const exportData = this.generateExportData();
     const base64Data = btoa(JSON.stringify(exportData));
 
+    // FIXME: change url
     return `https://nanovault.io/import-wallet#${base64Data}`;
   }
 
@@ -316,14 +317,14 @@ export class WalletService {
         batchAccountsArray.push(accountAddress);
       }
       let batchResponse = await this.api.accountsFrontiers(batchAccountsArray);
-      for (let accountID in batchResponse.frontiers) {
+      for (const accountID in batchResponse.frontiers) {
         const frontier = batchResponse.frontiers[accountID];
         if (frontier !== batchAccounts[accountID].publicKey) {
           batchAccounts[accountID].used = true;
         }
       }
-      for (let accountID in batchAccounts) {
-        let account = batchAccounts[accountID];
+      for (const accountID in batchAccounts) {
+        const account = batchAccounts[accountID];
         if (account.used) {
           usedIndices.push(account.index)
           if (account.index > greatestUsedIndex) {
@@ -493,7 +494,7 @@ export class WalletService {
     for (const accountID in accounts.balances) {
       if (!accounts.balances.hasOwnProperty(accountID)) continue;
       // Find the account, update it
-      const walletAccount = this.wallet.accounts.find(a => a.id == accountID);
+      const walletAccount = this.wallet.accounts.find(a => a.id === accountID);
       if (!walletAccount) continue;
       walletAccount.balance = new BigNumber(accounts.balances[accountID].balance);
       walletAccount.pending = new BigNumber(accounts.balances[accountID].pending);
@@ -542,7 +543,7 @@ export class WalletService {
 
 
   async loadWalletAccount(accountIndex, accountID) {
-    let index = accountIndex;
+    const index = accountIndex;
     const addressBookName = this.addressBook.getAccountName(accountID);
 
     const newAccount: WalletAccount = {
@@ -634,7 +635,7 @@ export class WalletService {
 
   addPendingBlock(accountID, blockHash, amount) {
     if (this.successfulBlocks.indexOf(blockHash) !== -1) return; // Already successful with this block
-    const existingHash = this.pendingBlocks.find(b => b.hash == blockHash);
+    const existingHash = this.pendingBlocks.find(b => b.hash === blockHash);
     if (existingHash) return; // Already added
 
     this.pendingBlocks.push({ account: accountID, hash: blockHash, amount: amount });
@@ -645,9 +646,9 @@ export class WalletService {
     const pending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
     if (!pending || !pending.blocks) return;
 
-    for (let account in pending.blocks) {
+    for (const account in pending.blocks) {
       if (!pending.blocks.hasOwnProperty(account)) continue;
-      for (let block in pending.blocks[account]) {
+      for (const block in pending.blocks[account]) {
         if (!pending.blocks[account].hasOwnProperty(block)) continue;
 
         this.addPendingBlock(account, block, pending.blocks[account][block].amount);
@@ -666,7 +667,7 @@ export class WalletService {
     this.processingPending = true;
 
     const nextBlock = this.pendingBlocks[0];
-    if (this.successfulBlocks.find(b => b.hash == nextBlock.hash)) {
+    if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
       return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
     }
     const walletAccount = this.getWalletAccount(nextBlock.account);
@@ -714,7 +715,7 @@ export class WalletService {
   }
 
   generateWalletExport() {
-    let data: any = {
+    const data: any = {
       type: this.wallet.type,
       accounts: this.wallet.accounts.map(a => ({ id: a.id, index: a.index })),
       accountsIndex: this.wallet.accountsIndex,

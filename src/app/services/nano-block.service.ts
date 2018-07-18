@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import {ApiService} from "./api.service";
-import {UtilService} from "./util.service";
+import {ApiService} from './api.service';
+import {UtilService} from './util.service';
 import * as blake from 'blakejs';
-import {WorkPoolService} from "./work-pool.service";
-import BigNumber from "bignumber.js";
-import {NotificationService} from "./notification.service";
-import {AppSettingsService} from "./app-settings.service";
-import {WalletService} from "./wallet.service";
-import {LedgerService} from "../ledger.service";
+import {WorkPoolService} from './work-pool.service';
+import BigNumber from 'bignumber.js';
+import {NotificationService} from './notification.service';
+import {AppSettingsService} from './app-settings.service';
+import {WalletService} from './wallet.service';
+import {LedgerService} from '../ledger.service';
 const nacl = window['nacl'];
 
 const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000006';
@@ -33,7 +33,7 @@ export class NanoBlockService {
     const balanceDecimal = balance.toString(10);
     let balancePadded = balance.toString(16);
     while (balancePadded.length < 32) balancePadded = '0' + balancePadded; // Left pad with 0's
-    let link = '0000000000000000000000000000000000000000000000000000000000000000';
+    const link = '0000000000000000000000000000000000000000000000000000000000000000';
 
     let signature = null;
     if (ledger) {
@@ -150,7 +150,7 @@ export class NanoBlockService {
 
     const openEquiv = !toAcct || !toAcct.frontier;
 
-    const previousBlock = toAcct.frontier || "0000000000000000000000000000000000000000000000000000000000000000";
+    const previousBlock = toAcct.frontier || '0000000000000000000000000000000000000000000000000000000000000000';
     const representative = toAcct.representative || this.representativeAccount;
 
     const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
@@ -252,7 +252,7 @@ export class NanoBlockService {
   }
 
   signChangeBlock(walletAccount, toAcct, representativeAccount, balancePadded, link) {
-    let context = blake.blake2bInit(32, null);
+    const context = blake.blake2bInit(32, null);
     blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
     blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(walletAccount.id)));
     blake.blake2bUpdate(context, this.util.hex.toUint8(toAcct.frontier));
