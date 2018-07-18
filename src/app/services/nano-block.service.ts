@@ -14,8 +14,7 @@ const STATE_BLOCK_PREAMBLE = '00000000000000000000000000000000000000000000000000
 
 @Injectable()
 export class QLCBlockService {
-  // FIXME: chaneg to QLC genesis
-  representativeAccount = 'qlc_16s9kn7qmjx3jjiw6td7wbth95ifjjirsqdkqady15jh8scww4urw6gg8zd5'; // QLC Representative
+  representativeAccount = 'qlc_3oftfjxu9x9pcjh1je3xfpikd441w1wo313qjc6ie1es5aobwed5x4pjojic'; // QLC Representative
 
   constructor(
     private api: ApiService,

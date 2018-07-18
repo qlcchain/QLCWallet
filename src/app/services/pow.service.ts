@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import {AppSettingsService} from "./app-settings.service";
-import {ApiService} from "./api.service";
-import {NotificationService} from "./notification.service";
-import {queue} from "rxjs/scheduler/queue";
-import { PoWSource } from './app-settings.service'
+import { AppSettingsService } from './app-settings.service';
+import { ApiService } from './api.service';
+import { NotificationService } from './notification.service';
+import { queue } from 'rxjs/scheduler/queue';
+import { PoWSource } from './app-settings.service';
 
 const mod = window['Module'];
 
@@ -34,7 +34,7 @@ export class PowService {
    * Otherwise, add it into the queue and return when it is ready
    */
   async getPow(hash) {
-    const existingPoW = this.PoWPool.find(p => p.hash == hash);
+    const existingPoW = this.PoWPool.find(p => p.hash === hash);
     if (existingPoW) {
       return existingPoW.promise.promise; // Its okay if its resolved already
     }
@@ -47,7 +47,7 @@ export class PowService {
    * Returns a promise that is resolved when work is completed
    */
   addQueueItem(hash) {
-    const existingPoW = this.PoWPool.find(p => p.hash == hash);
+    const existingPoW = this.PoWPool.find(p => p.hash === hash);
     if (existingPoW) {
       return existingPoW.promise.promise;
     }
@@ -77,13 +77,14 @@ export class PowService {
    * @returns {boolean}
    */
   public hasWebGLSupport() {
-    if (this.webGLTested) return this.webGLAvailable;
-
+    if (this.webGLTested) {
+      return this.webGLAvailable;
+    }
     this.webGLTested = true;
 
     try {
-      const canvas = document.createElement( 'canvas' );
-      const webGL = !! window['WebGLRenderingContext'] && (canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ));
+      const canvas = document.createElement('canvas');
+      const webGL = !!window['WebGLRenderingContext'] && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
       this.webGLAvailable = !!webGL;
       return this.webGLAvailable;
     } catch (e) {
@@ -96,10 +97,12 @@ export class PowService {
    * Gets the next item in the queue and sends it to be processed
    */
   private processQueue() {
-    if (!this.PoWPool.length) return; // No items in the queue
-    if (this.parallelQueue) return; // Not yet implemented
-
-    if (this.processingQueueItem) return; // Already processing.
+    // No items in the queue
+    // Not yet implemented
+    // Already processing.
+    if (!this.PoWPool.length || this.parallelQueue || this.processingQueueItem) {
+      return;
+    }
 
     // Get the next item from the queue and process it
     this.processNextQueueItem();
@@ -111,7 +114,9 @@ export class PowService {
    */
   private async processNextQueueItem() {
     this.processingQueueItem = true;
-    if (!this.PoWPool.length) return; // Nothing in the queue?
+    if (!this.PoWPool.length) {
+      return; // Nothing in the queue?
+    }
     const queueItem = this.PoWPool[0];
 
     let powSource = this.appSettings.settings.powSource;
@@ -137,7 +142,8 @@ export class PowService {
     this.processingQueueItem = false;
 
     if (!work) {
-      this.notifications.sendError(`Unable to generate work for ${queueItem.hash} using ${powSource}`);
+      const errMessage = `Unable to generate work for ${queueItem.hash} using ${powSource}`;
+      this.notifications.sendError(errMessage);
       queueItem.promise.reject(null);
     } else {
       queueItem.work = work;
@@ -159,10 +165,13 @@ export class PowService {
   getHashCPUSync(hash) {
     const response = this.getDeferredPromise();
 
-    const PoW = mod.cwrap("launchPoW", 'string', ['string']);
+    const PoW = mod.cwrap('launchPoW', 'string', ['string']);
     const start = Date.now();
     let work;
-    do { work = PoW(hash) } while (work == '0000000000000000');
+    do {
+      work = PoW(hash);
+    }
+    while (work === '0000000000000000');
     console.log(`Synchronous CPU: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds`);
 
     response.resolve(work);
@@ -179,7 +188,7 @@ export class PowService {
     const NUM_THREADS = navigator.hardwareConcurrency < 4 ? navigator.hardwareConcurrency : 4;
     const workers = window['pow_initiate'](NUM_THREADS, '/assets/lib/pow/');
 
-    window['pow_callback'](workers, hash, () => {}, (work) => {
+    window['pow_callback'](workers, hash, () => { }, (work) => {
       console.log(`CPU Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${NUM_THREADS} Workers]`);
       response.resolve(work);
     });
@@ -196,12 +205,12 @@ export class PowService {
     const start = Date.now();
     try {
       window['NanoWebglPow'](hash, (work, n) => {
-          console.log(`WebGL Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${n} iterations]`);
-          response.resolve(work);
-        },
-        n => {}
+        console.log(`WebGL Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${n} iterations]`);
+        response.resolve(work);
+      },
+        n => { }
       );
-    } catch(error) {
+    } catch (error) {
       if (error.message === 'webgl2_required') {
         this.webGLAvailable = false;
       }

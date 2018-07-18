@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class PriceService {
@@ -15,7 +15,9 @@ export class PriceService {
   constructor(private http: HttpClient) { }
 
   async getPrice(currency = 'USD') {
-    if (!currency) return; // No currency defined, do not refetch
+    if (!currency) {
+      return; // No currency defined, do not refetch
+    }
     const convertString = currency !== 'USD' && currency !== 'BTC' ? `?convert=${currency}` : ``;
     const response: any = await this.http.get(`${this.apiUrl}ticker/nano/${convertString}`).toPromise();
     if (!response || !response.length) {
