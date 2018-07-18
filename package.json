@@ -1,9 +1,9 @@
 {
-  "name": "NanoVault",
-  "version": "1.0.4",
+  "name": "qlcwallet",
+  "version": "0.1",
   "license": "MIT",
-  "description": "Wallet for interacting with Nano",
-  "author": "Andrew Steele",
+  "description": "Wallet for interacting with QLC Chain",
+  "author": "QLC Chain Team",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
@@ -79,7 +79,7 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "protractor": "~5.1.2",
+    "protractor": "^5.3.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
     "typescript": "~2.4.2",
