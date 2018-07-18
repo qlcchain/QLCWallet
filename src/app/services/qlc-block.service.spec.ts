@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { QLCBlockService } from './nano-block.service';
+import { QLCBlockService } from './qlc-block.service';
 
 describe('NanoBlockService', () => {
   beforeEach(() => {

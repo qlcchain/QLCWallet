@@ -7,7 +7,7 @@ import {RepresentativeService} from "../../services/representative.service";
 import {AppSettingsService} from "../../services/app-settings.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {NotificationService} from "../../services/notification.service";
-import {QLCBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/qlc-block.service";
 
 @Component({
   selector: 'app-representatives',

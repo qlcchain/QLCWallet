@@ -12,7 +12,7 @@ import {WorkPoolService} from "../../services/work-pool.service";
 import {AppSettingsService} from "../../services/app-settings.service";
 import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
 import {PriceService} from "../../services/price.service";
-import {QLCBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/qlc-block.service";
 
 const nacl = window['nacl'];
 

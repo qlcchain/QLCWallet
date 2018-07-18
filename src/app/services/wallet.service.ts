@@ -6,7 +6,7 @@ import { AddressBookService } from './address-book.service';
 import * as CryptoJS from 'crypto-js';
 import { WorkPoolService } from './work-pool.service';
 import { WebsocketService } from './websocket.service';
-import { QLCBlockService } from './nano-block.service';
+import { QLCBlockService } from './qlc-block.service';
 import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 import { PriceService } from './price.service';

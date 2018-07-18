@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js";
 import {UtilService} from "../../services/util.service";
 import {WorkPoolService} from "../../services/work-pool.service";
 import {AppSettingsService} from "../../services/app-settings.service";
-import {QLCBlockService} from "../../services/nano-block.service";
+import {QLCBlockService} from "../../services/qlc-block.service";
 const nacl = window['nacl'];
 
 @Component({

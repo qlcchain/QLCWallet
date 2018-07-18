@@ -1,17 +1,17 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, ChildActivationEnd, Router} from "@angular/router";
-import {AddressBookService} from "../../services/address-book.service";
-import {ApiService} from "../../services/api.service";
-import {NotificationService} from "../../services/notification.service";
-import {WalletService} from "../../services/wallet.service";
-import {QLCBlockService} from "../../services/nano-block.service";
-import {AppSettingsService} from "../../services/app-settings.service";
-import {PriceService} from "../../services/price.service";
-import {UtilService} from "../../services/util.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, ChildActivationEnd, Router } from '@angular/router';
+import { AddressBookService } from '../../services/address-book.service';
+import { ApiService } from '../../services/api.service';
+import { NotificationService } from '../../services/notification.service';
+import { WalletService } from '../../services/wallet.service';
+import { QLCBlockService } from '../../services/qlc-block.service';
+import { AppSettingsService } from '../../services/app-settings.service';
+import { PriceService } from '../../services/price.service';
+import { UtilService } from '../../services/util.service';
 import * as QRCode from 'qrcode';
-import BigNumber from "bignumber.js";
-import {RepresentativeService} from "../../services/representative.service";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import BigNumber from 'bignumber.js';
+import { RepresentativeService } from '../../services/representative.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-account-details',
@@ -29,7 +29,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
   repLabel: any = '';
   addressBookEntry: any = null;
   account: any = {};
-  accountID: string = '';
+  accountID = '';
 
   walletAccount = null;
 
@@ -89,8 +89,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     if ((!this.account.error && this.account.pending > 0) || this.account.error) {
       const pending = await this.api.pending(this.accountID, 25);
       if (pending && pending.blocks) {
-        for (let block in pending.blocks) {
-          if (!pending.blocks.hasOwnProperty(block)) continue;
+        for (const block in pending.blocks) {
+          if (!pending.blocks.hasOwnProperty(block)) {
+            continue;
+          }
           this.pendingBlocks.push({
             account: pending.blocks[block].source,
             amount: pending.blocks[block].amount,
@@ -104,7 +106,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     // If the account doesnt exist, set the pending balance manually
     if (this.account.error) {
-      const pendingRaw = this.pendingBlocks.reduce((prev: BigNumber, current: any) => prev.plus(new BigNumber(current.amount)), new BigNumber(0));
+      const pendingRaw = this.pendingBlocks.reduce((prev: BigNumber, current: any) =>
+        prev.plus(new BigNumber(current.amount)), new BigNumber(0)
+      );
       this.account.pending = pendingRaw;
     }
 
@@ -134,7 +138,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
       this.pageSize = 25;
     }
     const history = await this.api.accountHistory(account, this.pageSize, true);
-    let additionalBlocksInfo = [];
+    const additionalBlocksInfo = [];
 
     if (history && history.history && Array.isArray(history.history)) {
       this.accountHistory = history.history.map(h => {
@@ -157,13 +161,18 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
       if (additionalBlocksInfo.length) {
         const blocksInfo = await this.api.blocksInfo(additionalBlocksInfo.map(b => b.link));
-        for (let block in blocksInfo.blocks) {
-          if (!blocksInfo.blocks.hasOwnProperty(block)) continue;
-
+        for (const block in blocksInfo.blocks) {
+          if (!blocksInfo.blocks.hasOwnProperty(block)) {
+            continue;
+          }
           const matchingBlock = additionalBlocksInfo.find(a => a.link === block);
-          if (!matchingBlock) continue;
+          if (!matchingBlock) {
+            continue;
+          }
           const accountInHistory = this.accountHistory.find(h => h.hash === matchingBlock.hash);
-          if (!accountInHistory) continue;
+          if (!accountInHistory) {
+            continue;
+          }
 
           const blockData = blocksInfo.blocks[block];
 
@@ -185,13 +194,18 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
   }
 
   async saveRepresentative() {
-    if (this.wallet.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
-    if (!this.walletAccount) return;
+    if (this.wallet.walletIsLocked()) {
+      return this.notifications.sendWarning(`Wallet must be unlocked`);
+    }
+    if (!this.walletAccount) {
+      return;
+    }
     const repAccount = this.representativeModel;
 
     const valid = await this.api.validateAccountNumber(repAccount);
-    if (!valid || valid.valid !== '1') return this.notifications.sendWarning(`Account ID is not a valid account`);
-
+    if (!valid || valid.valid !== '1') {
+      return this.notifications.sendWarning(`Account ID is not a valid account`);
+    }
     try {
       const changed = await this.nanoBlock.generateChange(this.walletAccount, repAccount, this.wallet.isLedgerWallet());
       if (!changed) {
