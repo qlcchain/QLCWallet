@@ -37,13 +37,13 @@ export class UtilService {
     generateSeedBytes: generateSeedBytes,
     getAccountPublicKey: getAccountPublicKey,
   };
-  nano = {
-    mnanoToRaw: mqlcToRaw,
-    knanoToRaw: kqlcToRaw,
-    nanoToRaw: qlcToRaw,
-    rawToMnano: rawToMqlc,
-    rawToKnano: rawToKqlc,
-    rawToNano: rawToQlc,
+  qlc = {
+    mqlcToRaw: mqlcToRaw,
+    kqlcToRaw: kqlcToRaw,
+    qlcToRaw: qlcToRaw,
+    rawToMqlc: rawToMqlc,
+    rawToKqlc: rawToKqlc,
+    rawToQlc: rawToQlc,
   };
 
 }
@@ -333,12 +333,12 @@ const util = {
     generateSeedBytes: generateSeedBytes,
     getAccountPublicKey: getAccountPublicKey,
   },
-  nano: {
-    mnanoToRaw: mqlcToRaw,
-    knanoToRaw: kqlcToRaw,
-    nanoToRaw: qlcToRaw,
-    rawToMnano: rawToMqlc,
-    rawToKnano: rawToKqlc,
-    rawToNano: rawToQlc,
+  qlc: {
+    mqlcToRaw: mqlcToRaw,
+    kqlcToRaw: kqlcToRaw,
+    qlcToRaw: qlcToRaw,
+    rawToMqlc: rawToMqlc,
+    rawToKqlc: rawToKqlc,
+    rawToQlc: rawToQlc,
   }
 };

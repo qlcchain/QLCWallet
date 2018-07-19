@@ -19,7 +19,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   styleUrls: ['./account-details.component.scss']
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
-  nano = 1000000000000000000000000;
+  nano = 100000000;
 
   accountHistory: any[] = [];
   pendingBlocks = [];
@@ -58,7 +58,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private wallet: WalletService,
     private util: UtilService,
     public settings: AppSettingsService,
-    private nanoBlock: QLCBlockService) { }
+    private qlcBlock: QLCBlockService) { }
 
   async ngOnInit() {
     this.routerSub = this.route.events.subscribe(event => {
@@ -67,8 +67,8 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
       }
     });
     this.priceSub = this.price.lastPrice$.subscribe(event => {
-      this.account.balanceFiat = this.util.nano.rawToMnano(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
-      this.account.pendingFiat = this.util.nano.rawToMnano(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
+      this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
+      this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
     });
 
     await this.loadAccountDetails();
@@ -115,8 +115,8 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     // Set fiat values?
     this.account.balanceRaw = new BigNumber(this.account.balance || 0).mod(this.nano);
     this.account.pendingRaw = new BigNumber(this.account.pending || 0).mod(this.nano);
-    this.account.balanceFiat = this.util.nano.rawToMnano(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
-    this.account.pendingFiat = this.util.nano.rawToMnano(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
+    this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
+    this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
     await this.getAccountHistory(this.accountID);
 
 
@@ -207,7 +207,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
       return this.notifications.sendWarning(`Account ID is not a valid account`);
     }
     try {
-      const changed = await this.nanoBlock.generateChange(this.walletAccount, repAccount, this.wallet.isLedgerWallet());
+      const changed = await this.qlcBlock.generateChange(this.walletAccount, repAccount, this.wallet.isLedgerWallet());
       if (!changed) {
         this.notifications.sendError(`Error changing representative, please try again`);
         return;

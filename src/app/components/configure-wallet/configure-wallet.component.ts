@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {WalletService} from "../../services/wallet.service";
-import {NotificationService} from "../../services/notification.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { WalletService } from '../../services/wallet.service';
+import { NotificationService } from '../../services/notification.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as bip from 'bip39';
-import {LedgerService, LedgerStatus} from "../../services/ledger.service";
+import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 
 @Component({
   selector: 'app-configure-wallet',
@@ -23,16 +23,17 @@ export class ConfigureWalletComponent implements OnInit {
 
   selectedImportOption = 'seed';
   importOptions = [
-    { name: 'Nano Seed', value: 'seed' },
-    { name: 'Nano Mnemonic Phrase', value: 'mnemonic' },
-    { name: 'NanoVault Wallet File', value: 'file' },
-    { name: 'Ledger Nano S', value: 'ledger' },
+    { name: 'QLC Seed', value: 'seed' },
+    { name: 'QLC Mnemonic Phrase', value: 'mnemonic' },
+    { name: 'QLCWallet File', value: 'file' },
+    // { name: 'Ledger Nano S', value: 'ledger' },
   ];
 
   ledgerStatus = LedgerStatus;
   ledger = this.ledgerService.ledger;
 
-  constructor(private router: ActivatedRoute, public walletService: WalletService, private notifications: NotificationService, private route: Router, private ledgerService: LedgerService) { }
+  constructor(private router: ActivatedRoute, public walletService: WalletService,
+    private notifications: NotificationService, private route: Router, private ledgerService: LedgerService) { }
 
   async ngOnInit() {
     const toggleImport = this.router.snapshot.queryParams.import;
@@ -43,24 +44,30 @@ export class ConfigureWalletComponent implements OnInit {
     this.ledgerService.loadLedger(true);
     this.ledgerService.ledgerStatus$.subscribe(newStatus => {
       // this.updateLedgerStatus();
-    })
+    });
   }
 
   async importExistingWallet() {
     let importSeed = '';
     if (this.selectedImportOption === 'seed') {
       const existingSeed = this.importSeedModel.trim();
-      if (existingSeed.length !== 64) return this.notifications.sendError(`Seed is invalid, double check it!`);
+      if (existingSeed.length !== 64) {
+        return this.notifications.sendError(`Seed is invalid, double check it!`);
+      }
       importSeed = existingSeed;
     } else if (this.selectedImportOption === 'mnemonic') {
       const mnemonic = this.importSeedMnemonicModel.toLowerCase().trim();
       const words = mnemonic.split(' ');
-      if (words.length < 12) return this.notifications.sendError(`Mnemonic is too short, double check it!`);
+      if (words.length < 12) {
+        return this.notifications.sendError(`Mnemonic is too short, double check it!`);
+      }
 
       // Try and decode the mnemonic
       try {
         const newSeed = bip.mnemonicToEntropy(mnemonic);
-        if (!newSeed || newSeed.length !== 64) return this.notifications.sendError(`Mnemonic is invalid, double check it!`);
+        if (!newSeed || newSeed.length !== 64) {
+          return this.notifications.sendError(`Mnemonic is invalid, double check it!`);
+        }
         importSeed = newSeed.toUpperCase(); // Force uppercase, for consistency
       } catch (err) {
         return this.notifications.sendError(`Unable to decode mnemonic, double check it!`);
@@ -95,7 +102,7 @@ export class ConfigureWalletComponent implements OnInit {
     if (refreshOnly) {
       return;
     }
-    
+
     const newWallet = await this.walletService.createLedgerWallet();
 
     // We skip the password panel
@@ -147,7 +154,9 @@ export class ConfigureWalletComponent implements OnInit {
   }
 
   importFromFile(files) {
-    if (!files.length) return;
+    if (!files.length) {
+      return;
+    }
 
     const file = files[0];
     const reader = new FileReader();
@@ -156,7 +165,7 @@ export class ConfigureWalletComponent implements OnInit {
       try {
         const importData = JSON.parse(fileData);
         if (!importData.seed || !importData.hasOwnProperty('accountsIndex')) {
-          return this.notifications.sendError(`Bad import data `)
+          return this.notifications.sendError(`Bad import data `);
         }
 
         const walletEncrypted = btoa(JSON.stringify(importData));

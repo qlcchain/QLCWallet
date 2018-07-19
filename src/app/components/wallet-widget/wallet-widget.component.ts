@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {WalletService} from "../../services/wallet.service";
-import {NotificationService} from "../../services/notification.service";
-import {LedgerService, LedgerStatus} from "../../services/ledger.service";
+import { WalletService } from '../../services/wallet.service';
+import { NotificationService } from '../../services/notification.service';
+import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 
 @Component({
   selector: 'app-wallet-widget',
@@ -17,7 +17,8 @@ export class WalletWidgetComponent implements OnInit {
 
   modal: any = null;
 
-  constructor(public walletService: WalletService, private notificationService: NotificationService, public ledgerService: LedgerService) { }
+  constructor(public walletService: WalletService, private notificationService: NotificationService,
+    public ledgerService: LedgerService) { }
 
   ngOnInit() {
     const UIkit = (window as any).UIkit;
@@ -26,7 +27,7 @@ export class WalletWidgetComponent implements OnInit {
 
     this.ledgerService.ledgerStatus$.subscribe((ledgerStatus: string) => {
       this.ledgerStatus = ledgerStatus;
-    })
+    });
   }
 
   async lockWallet() {
@@ -45,7 +46,7 @@ export class WalletWidgetComponent implements OnInit {
   }
 
   async reloadLedger() {
-    this.notificationService.sendInfo(`Checking Ledger Status...`, { identifier: 'ledger-status', length: 0 })
+    this.notificationService.sendInfo(`Checking Ledger Status...`, { identifier: 'ledger-status', length: 0 });
     try {
       const loaded = await this.ledgerService.loadLedger();
       this.notificationService.removeNotification('ledger-status');

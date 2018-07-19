@@ -68,7 +68,7 @@
         <p>
           Enter your 64 character seed from any Nano wallet to import it below.
         </p>
-        <input type="text" class="uk-input" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedModel" placeholder="Your Nano Backup Seed">
+        <input type="text" class="uk-input" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedModel" placeholder="Your QLC Backup Seed">
       </div>
     </div>
     <div uk-grid *ngIf="selectedImportOption === 'mnemonic'" class="uk-margin-top">
@@ -76,7 +76,7 @@
         <p>
           Enter your wallet mnemonic phrase generated from any Nano wallet to import it below.
         </p>
-        <textarea class="uk-textarea" rows="3" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedMnemonicModel" placeholder="Your Nano Backup Mnemonic Phrase"></textarea>
+        <textarea class="uk-textarea" rows="3" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedMnemonicModel" placeholder="Your QLC Backup Mnemonic Phrase"></textarea>
       </div>
     </div>
     <div uk-grid *ngIf="selectedImportOption === 'ledger'" class="uk-margin-top">

@@ -77,7 +77,7 @@ export class WalletService {
     private price: PriceService,
     private workPool: WorkPoolService,
     private websocket: WebsocketService,
-    private nanoBlock: QLCBlockService,
+    private qlcBlock: QLCBlockService,
     private ledgerService: LedgerService,
     private notifications: NotificationService) {
     this.websocket.newTransactions$.subscribe(async (transaction) => {
@@ -477,12 +477,12 @@ export class WalletService {
     const fiatPrice = this.price.price.lastPrice;
 
     this.wallet.accounts.forEach(account => {
-      account.balanceFiat = this.util.nano.rawToMnano(account.balance).times(fiatPrice).toNumber();
-      account.pendingFiat = this.util.nano.rawToMnano(account.pending).times(fiatPrice).toNumber();
+      account.balanceFiat = this.util.qlc.rawToMqlc(account.balance).times(fiatPrice).toNumber();
+      account.pendingFiat = this.util.qlc.rawToMqlc(account.pending).times(fiatPrice).toNumber();
     });
 
-    this.wallet.balanceFiat = this.util.nano.rawToMnano(this.wallet.balance).times(fiatPrice).toNumber();
-    this.wallet.pendingFiat = this.util.nano.rawToMnano(this.wallet.pending).times(fiatPrice).toNumber();
+    this.wallet.balanceFiat = this.util.qlc.rawToMqlc(this.wallet.balance).times(fiatPrice).toNumber();
+    this.wallet.pendingFiat = this.util.qlc.rawToMqlc(this.wallet.pending).times(fiatPrice).toNumber();
   }
 
   async reloadBalances(reloadPending = true) {
@@ -520,8 +520,8 @@ export class WalletService {
       walletAccount.balanceRaw = new BigNumber(walletAccount.balance).mod(this.qlc);
       walletAccount.pendingRaw = new BigNumber(walletAccount.pending).mod(this.qlc);
 
-      walletAccount.balanceFiat = this.util.nano.rawToMnano(walletAccount.balance).times(fiatPrice).toNumber();
-      walletAccount.pendingFiat = this.util.nano.rawToMnano(walletAccount.pending).times(fiatPrice).toNumber();
+      walletAccount.balanceFiat = this.util.qlc.rawToMqlc(walletAccount.balance).times(fiatPrice).toNumber();
+      walletAccount.pendingFiat = this.util.qlc.rawToMqlc(walletAccount.pending).times(fiatPrice).toNumber();
 
       walletAccount.frontier = frontiers.frontiers[accountID] || null;
 
@@ -549,8 +549,8 @@ export class WalletService {
     this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.qlc);
     this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.qlc);
 
-    this.wallet.balanceFiat = this.util.nano.rawToMnano(walletBalance).times(fiatPrice).toNumber();
-    this.wallet.pendingFiat = this.util.nano.rawToMnano(walletPending).times(fiatPrice).toNumber();
+    this.wallet.balanceFiat = this.util.qlc.rawToMqlc(walletBalance).times(fiatPrice).toNumber();
+    this.wallet.pendingFiat = this.util.qlc.rawToMqlc(walletPending).times(fiatPrice).toNumber();
 
     // If there is a pending balance, search for the actual pending transactions
     if (reloadPending && walletPending.gt(0)) {
@@ -713,14 +713,14 @@ export class WalletService {
       return; // Dispose of the block, no matching account
     }
 
-    const newHash = await this.nanoBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
+    const newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
     if (newHash) {
       if (this.successfulBlocks.length >= 15) {
         this.successfulBlocks.shift();
       }
       this.successfulBlocks.push(nextBlock.hash);
 
-      const receiveAmount = this.util.nano.rawToMnano(nextBlock.amount);
+      const receiveAmount = this.util.qlc.rawToMqlc(nextBlock.amount);
       this.notifications.sendSuccess(`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} Nano!`);
 
       // await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?

@@ -16,7 +16,7 @@ export class NodeService {
     }
     this.node.status = false;
 
-    const errMessage = `Unable to connect to the Nano node, your balances may be inaccurate!`;
+    const errMessage = `Unable to connect to the QLC node, your balances may be inaccurate!`;
     this.notifications.sendError(errMessage, { identifier: 'node-offline', length: 0 });
   }
 

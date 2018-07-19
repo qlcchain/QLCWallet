@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import Nano from 'hw-app-nano';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
-import {Subject} from 'rxjs/Subject';
-import {ApiService} from './api.service';
-import {NotificationService} from './notification.service';
+import { Subject } from 'rxjs/Subject';
+import { ApiService } from './api.service';
+import { NotificationService } from './notification.service';
 
 export const STATUS_CODES = {
   /**
@@ -35,8 +35,8 @@ export const LedgerStatus = {
 
 export interface LedgerData {
   status: string;
-  nano: any|null;
-  transport: any|null;
+  nano: any | null;
+  transport: any | null;
 }
 
 @Injectable()
@@ -73,7 +73,7 @@ export class LedgerService {
           this.ledger.transport = await TransportU2F.open(null);
           this.ledger.transport.setExchangeTimeout(this.waitTimeout); // 5 minutes
         } catch (err) {
-          if (err.statusText == 'UNKNOWN_ERROR') {
+          if (err.statusText === 'UNKNOWN_ERROR') {
             this.resetLedger();
           }
           this.ledgerStatus$.next(this.ledger.status);
@@ -86,7 +86,7 @@ export class LedgerService {
         try {
           this.ledger.nano = new Nano(this.ledger.transport);
         } catch (err) {
-          if (err.statusText == 'UNKNOWN_ERROR') {
+          if (err.statusText === 'UNKNOWN_ERROR') {
             this.resetLedger();
           }
           this.ledgerStatus$.next(this.ledger.status);
@@ -101,31 +101,36 @@ export class LedgerService {
 
       // Set up a timeout when things are not ready
       setTimeout(() => {
-        if (resolved) return;
-        this.ledger.status = LedgerStatus.NOT_CONNECTED;
-        this.ledgerStatus$.next(this.ledger.status);
-        if (!hideNotifications) {
-          this.notifications.sendWarning(`Unable to connect to the Ledger device.  Make sure it is unlocked and the Nano application is open`);
+        if (!resolved) {
+          this.ledger.status = LedgerStatus.NOT_CONNECTED;
+          this.ledgerStatus$.next(this.ledger.status);
+          if (!hideNotifications) {
+            const warnMessage = 'Unable to connect to the Ledger device.  Make sure it is unlocked and the Nano application is open';
+            this.notifications.sendWarning(warnMessage);
+          }
+          resolved = true;
+          return resolve(false);
         }
-        resolved = true;
-        return resolve(false);
       }, 2500);
 
       // Try to load the app config
       try {
         const ledgerConfig = await this.ledger.nano.getAppConfiguration();
         resolved = true;
-        if (!ledgerConfig || !ledgerConfig) return resolve(false);
+        if (!ledgerConfig || !ledgerConfig) {
+          return resolve(false);
+        }
         if (ledgerConfig && ledgerConfig.version) {
           this.ledger.status = LedgerStatus.LOCKED;
           this.ledgerStatus$.next(this.ledger.status);
         }
       } catch (err) {
-        if (err.statusText == 'HALTED') {
+        if (err.statusText === 'HALTED') {
           this.resetLedger();
         }
         if (!hideNotifications && !resolved) {
-          this.notifications.sendWarning(`Ledger device locked.  Unlock and open the Nano application`);
+          const warnMessage = `Ledger device locked.  Unlock and open the Nano application`;
+          this.notifications.sendWarning(warnMessage);
         }
         return resolve(false);
       }
@@ -143,7 +148,8 @@ export class LedgerService {
       } catch (err) {
         if (err.statusCode === STATUS_CODES.SECURITY_STATUS_NOT_SATISFIED) {
           if (!hideNotifications) {
-            this.notifications.sendWarning(`Ledger device locked.  Unlock and open the Nano application`);
+            const warnMessage = `Ledger device locked.  Unlock and open the Nano application`;
+            this.notifications.sendWarning(warnMessage);
           }
         }
       }
@@ -152,9 +158,10 @@ export class LedgerService {
     }).catch(err => {
       console.log(`error when loading ledger `, err);
       if (!hideNotifications) {
-        this.notifications.sendWarning(`Error loading Ledger device: `, err.message);
+        const warnMessage = `Error loading Ledger device: ${err.message}`;
+        this.notifications.sendWarning(warnMessage);
       }
-    })
+    });
 
   }
 
@@ -164,13 +171,16 @@ export class LedgerService {
     }
     const blockResponse = await this.api.blocksInfo([blockHash]);
     const blockData = blockResponse.blocks[blockHash];
-    if (!blockData) throw new Error(`Unable to load block data`);
+    if (!blockData) {
+      throw new Error(`Unable to load block data`);
+    }
     blockData.contents = JSON.parse(blockData.contents);
 
     const cacheData = {
       representative: blockData.contents.representative,
       balance: blockData.contents.balance,
-      previousBlock: blockData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000' ? null : blockData.contents.previous,
+      previousBlock: blockData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000'
+        ? null : blockData.contents.previous,
       sourceBlock: blockData.contents.link,
     };
 
@@ -201,11 +211,12 @@ export class LedgerService {
   }
 
   pollLedgerStatus() {
-    if (!this.pollingLedger) return;
-    setTimeout(async () => {
-      await this.checkLedgerStatus();
-      this.pollLedgerStatus();
-    }, this.pollInterval);
+    if (this.pollingLedger) {
+      setTimeout(async () => {
+        await this.checkLedgerStatus();
+        this.pollLedgerStatus();
+      }, this.pollInterval);
+    }
   }
 
   async checkLedgerStatus() {
@@ -223,7 +234,5 @@ export class LedgerService {
 
     this.ledgerStatus$.next(this.ledger.status);
   }
-
-
 
 }

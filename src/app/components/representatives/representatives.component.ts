@@ -1,13 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {WalletService} from "../../services/wallet.service";
-import {ApiService} from "../../services/api.service";
-import BigNumber from "bignumber.js";
-import {UtilService} from "../../services/util.service";
-import {RepresentativeService} from "../../services/representative.service";
-import {AppSettingsService} from "../../services/app-settings.service";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {NotificationService} from "../../services/notification.service";
-import {QLCBlockService} from "../../services/qlc-block.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { WalletService } from '../../services/wallet.service';
+import { ApiService } from '../../services/api.service';
+import BigNumber from 'bignumber.js';
+import { UtilService } from '../../services/util.service';
+import { RepresentativeService } from '../../services/representative.service';
+import { AppSettingsService } from '../../services/app-settings.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { NotificationService } from '../../services/notification.service';
+import { QLCBlockService } from '../../services/qlc-block.service';
 
 @Component({
   selector: 'app-representatives',
@@ -19,7 +19,7 @@ export class RepresentativesComponent implements OnInit {
   @ViewChild('repInput') repInput;
 
   changeAccountID: any = null;
-  toRepresentativeID: string = '';
+  toRepresentativeID = '';
 
   representativeResults$ = new BehaviorSubject([]);
   showRepresentatives = false;
@@ -59,14 +59,14 @@ export class RepresentativesComponent implements OnInit {
     const representativesDetails = await this.getRepresentativesDetails(uniqueRepresentatives);
 
     // Build up the overview object for each representative
-    const totalSupply = new BigNumber(133248289);
+    const totalSupply = new BigNumber(60000000000000000);
     let representativesOverview = [];
 
     for (const representative of representativesDetails) {
       const repOnline = onlineReps.indexOf(representative.account) !== -1;
       const knownRep = this.representativeService.getRepresentative(representative.account);
 
-      const nanoWeight = this.util.nano.rawToMnano(representative.weight || 0);
+      const nanoWeight = this.util.qlc.rawToMqlc(representative.weight || 0);
       const percent = nanoWeight.div(totalSupply).times(100);
 
       // Determine the status based on some factors
@@ -141,10 +141,12 @@ export class RepresentativesComponent implements OnInit {
   // Make a unique list of representatives used in all accounts
   getAccountRepresentatives(walletAccountInfos) {
     const representatives = [];
-    for (let accountInfo of walletAccountInfos) {
-      if (!accountInfo || !accountInfo.representative) continue; // Account doesn't exist yet
+    for (const accountInfo of walletAccountInfos) {
+      if (!accountInfo || !accountInfo.representative) {
+        continue;
+      } // Account doesn't exist yet
 
-      const existingRep = representatives.find(rep => rep.id == accountInfo.representative);
+      const existingRep = representatives.find(rep => rep.id === accountInfo.representative);
       if (existingRep) {
         existingRep.weight = existingRep.weight.plus(new BigNumber(accountInfo.balance));
         existingRep.accounts.push(accountInfo);
@@ -165,8 +167,10 @@ export class RepresentativesComponent implements OnInit {
     const representatives = [];
     try {
       const reps = await this.api.representativesOnline();
-      for (let representative in reps.representatives) {
-        if (!reps.representatives.hasOwnProperty(representative)) continue;
+      for (const representative in reps.representatives) {
+        if (!reps.representatives.hasOwnProperty(representative)) {
+          continue;
+        }
         representatives.push(representative);
       }
     } catch (err) {
@@ -177,7 +181,7 @@ export class RepresentativesComponent implements OnInit {
   }
 
   addSelectedAccounts(accounts) {
-    for (let account of accounts) {
+    for (const account of accounts) {
       this.newAccountID(account.id);
     }
 
@@ -187,10 +191,14 @@ export class RepresentativesComponent implements OnInit {
 
   newAccountID(accountID) {
     const newAccount = accountID || this.changeAccountID;
-    if (!newAccount) return; // Didn't select anything
+    if (!newAccount) {
+      return; // Didn't select anything
+    }
 
     const existingAccount = this.selectedAccounts.find(a => a.id === newAccount);
-    if (existingAccount) return; // Already selected
+    if (existingAccount) {
+      return; // Already selected
+    }
 
     const allExists = this.selectedAccounts.find(a => a.id === 'All Accounts');
     if (newAccount === 'all' && !allExists) {
@@ -249,9 +257,15 @@ export class RepresentativesComponent implements OnInit {
     const accounts = this.selectedAccounts;
     const newRep = this.toRepresentativeID;
 
-    if (this.changingRepresentatives) return; // Already running
-    if (this.wallet.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
-    if (!accounts || !accounts.length) return this.notifications.sendWarning(`You must select at least one account to change`);
+    if (this.changingRepresentatives) {
+      return; // Already running
+    }
+    if (this.wallet.walletIsLocked()) {
+      return this.notifications.sendWarning(`Wallet must be unlocked`);
+    }
+    if (!accounts || !accounts.length) {
+      return this.notifications.sendWarning(`You must select at least one account to change`);
+    }
 
     this.changingRepresentatives = true;
 
@@ -267,7 +281,9 @@ export class RepresentativesComponent implements OnInit {
     // Remove any that don't need their represetatives to be changed
     const accountsNeedingChange = accountsToChange.filter(account => {
       const accountInfo = this.fullAccounts.find(a => a.id === account.id);
-      if (!accountInfo || accountInfo.error) return false; // Cant find info, update the account
+      if (!accountInfo || accountInfo.error) {
+        return false; // Cant find info, update the account
+      }
 
       if (accountInfo.representative.toLowerCase() === newRep.toLowerCase()) {
         return false; // This account already has this representative, reject it
@@ -282,9 +298,11 @@ export class RepresentativesComponent implements OnInit {
     }
 
     // Now loop and change them
-    for (let account of accountsNeedingChange) {
+    for (const account of accountsNeedingChange) {
       const walletAccount = this.wallet.getWalletAccount(account.id);
-      if (!walletAccount) continue; // Unable to find account in the wallet? wat?
+      if (!walletAccount) {
+        continue; // Unable to find account in the wallet? wat?
+      }
 
       try {
         const changed = await this.nanoBlock.generateChange(walletAccount, newRep, this.wallet.isLedgerWallet());
