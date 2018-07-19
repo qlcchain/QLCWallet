@@ -27,11 +27,13 @@ export interface WalletAccount {
   balanceFiat: number;
   pendingFiat: number;
   addressBookName: string | null;
+  account_info: any;
 }
 export interface FullWallet {
   type: WalletType;
   seedBytes: any;
   seed: string | null;
+  //tokens: any;
   balance: BigNumber;
   pending: BigNumber;
   balanceRaw: BigNumber;
@@ -53,6 +55,7 @@ export class WalletService {
     type: 'seed',
     seedBytes: null,
     seed: '',
+    //tokens: {},
     balance: new BigNumber(0),
     pending: new BigNumber(0),
     balanceRaw: new BigNumber(0),
@@ -404,6 +407,7 @@ export class WalletService {
       pendingFiat: 0,
       index: index,
       addressBookName,
+      account_info: {}
     };
 
     return newAccount;
@@ -428,6 +432,7 @@ export class WalletService {
       pendingFiat: 0,
       index: index,
       addressBookName,
+      account_info: {}
     };
 
     return newAccount;
@@ -496,6 +501,7 @@ export class WalletService {
     const accountIDs = this.wallet.accounts.map(a => a.id);
     const accounts = await this.api.accountsBalances(accountIDs);
     const frontiers = await this.api.accountsFrontiers(accountIDs);
+    //this.wallet.tokens = await this.api.tokens();
     // const allFrontiers = [];
     // for (const account in frontiers.frontiers) {
     //   allFrontiers.push({ account, frontier: frontiers.frontiers[account] });
@@ -525,6 +531,8 @@ export class WalletService {
 
       walletAccount.frontier = frontiers.frontiers[accountID] || null;
 
+      walletAccount.account_info = await this.api.accountInfo(accountID);
+
       // Look at the accounts latest block to determine if they are using state blocks
       // if (walletAccount.frontier && frontierBlocks.blocks[walletAccount.frontier]) {
       //   const frontierBlock = frontierBlocks.blocks[walletAccount.frontier];
@@ -536,6 +544,7 @@ export class WalletService {
 
       walletBalance = walletBalance.plus(walletAccount.balance);
       walletPending = walletPending.plus(walletAccount.pending);
+
     }
 
     // Make sure any frontiers are in the work pool
@@ -577,11 +586,12 @@ export class WalletService {
       pendingFiat: 0,
       index: index,
       addressBookName,
+      account_info: {}
     };
 
     this.wallet.accounts.push(newAccount);
     this.websocket.subscribeAccounts([accountID]);
-
+console.log('loadWalletAccount');
     return newAccount;
   }
 

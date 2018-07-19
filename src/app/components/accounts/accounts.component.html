@@ -26,43 +26,16 @@
           <div class="col-2 pricechange text-right">24H</div>
           <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">Total Value</div>
         </div>
-        <div class="row align-items-center rowContent">
-          <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon qn1"></span> QLC Chain Token 1</div>
-          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">1,282,366.54 QN1</div>
-          <div class="col-2 price text-right">$0.581</div>
-          <div class="col-2 pricechange text-right negative_change">-2.421%</div>
-          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">$745,054.96</div>
+        <div class="row align-items-center rowContent" *ngFor="let balance of account.account_info.account_infos">
+          <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon {{ balance.token | lowercase }}"></span> {{ balance.token }}</div>
+          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">{{ balance.balance || 0 | qlc: settings.settings.displayDenomination }} {{ balance.token }}</div>
+          <div class="col-2 price text-right">-</div>
+          <div class="col-2 pricechange text-right no_change">-</div>
+          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">-</div>
         </div>
-        <div class="row align-items-center rowContent">
-          <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon qn2"></span> QLC Chain Token 2</div>
-          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">265,366.40 QN2</div>
-          <div class="col-2 price text-right">$0.0187</div>
-          <div class="col-2 pricechange text-right positive_change">5.10%</div>
-          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">$745,054.96</div>
-        </div>
-        <div class="row align-items-center rowContent">
-          <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon qn3"></span> QLC Chain Token 3</div>
-          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">81,000.00 QN3</div>
-          <div class="col-2 price text-right">$0.581</div>
-          <div class="col-2 pricechange text-right negative_change">-0.42%</div>
-          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">$745,054.96</div>
-        </div>
-        <div class="row align-items-center rowContent">
-          <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon qn4"></span> QLC Chain Token 4</div>
-          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">10,000.00 QN4</div>
-          <div class="col-2 price text-right">$0.581</div>
-          <div class="col-2 pricechange text-right negative_change">-1.42%</div>
-          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">$745,054.96</div>
-        </div>
-        <div class="row align-items-center rowContent">
-          <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon qn5"></span> QLC Chain Token 5</div>
-          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">24.7365 QN5</div>
-          <div class="col-2 price text-right">$0.581</div>
-          <div class="col-2 pricechange text-right no_change">0.00%</div>
-          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">$745,054.96</div>
-        </div>
+        
         <div class="row align-items-center rowFooter accountFooter">
-          <div class="col-12 pl-0 pr-0 text-right">$745,054.96</div>
+          <div class="col-12 pl-0 pr-0 text-right">-</div>
         </div>
       </div>
     </div>

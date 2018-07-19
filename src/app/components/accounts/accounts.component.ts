@@ -12,6 +12,7 @@ import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 })
 export class AccountsComponent implements OnInit {
   accounts = this.walletService.wallet.accounts;
+  wallet = this.walletService.wallet;
   isLedgerWallet = this.walletService.isLedgerWallet();
 
   constructor(
@@ -19,7 +20,7 @@ export class AccountsComponent implements OnInit {
     private notificationService: NotificationService,
     public modal: ModalService,
     public settings: AppSettingsService,
-    private ledger: LedgerService) { }
+    private ledger: LedgerService) { console.log(this.wallet); }
 
   async ngOnInit() {
   }

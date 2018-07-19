@@ -72,6 +72,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     });
 
     await this.loadAccountDetails();
+    console.log(this.accountHistory);
   }
 
   async loadAccountDetails() {
@@ -146,6 +147,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
           // For Open and receive blocks, we need to look up block info to get originating account
           if (h.subtype === 'open' || h.subtype === 'receive') {
             additionalBlocksInfo.push({ hash: h.hash, link: h.link });
+            h.addressBookName = this.addressBook.getAccountName(h.account) || null;
           } else {
             h.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(h.link));
             h.addressBookName = this.addressBook.getAccountName(h.link_as_account) || null;

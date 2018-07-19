@@ -59,24 +59,9 @@
               <div class="col-5 text-right">Balance</div>
               <div class="col-3 pr-0 text-right">Value</div>
             </div>
-            <div class="row align-items-center rowContent">
-              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn1"></span>QN1</div>
-              <div class="col-5 text-right">1,282,366.54</div>
-              <div class="col-3 pr-0 totalvalue text-right">-</div>
-            </div>
-            <div class="row align-items-center rowContent">
-              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn2"></span>QN2</div>
-              <div class="col-5 text-right">282,366.54</div>
-              <div class="col-3 pr-0 totalvalue text-right">-</div>
-            </div>
-            <div class="row align-items-center rowContent">
-              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn3"></span>QN3</div>
-              <div class="col-5 text-right">366.54</div>
-              <div class="col-3 pr-0 totalvalue text-right">-</div>
-            </div>
-            <div class="row align-items-center rowContent">
-              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon qn4"></span>QN4</div>
-              <div class="col-5 text-right">66.54004041</div>
+            <div class="row align-items-center rowContent" *ngFor="let balance of account.account_infos">
+              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon {{ balance.token | lowercase }}"></span>{{ balance.token }}</div>
+              <div class="col-5 text-right">{{ balance.balance || 0 | qlc: settings.settings.displayDenomination }}</div>
               <div class="col-3 pr-0 totalvalue text-right">-</div>
             </div>
             <div class="row align-items-center rowFooter">
@@ -111,7 +96,7 @@
           </a>
         </div>
         <div class="col-3 col-md-2 price text-right positive_change">+{{ pending.amount | qlc: settings.settings.displayDenomination }}</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right positive_change">QN1</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right positive_change">{{ pending.token }}</div>
         <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
       </div>
     </div>
@@ -133,15 +118,15 @@
       </div>
       <div class="row align-items-center rowContent" *ngFor="let history of accountHistory">
         <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</span><span *ngIf="!history.timestamp">N/A</span></div>
-        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate">
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate" tooltip="View account details">
           <a [routerLink]="'/account/' + (history.link_as_account || history.account)">
             <span class="name" *ngIf="history.addressBookName">{{ history.addressBookName }}</span> 
             <span class="address">{{ history.link_as_account || history.account }}</span>
           </a>
         </div>
         <div class="col-3 col-md-2 price text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ (history.type == 'send' || history.subtype == 'send') ? '-' : '+' }}{{ history.amount | qlc: settings.settings.displayDenomination }}</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">QN1</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate"><a [routerLink]="'/transaction/' + history.hash">{{ history.hash }}</a></div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ history.token }}</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate" tooltip="View transaction details"><a [routerLink]="'/transaction/' + history.hash">{{ history.hash }}</a></div>
       </div>
     </div>
   </div>
