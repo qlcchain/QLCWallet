@@ -110,7 +110,7 @@
             <span class="address">{{ pending.account }}</span>
           </a>
         </div>
-        <div class="col-3 col-md-2 price text-right positive_change">+{{ pending.amount | rai: settings.settings.displayDenomination }}</div>
+        <div class="col-3 col-md-2 price text-right positive_change">+{{ pending.amount | qlc: settings.settings.displayDenomination }}</div>
         <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right positive_change">QN1</div>
         <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
       </div>
@@ -139,7 +139,7 @@
             <span class="address">{{ history.link_as_account || history.account }}</span>
           </a>
         </div>
-        <div class="col-3 col-md-2 price text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ (history.type == 'send' || history.subtype == 'send') ? '-' : '+' }}{{ history.amount | rai: settings.settings.displayDenomination }}</div>
+        <div class="col-3 col-md-2 price text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ (history.type == 'send' || history.subtype == 'send') ? '-' : '+' }}{{ history.amount | qlc: settings.settings.displayDenomination }}</div>
         <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">QN1</div>
         <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate"><a [routerLink]="'/transaction/' + history.hash">{{ history.hash }}</a></div>
       </div>

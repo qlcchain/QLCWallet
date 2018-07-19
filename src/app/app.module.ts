@@ -14,7 +14,7 @@ import { WalletService } from './services/wallet.service';
 import { ConfigureWalletComponent } from './components/configure-wallet/configure-wallet.component';
 import { NotificationService } from './services/notification.service';
 import { NotificationsComponent } from './components/notifications/notifications.component';
-import { RaiPipe } from './pipes/rai.pipe';
+import { QlcPipe } from './pipes/qlc.pipe';
 import { AccountsComponent } from './components/accounts/accounts.component';
 import { ApiService } from './services/api.service';
 import { AddressBookService } from './services/address-book.service';
@@ -61,7 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WelcomeComponent,
     ConfigureWalletComponent,
     NotificationsComponent,
-    RaiPipe,
+    QlcPipe,
     SqueezePipe,
     AccountsComponent,
     SendComponent,

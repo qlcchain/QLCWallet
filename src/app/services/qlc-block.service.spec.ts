@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { QLCBlockService } from './qlc-block.service';
 
-describe('NanoBlockService', () => {
+describe('QlcBlockService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [QLCBlockService]

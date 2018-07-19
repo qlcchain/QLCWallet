@@ -13,7 +13,7 @@
           <span *ngIf="blockType == 'open'">Receive</span>
           <span *ngIf="blockType == 'receive'">Receive</span>
         </span>
-        <span style="display:block; font-size: 32px;">{{ transaction?.amount | rai: settings.settings.displayDenomination }}</span>
+        <span style="display:block; font-size: 32px;">{{ transaction?.amount | qlc: settings.settings.displayDenomination }}</span>
         <span *ngIf="amountRaw.gt(0)" style="display:block; font-size: 12px;">+{{ amountRaw.toString(10) }} raw</span>
       </div>
       <div class="uk-card uk-card-default uk-width-1-1 uk-text-center" *ngIf="blockType == 'change'">
@@ -77,7 +77,7 @@
         <div class="uk-margin" *ngIf="transaction?.contents?.balance">
           <label class="uk-form-label">Balance:</label>
           <div class="uk-form-controls uk-text-truncate">
-            {{ (isStateBlock ? getBalanceFromDec(transaction?.contents?.balance) : getBalanceFromHex(transaction?.contents?.balance)) | rai: settings.settings.displayDenomination }}<br>
+            {{ (isStateBlock ? getBalanceFromDec(transaction?.contents?.balance) : getBalanceFromHex(transaction?.contents?.balance)) | qlc: settings.settings.displayDenomination }}<br>
             <span class="uk-text-small">{{ transaction?.contents?.balance }}</span>
           </div>
         </div>

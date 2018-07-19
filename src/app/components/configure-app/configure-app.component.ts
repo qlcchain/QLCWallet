@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {WalletService} from "../../services/wallet.service";
-import {NotificationService} from "../../services/notification.service";
-import {AppSettingsService} from "../../services/app-settings.service";
-import {PriceService} from "../../services/price.service";
-import {PowService} from "../../services/pow.service";
-import {WorkPoolService} from "../../services/work-pool.service";
-import {AddressBookService} from "../../services/address-book.service";
-import {ApiService} from "../../services/api.service";
-import {LedgerService, LedgerStatus} from "../../services/ledger.service";
-import {LangService} from "../../services/lang.service";
-import BigNumber from "bignumber.js";
+import { WalletService } from '../../services/wallet.service';
+import { NotificationService } from '../../services/notification.service';
+import { AppSettingsService } from '../../services/app-settings.service';
+import { PriceService } from '../../services/price.service';
+import { PowService } from '../../services/pow.service';
+import { WorkPoolService } from '../../services/work-pool.service';
+import { AddressBookService } from '../../services/address-book.service';
+import { ApiService } from '../../services/api.service';
+import { LedgerService, LedgerStatus } from '../../services/ledger.service';
+import { LangService } from '../../services/lang.service';
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-configure-app',
@@ -20,9 +20,9 @@ export class ConfigureAppComponent implements OnInit {
   wallet = this.walletService.wallet;
 
   denominations = [
-    { name: 'NANO (1 Mnano)', value: 'mnano' },
-    { name: 'knano (0.001 Mnano)', value: 'knano' },
-    { name: 'nano (0.000001 Mnano)', value: 'nano' },
+    { name: 'QLC (1 Mqlc)', value: 'mqlc' },
+    { name: 'kqlc (0.001 Mqlc)', value: 'kqlc' },
+    { name: 'qlc (0.000001 Mqlc)', value: 'qlc' },
   ];
   selectedDenomination = this.denominations[0].value;
 
@@ -88,9 +88,9 @@ export class ConfigureAppComponent implements OnInit {
     private ledgerService: LedgerService,
     private workPool: WorkPoolService,
     private price: PriceService,
-    private lang:LangService) { 
-      this.langService = lang;
-    }
+    private lang: LangService) {
+    this.langService = lang;
+  }
 
   async ngOnInit() {
     this.loadFromSettings();
@@ -105,13 +105,13 @@ export class ConfigureAppComponent implements OnInit {
     const matchingCurrency = this.currencies.find(d => d.value === settings.displayCurrency);
     this.selectedCurrency = matchingCurrency.value || this.currencies[0].value;
 
-    const matchingDenomination = this.denominations.find(d => d.value == settings.displayDenomination);
+    const matchingDenomination = this.denominations.find(d => d.value === settings.displayDenomination);
     this.selectedDenomination = matchingDenomination.value || this.denominations[0].value;
 
-    const matchingStorage = this.storageOptions.find(d => d.value == settings.walletStore);
+    const matchingStorage = this.storageOptions.find(d => d.value === settings.walletStore);
     this.selectedStorage = matchingStorage.value || this.storageOptions[0].value;
 
-    const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value == settings.lockInactivityMinutes);
+    const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value === settings.lockInactivityMinutes);
     this.selectedInactivityMinutes = matchingInactivityMinutes ? matchingInactivityMinutes.value : this.inactivityOptions[4].value;
 
     const matchingLockOption = this.lockOptions.find(d => d.value === settings.lockOnClose);
@@ -119,7 +119,7 @@ export class ConfigureAppComponent implements OnInit {
 
     const matchingPowOption = this.powOptions.find(d => d.value === settings.powSource);
     this.selectedPoWOption = matchingPowOption ? matchingPowOption.value : this.powOptions[0].value;
-    }
+  }
 
   async updateAppSettings() {
     const newStorage = this.selectedStorage;
@@ -131,8 +131,8 @@ export class ConfigureAppComponent implements OnInit {
 
     const newSettings = {
       walletStore: newStorage,
-      lockOnClose: new Number(this.selectedLockOption),
-      lockInactivityMinutes: new Number(this.selectedInactivityMinutes),
+      lockOnClose: this.selectedLockOption,
+      lockInactivityMinutes: this.selectedInactivityMinutes,
       displayDenomination: this.selectedDenomination,
       lang: newLang
     };
@@ -158,27 +158,41 @@ export class ConfigureAppComponent implements OnInit {
   async clearWorkCache() {
     const UIkit = window['UIkit'];
     try {
-      await UIkit.modal.confirm('<p style="text-align: center;">You are about to delete all locally cached Proof of Work values<br><br><b>Are you sure?</b></p>');
+      const confirmMessage = `<p style="text-align: center;">
+      You are about to delete all locally cached Proof of Work values
+      <br><br><b>Are you sure?</b></p>`;
+      await UIkit.modal.confirm(confirmMessage);
       this.workPool.clearCache();
       this.notifications.sendSuccess(`Successfully cleared the work cache!`);
-    } catch (err) {}
+    } catch (err) {
+
+    }
   }
 
   async clearWalletData() {
     const UIkit = window['UIkit'];
     try {
-      await UIkit.modal.confirm('<p style="text-align: center;">You are about to delete all of your wallet data stored in NanoVault!<br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>');
+      const confirmMessage = `<p style="text-align: center;">
+      You are about to delete all of your wallet data stored in NanoVault!<br><b>Make sure you have your seed backed up!!
+      </b><br><br><b>Are you sure?</b></p>`;
+      await UIkit.modal.confirm(confirmMessage);
       this.walletService.resetWallet();
       this.walletService.removeWalletData();
 
       this.notifications.sendSuccess(`Successfully deleted all wallet data!`);
-    } catch (err) {}
+    } catch (err) {
+
+    }
   }
 
   async clearAllData() {
     const UIkit = window['UIkit'];
     try {
-      await UIkit.modal.confirm('<p style="text-align: center;">You are about to delete ALL of your data stored in NanoVault.<br>This includes all of your wallet data, your address book, and your application settings!<br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>');
+      const confirmMessage = `<p style="text-align: center;">
+      You are about to delete ALL of your data stored in NanoVault.<br>
+      This includes all of your wallet data, your address book, and your application settings!
+      <br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>`;
+      await UIkit.modal.confirm(confirmMessage);
       this.walletService.resetWallet();
       this.walletService.removeWalletData();
 
@@ -189,6 +203,8 @@ export class ConfigureAppComponent implements OnInit {
       this.loadFromSettings();
 
       this.notifications.sendSuccess(`Successfully deleted ALL locally stored data!`);
-    } catch (err) {}
+    } catch (err) {
+
+    }
   }
 }
