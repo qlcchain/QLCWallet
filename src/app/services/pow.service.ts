@@ -97,7 +97,7 @@ export class PowService {
       this.webGLAvailable = false;
       return false;
     }
-  };
+  }
 
   /**
    * Gets the next item in the queue and sends it to be processed
