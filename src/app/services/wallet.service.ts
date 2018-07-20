@@ -531,7 +531,7 @@ export class WalletService {
 
       walletAccount.frontier = frontiers.frontiers[accountID] || null;
 
-      walletAccount.account_info = await this.api.accountInfo(accountID);
+      //walletAccount.account_info = await this.api.accountInfo(accountID);
 
       // Look at the accounts latest block to determine if they are using state blocks
       // if (walletAccount.frontier && frontierBlocks.blocks[walletAccount.frontier]) {

@@ -1,0 +1,132 @@
+@import "~scss/mixins";
+.sendTokens {
+	padding-top: 40px;
+	padding-bottom: 40px;
+	.second {
+		margin-top: 15px;
+	}
+	.balance {
+		@include latoBold;
+		padding-left: 30px;
+	}
+	.fiat {
+		@include latoBold;
+		color: $textLight;
+	}
+	.toaccount {
+    position: absolute;
+    top: 16px;
+    width: 90%;
+    height: 38px;
+    border-right: none;
+  }
+  .success {
+    border: 1px solid $greenLight;
+  }
+  .dangerLeft {
+    border-bottom: 1px solid $redLight;
+    border-top: 1px solid $redLight;
+    border-left: 1px solid $redLight;
+  }
+  .dangerRight {
+    border-bottom: 1px solid $redLight;
+    border-top: 1px solid $redLight;
+    border-right: 1px solid $redLight;
+  }
+
+	button.btn-outline-secondary {
+		margin-top: auto; 
+		background-color: transparent;
+		border: 1px solid $textLight;
+		border-left: none;
+		color: $default;
+		border-radius: 0;
+		text-shadow: none;
+	}
+	button.btn-outline-secondary:hover {
+		text-decoration: underline;
+	}
+	button.btn-outline-secondary:focus,.btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle,.btn-outline-secondary:not(:disabled):not(.disabled):active:focus, .btn-outline-secondary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-secondary.dropdown-toggle:focus {
+		box-shadow: none;
+		outline: 0;
+		background-color: transparent;
+		color: $default;
+		border-color: $textLight;
+	}
+	button.btn-outline-secondary:active {
+		text-decoration: underline;
+	}
+	.inlineForm,.inlineForm2 {
+		border: 0;
+		border-top: 1px solid $textLight;
+		border-bottom: 1px solid $textLight;
+		background: #fff url('~assets/img/separator_input.png') no-repeat left 0 center;
+		background-size: 1px 34px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	.inlineForm2 {
+		border-radius: 0;
+		border-right: 1px solid $textLight;	
+	}
+	.input-group-text {
+		@include latoBold;
+		border-radius: 0;
+		border: 1px solid $textLight;
+		border-right: none;
+		background: transparent;
+		width: 65px;
+		font-size: 13px;
+	}
+	.input-group-text.maxLink {
+		border: 1px solid $textLight;
+		border-left: none;
+		color: $default;
+		width: auto;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	.maxLink:hover {
+		text-decoration: underline;
+	}
+	.rowAmount {
+		@include lato;
+		font-size: 13px;
+		height: 58px;
+		padding-left: 20px;
+		padding-right: 20px;
+		color: $text;
+		padding-top: 10px;
+		height: auto;
+	}
+
+}
+
+.confirm-title {
+  font-weight: bolder;
+  display: block;
+  font-size: 24px;
+}
+
+.confirm-currency {
+  font-weight: bolder;
+  display: block;
+  font-size: 20px;
+}
+
+.confirm-subtitle {
+  display: block;
+  font-size: 10px;
+}
+
+
+@media (max-width: 12450px) {
+  .br-spacer {
+    display: block;
+  }
+}
+@media (max-width: 959px) {
+  .br-spacer {
+    display: none;
+  }
+}

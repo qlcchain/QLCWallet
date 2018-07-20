@@ -60,7 +60,7 @@
               <div class="col-3 pr-0 text-right">Value</div>
             </div>
             <div class="row align-items-center rowContent" *ngFor="let balance of account.account_infos">
-              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon {{ balance.token | lowercase }}"></span>{{ balance.token }}</div>
+              <div class="col-4 pl-0 text-truncate"><span class="tokenIcon {{ balance.token | lowercase }}"></span>{{ balance.symbol }}</div>
               <div class="col-5 text-right">{{ balance.balance || 0 | qlc: settings.settings.displayDenomination }}</div>
               <div class="col-3 pr-0 totalvalue text-right">-</div>
             </div>

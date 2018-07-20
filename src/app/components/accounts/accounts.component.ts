@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WalletService } from '../../services/wallet.service';
+import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
 import { ModalService } from '../../services/modal.service';
 import { AppSettingsService } from '../../services/app-settings.service';
@@ -17,12 +18,24 @@ export class AccountsComponent implements OnInit {
 
   constructor(
     private walletService: WalletService,
+    private api: ApiService,
     private notificationService: NotificationService,
     public modal: ModalService,
     public settings: AppSettingsService,
-    private ledger: LedgerService) { console.log(this.wallet); }
+    private ledger: LedgerService) { 
+      console.log(this.wallet); 
+      this.loadBalances();
+    }
 
   async ngOnInit() {
+  }
+
+  async loadBalances() {
+    for (let i = 0; i < this.accounts.length; i++) {
+      console.log(this.accounts[i]);
+      this.accounts[i].account_info = await this.api.accountInfo(this.accounts[i].id);
+    }
+    //walletAccount.account_info = await this.api.accountInfo(accountID);
   }
 
   async createAccount() {
