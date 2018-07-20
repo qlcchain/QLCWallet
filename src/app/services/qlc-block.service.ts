@@ -24,8 +24,9 @@ export class QLCBlockService {
     private ledgerService: LedgerService,
     public settings: AppSettingsService) { }
 
-  async generateChange(walletAccount, tokenTypeHash, representativeAccount, ledger = false) {
-    const toAcct = await this.getAccountInfo(walletAccount.id, tokenTypeHash);
+  async generateChange(walletAccount, representativeAccount, ledger = false) {
+    const tokenTypeHash = '125998E086F7011384F89554676B69FCD86769642080CE7EED4A8AA83EF58F36';
+    const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
     if (!toAcct) {
       throw new Error(`Account of ${toAcct.token} must have an open block first`);
     }
@@ -71,13 +72,13 @@ export class QLCBlockService {
       representative: representativeAccount,
       balance: balanceDecimal,
       link: link,
-      token_hash: tokenTypeHash,
+      token: tokenTypeHash,
       signature: signature,
       work: await this.workPool.getWork(toAcct.frontier),
     };
 
     if (!signature) {
-      blockData.signature = this.signStateBlock(blockData, walletAccount.id.keyPair);
+      blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
     }
 
     const processResponse = await this.api.process(blockData);
@@ -92,7 +93,7 @@ export class QLCBlockService {
   }
 
   async generateSend(walletAccount, toAccountID, tokenTypeHash, rawAmount, ledger = false) {
-    const fromAccount = await this.getAccountInfo(walletAccount.id, tokenTypeHash);
+    const fromAccount = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
     if (!fromAccount) {
       throw new Error(`Unable to get account information for ${walletAccount.id}`);
     }
@@ -138,15 +139,17 @@ export class QLCBlockService {
       previous: fromAccount.frontier,
       representative: representative,
       balance: remainingDecimal,
-      token_type: tokenTypeHash,
+      token: tokenTypeHash,
       link: this.util.account.getAccountPublicKey(toAccountID),
       work: await this.workPool.getWork(fromAccount.frontier),
       signature: signature,
     };
 
     if (!signature) {
-      blockData.signature = this.signStateBlock(blockData, walletAccount.id.keyPair);
+      blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
     }
+
+    console.log(JSON.stringify(blockData));
 
     const processResponse = await this.api.process(blockData);
     if (!processResponse || !processResponse.hash) {
@@ -165,7 +168,7 @@ export class QLCBlockService {
     const srcAmount = new BigNumber(srcBlockInfo.blocks[sourceBlock].amount);
     const tokenTypeHash = srcBlockInfo.blocks[sourceBlock].token_hash;
 
-    const toAcct = await this.getAccountInfo(walletAccount.id, tokenTypeHash);
+    const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
 
     let blockData: any = {};
     let workBlock = null;
@@ -216,14 +219,14 @@ export class QLCBlockService {
       previous: previousBlock,
       representative: representative,
       balance: newBalanceDecimal,
-      token_type: tokenTypeHash,
+      token: tokenTypeHash,
       link: sourceBlock,
       signature: signature,
       work: null
     };
 
     if (!signature) {
-      blockData.signature = this.signStateBlock(blockData, walletAccount.id.keyPair);
+      blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
     }
 
     if (!this.workPool.workExists(workBlock)) {
@@ -242,13 +245,6 @@ export class QLCBlockService {
     }
   }
 
-  async getAccountInfo(account, tokenHash) {
-    const info = await this.api.accountInfo(account);
-    const frontiers = info.frontiers;
-
-    return frontiers ? frontiers.filter(frontier => frontier.token_hash === tokenHash) : null;
-  }
-
   signStateBlock(stateBlock, keyPair) {
     const context = blake.blake2bInit(32, null);
     blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
@@ -257,15 +253,25 @@ export class QLCBlockService {
     blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.representative)));
     blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.balance));
     blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.link));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token_hash));
+    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token));
     const hashBytes = blake.blake2bFinal(context);
 
+    console.log('data: ' + this.toHexString(new Uint8Array(hashBytes)));
     const privKey = keyPair.secretKey;
+    console.log('privKey: ' + this.toHexString(new Uint8Array(privKey)));
+    console.log('publicKey: ' + this.toHexString(new Uint8Array(keyPair.publicKey)));
     const signed = nacl.sign.detached(hashBytes, privKey);
+    console.log('sign: ' + this.toHexString(new Uint8Array(signed)));
+    // const verify = nacl.sign.detached.verify(hashBytes, signed, keyPair.publicKey);
+    // console.log(verify);
+
     const signature = this.util.hex.fromUint8(signed);
 
     return signature;
   }
+
+  toHexString = bytes =>
+    bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'))
 
   sendLedgerDeniedNotification() {
     this.notifications.sendWarning(`Transaction denied on Ledger device`);

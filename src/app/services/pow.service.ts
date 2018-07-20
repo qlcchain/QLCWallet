@@ -23,14 +23,14 @@ export class PowService {
    * Determine the best PoW Method available for this browser
    */
   determineBestPoWMethod(): PoWSource {
-    if (this.hasWebGLSupport()) {
-      return 'clientWebGL';
-    }
+    // if (this.hasWebGLSupport()) {
+    //   return 'clientWebGL';
+    // }
 
-    // For now, server is better than a CPU default (For Mobile)
-    if (this.hasWorkerSupport()) {
-      return 'clientCPU';
-    }
+    // // For now, server is better than a CPU default (For Mobile)
+    // if (this.hasWorkerSupport()) {
+    //   return 'clientCPU';
+    // }
 
     return 'server';
   }

@@ -70,4 +70,26 @@ export class ApiService {
   async tokens(): Promise<{ tokens: any }> {
     return await this.request('tokens', {});
   }
+
+  async tokenByName(token_name): Promise<{ token_info: any }> {
+    const tokenRespone = await this.tokens();
+    const tokens = tokenRespone.tokens;
+
+    let token = null;
+
+    Object.keys(tokens).map(token_hash => {
+      if (tokens.token_hash.token_name === token_name) {
+        token = tokens.token_hash;
+        token.token_hash = token_hash;
+      }
+    });
+    return token;
+  }
+
+  async accountInfoByToken(account, tokenHash): Promise<any> {
+    const account_infos = await this.accountInfo(account);
+    const token_accounts = account_infos.account_infos;
+
+    return token_accounts ? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0] : null;
+  }
 }
