@@ -100,10 +100,6 @@ export class QLCBlockService {
 
     const remaining = new BigNumber(fromAccount.balance).minus(rawAmount);
     const remainingDecimal = remaining.toString(10);
-    let remainingPadded = remaining.toString(16);
-    while (remainingPadded.length < 32) {
-      remainingPadded = '0' + remainingPadded; // Left pad with 0's
-    }
 
     let blockData;
     const representative = fromAccount.representative || this.representativeAccount;
@@ -251,27 +247,20 @@ export class QLCBlockService {
     blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.account)));
     blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.previous));
     blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.representative)));
-    blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.balance));
+    // encoding balance
+    let balancePadded = new BigNumber(stateBlock.balance).toString(16);
+    while (balancePadded.length < 32) {
+      balancePadded = '0' + balancePadded; // Left pad with 0's
+    }
+    blake.blake2bUpdate(context, this.util.hex.toUint8(balancePadded));
     blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.link));
     blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token));
     const hashBytes = blake.blake2bFinal(context);
-
-    console.log('data: ' + this.toHexString(new Uint8Array(hashBytes)));
     const privKey = keyPair.secretKey;
-    console.log('privKey: ' + this.toHexString(new Uint8Array(privKey)));
-    console.log('publicKey: ' + this.toHexString(new Uint8Array(keyPair.publicKey)));
     const signed = nacl.sign.detached(hashBytes, privKey);
-    console.log('sign: ' + this.toHexString(new Uint8Array(signed)));
-    // const verify = nacl.sign.detached.verify(hashBytes, signed, keyPair.publicKey);
-    // console.log(verify);
-
     const signature = this.util.hex.fromUint8(signed);
-
     return signature;
   }
-
-  toHexString = bytes =>
-    bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'))
 
   sendLedgerDeniedNotification() {
     this.notifications.sendWarning(`Transaction denied on Ledger device`);
