@@ -33,7 +33,7 @@ export interface FullWallet {
   type: WalletType;
   seedBytes: any;
   seed: string | null;
-  //tokens: any;
+  // tokens: any;
   balance: BigNumber;
   pending: BigNumber;
   balanceRaw: BigNumber;
@@ -55,7 +55,7 @@ export class WalletService {
     type: 'seed',
     seedBytes: null,
     seed: '',
-    //tokens: {},
+    // tokens: {},
     balance: new BigNumber(0),
     pending: new BigNumber(0),
     balanceRaw: new BigNumber(0),
@@ -107,7 +107,6 @@ export class WalletService {
       }
 
       // TODO: We don't really need to call to update balances, we should be able to balance on our own from here
-
       await this.reloadBalances();
     });
 
@@ -323,6 +322,7 @@ export class WalletService {
         const accountBytes = this.util.account.generateAccountSecretKeyBytes(this.wallet.seedBytes, index);
         const accountKeyPair = this.util.account.generateAccountKeyPair(accountBytes);
         const accountAddress = this.util.account.getPublicAccountID(accountKeyPair.publicKey);
+
         batchAccounts[accountAddress] = {
           index: index,
           publicKey: this.util.uint8.toHex(accountKeyPair.publicKey).toUpperCase(),
@@ -333,9 +333,10 @@ export class WalletService {
       const batchResponse = await this.api.accountsFrontiers(batchAccountsArray);
 
       // if frontiers contains this account
-      Object.keys(batchResponse).map(accountID => {
+      Object.keys(batchResponse.frontiers).map(accountID => {
         if (batchAccounts.hasOwnProperty(accountID)) {
           batchAccounts[accountID].used = true;
+          console.log(`${accountID} at ${batchAccounts[accountID].index} >>> true`);
         }
       });
 
@@ -356,9 +357,9 @@ export class WalletService {
 
       if (usedIndices.length > 0) {
         for (let i = 0; i < usedIndices.length - 1; i++) {
-          this.addWalletAccount(usedIndices[i], false);
+          // add account and reload balance when add complete
+          this.addWalletAccount(usedIndices[i], (i === usedIndices.length - 1));
         }
-        this.addWalletAccount(usedIndices.length - 1, true);
       } else {
         this.addWalletAccount();
       }
@@ -435,6 +436,13 @@ export class WalletService {
       account_info: {}
     };
 
+    // FIXME: remove
+    //     console.log(`createSeedAccount: seed: ${this.util.uint8.toHex(accountBytes)},
+    // index: ${index},
+    // private: ${this.util.uint8.toHex(accountKeyPair.secretKey)},
+    // public: ${this.util.uint8.toHex(accountKeyPair.publicKey)},
+    // account: ${accountName}`);
+
     return newAccount;
   }
 
@@ -501,7 +509,7 @@ export class WalletService {
     const accountIDs = this.wallet.accounts.map(a => a.id);
     const accounts = await this.api.accountsBalances(accountIDs);
     const frontiers = await this.api.accountsFrontiers(accountIDs);
-    //this.wallet.tokens = await this.api.tokens();
+    // this.wallet.tokens = await this.api.tokens();
     // const allFrontiers = [];
     // for (const account in frontiers.frontiers) {
     //   allFrontiers.push({ account, frontier: frontiers.frontiers[account] });
@@ -531,7 +539,7 @@ export class WalletService {
 
       walletAccount.frontier = frontiers.frontiers[accountID] || null;
 
-      //walletAccount.account_info = await this.api.accountInfo(accountID);
+      // walletAccount.account_info = await this.api.accountInfo(accountID);
 
       // Look at the accounts latest block to determine if they are using state blocks
       // if (walletAccount.frontier && frontierBlocks.blocks[walletAccount.frontier]) {
@@ -591,7 +599,7 @@ export class WalletService {
 
     this.wallet.accounts.push(newAccount);
     this.websocket.subscribeAccounts([accountID]);
-console.log('loadWalletAccount');
+    console.log('loadWalletAccount');
     return newAccount;
   }
 

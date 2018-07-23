@@ -22,10 +22,10 @@ export class AccountsComponent implements OnInit {
     private notificationService: NotificationService,
     public modal: ModalService,
     public settings: AppSettingsService,
-    private ledger: LedgerService) { 
-      console.log(this.wallet); 
-      this.loadBalances();
-    }
+    private ledger: LedgerService) {
+    console.log(this.wallet);
+    this.loadBalances();
+  }
 
   async ngOnInit() {
   }
@@ -35,7 +35,7 @@ export class AccountsComponent implements OnInit {
       console.log(this.accounts[i]);
       this.accounts[i].account_info = await this.api.accountInfo(this.accounts[i].id);
     }
-    //walletAccount.account_info = await this.api.accountInfo(accountID);
+    // walletAccount.account_info = await this.api.accountInfo(accountID);
   }
 
   async createAccount() {
