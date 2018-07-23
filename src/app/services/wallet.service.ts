@@ -557,7 +557,13 @@ export class WalletService {
 
     // Make sure any frontiers are in the work pool
     // If they have no frontier, we want to use their pub key?
-    const hashes = this.wallet.accounts.map(account => account.frontier || this.util.account.getAccountPublicKey(account.id));
+    const hashes = [];
+    this.wallet.accounts.map(account => {
+      const token_fontiers = account.frontier;
+      Object.keys(token_fontiers).map(token_account => {
+        hashes.push(token_fontiers[token_account]);
+      });
+    });
     hashes.forEach(hash => this.workPool.addWorkToCache(hash));
 
     this.wallet.balance = walletBalance;

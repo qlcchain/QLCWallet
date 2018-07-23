@@ -280,7 +280,6 @@ export class SendComponent implements OnInit {
       this.notificationService.sendError(errMessage);
     }
 
-
     this.confirmingTransaction = false;
 
     await this.walletService.reloadBalances();
