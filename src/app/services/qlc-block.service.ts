@@ -34,10 +34,6 @@ export class QLCBlockService {
     let blockData;
     const balance = new BigNumber(toAcct.balance);
     const balanceDecimal = balance.toString(10);
-    let balancePadded = balance.toString(16);
-    while (balancePadded.length < 32) {
-      balancePadded = '0' + balancePadded; // Left pad with 0's
-    }
 
     const link = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -162,7 +158,7 @@ export class QLCBlockService {
   async generateReceive(walletAccount, sourceBlock, ledger = false) {
     const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
     const srcAmount = new BigNumber(srcBlockInfo.blocks[sourceBlock].amount);
-    const tokenTypeHash = srcBlockInfo.blocks[sourceBlock].token_hash;
+    const tokenTypeHash = sourceBlock.token;
 
     const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
 
@@ -176,10 +172,6 @@ export class QLCBlockService {
 
     const newBalance = openEquiv ? srcAmount : new BigNumber(toAcct.balance).plus(srcAmount);
     const newBalanceDecimal = newBalance.toString(10);
-    let newBalancePadded = newBalance.toString(16);
-    while (newBalancePadded.length < 32) {
-      newBalancePadded = '0' + newBalancePadded; // Left pad with 0's
-    }
 
     // We have everything we need, we need to obtain a signature
     let signature = null;

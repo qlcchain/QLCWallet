@@ -99,7 +99,7 @@ export class WalletService {
             const lockMessage = 'New incoming transaction - unlock the wallet to receive it!';
             this.notifications.sendWarning(lockMessage, { length: 0, identifier: 'pending-locked' });
           }
-          this.addPendingBlock(walletAccount.id, transaction.hash, transaction.amount);
+          this.addPendingBlock(walletAccount.id, transaction.hash, transaction.amount, transaction.token);
           await this.processPendingBlocks();
         }
       } else if (transaction.block.type === 'state') {
@@ -123,7 +123,7 @@ export class WalletService {
         return; // Not for our wallet?
       }
 
-      this.addPendingBlock(walletAccount.id, transaction.hash, new BigNumber(0));
+      this.addPendingBlock(walletAccount.id, transaction.hash, new BigNumber(0), transaction.token);
       await this.processPendingBlocks();
     } else {
       // Not a send to us, which means it was a block posted by us.  We shouldnt need to do anything...
@@ -679,7 +679,7 @@ export class WalletService {
     return true;
   }
 
-  addPendingBlock(accountID, blockHash, amount) {
+  addPendingBlock(accountID, blockHash, amount, tokenHash) {
     if (this.successfulBlocks.indexOf(blockHash) !== -1) {
       return; // Already successful with this block
     }
@@ -687,7 +687,7 @@ export class WalletService {
     if (existingHash) {
       return; // Already added
     }
-    this.pendingBlocks.push({ account: accountID, hash: blockHash, amount: amount });
+    this.pendingBlocks.push({ account: accountID, hash: blockHash, amount: amount, token: tokenHash });
   }
 
   async loadPendingBlocksForWallet() {
@@ -706,7 +706,7 @@ export class WalletService {
         if (!pending.blocks[account].hasOwnProperty(block)) {
           continue;
         }
-        this.addPendingBlock(account, block, pending.blocks[account][block].amount);
+        this.addPendingBlock(account, block, pending.blocks[account][block].amount, pending.blocks[account][block].token_hash);
       }
     }
 
@@ -739,7 +739,7 @@ export class WalletService {
       this.successfulBlocks.push(nextBlock.hash);
 
       const receiveAmount = this.util.qlc.rawToMqlc(nextBlock.amount);
-      this.notifications.sendSuccess(`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} Nano!`);
+      this.notifications.sendSuccess(`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} QLC!`);
 
       // await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
       await this.reloadBalances();

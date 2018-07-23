@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {WalletService} from "../../services/wallet.service";
-import {NotificationService} from "../../services/notification.service";
-import {ModalService} from "../../services/modal.service";
-import {ApiService} from "../../services/api.service";
+import { WalletService } from '../../services/wallet.service';
+import { NotificationService } from '../../services/notification.service';
+import { ModalService } from '../../services/modal.service';
+import { ApiService } from '../../services/api.service';
 import * as blake from 'blakejs';
-import BigNumber from "bignumber.js";
-import {UtilService} from "../../services/util.service";
-import {WorkPoolService} from "../../services/work-pool.service";
-import {AppSettingsService} from "../../services/app-settings.service";
-import {QLCBlockService} from "../../services/qlc-block.service";
+import BigNumber from 'bignumber.js';
+import { UtilService } from '../../services/util.service';
+import { WorkPoolService } from '../../services/work-pool.service';
+import { AppSettingsService } from '../../services/app-settings.service';
+import { QLCBlockService } from '../../services/qlc-block.service';
 const nacl = window['nacl'];
 
 @Component({
@@ -40,20 +40,27 @@ export class ReceiveComponent implements OnInit {
     this.pendingBlocks = [];
 
     const pending = await this.api.accountsPending(this.accounts.map(a => a.id));
-    if (!pending || !pending.blocks) return;
+    if (!pending || !pending.blocks) {
+      return;
+    }
 
-    for (let account in pending.blocks) {
-      if (!pending.blocks.hasOwnProperty(account)) continue;
-      for (let block in pending.blocks[account]) {
-        if (!pending.blocks[account].hasOwnProperty(block)) continue;
+    for (const account in pending.blocks) {
+      if (!pending.blocks.hasOwnProperty(account)) {
+        continue;
+      }
+      for (const block in pending.blocks[account]) {
+        if (!pending.blocks[account].hasOwnProperty(block)) {
+          continue;
+        }
         const pendingTx = {
           block: block,
           amount: pending.blocks[account][block].amount,
           source: pending.blocks[account][block].source,
+          tokenName: pending.blocks[account][block].token,
+          token: pending.blocks[account][block].token_hash,
           account: account,
         };
         // Account should be one of ours, so we should maybe know the frontier block for it?
-
         this.pendingBlocks.push(pendingTx);
       }
     }
@@ -62,34 +69,43 @@ export class ReceiveComponent implements OnInit {
     if (this.pendingBlocks.length) {
       const frontiers = await this.api.accountsFrontiers(this.pendingBlocks.map(p => p.account));
       if (frontiers && frontiers.frontiers) {
-        for (let account in frontiers.frontiers) {
-          if (!frontiers.frontiers.hasOwnProperty(account)) continue;
-          this.workPool.addWorkToCache(frontiers.frontiers[account]);
+        for (const account in frontiers.frontiers) {
+          if (frontiers.frontiers.hasOwnProperty(account)) {
+            const token_frontiers = frontiers.frontiers[account];
+            Object.keys(token_frontiers).map(token_account => {
+              const latest_block_hash = token_frontiers[token_account];
+              console.log(`cache work ${latest_block_hash} of token_account ${token_account} in ${account}`);
+              this.workPool.addWorkToCache(latest_block_hash);
+            });
+          }
         }
       }
     }
-
   }
 
   async loadPendingForAccount(account) {
     this.pendingBlocks = [];
 
     const pending = await this.api.pending(account, 50);
-    if (!pending || !pending.blocks) return;
+    if (!pending || !pending.blocks) {
+      return;
+    }
 
-    for (let block in pending.blocks) {
+    Object.keys(pending.blocks).map(block => {
       const pendingTx = {
         block: block,
         amount: pending.blocks[block].amount,
         source: pending.blocks[block].source,
+        tokenName: pending.blocks[block].token,
+        token: pending.blocks[block].token_hash,
         account: account,
       };
       this.pendingBlocks.push(pendingTx);
-    }
+    });
   }
 
   async getPending(account) {
-    if (!account || account == 0) {
+    if (!account || account === 0) {
       await this.loadPendingForAll();
     } else {
       await this.loadPendingForAccount(account);
@@ -99,10 +115,14 @@ export class ReceiveComponent implements OnInit {
   async receivePending(pendingBlock) {
     const sourceBlock = pendingBlock.block;
 
-    const walletAccount = this.walletService.wallet.accounts.find(a => a.id == pendingBlock.account);
-    if (!walletAccount) throw new Error(`unable to find receiving account in wallet`);
+    const walletAccount = this.walletService.wallet.accounts.find(a => a.id === pendingBlock.account);
+    if (!walletAccount) {
+      throw new Error(`unable to find receiving account in wallet`);
+    }
 
-    if (this.walletService.walletIsLocked()) return this.notificationService.sendWarning(`Wallet must be unlocked`);
+    if (this.walletService.walletIsLocked()) {
+      return this.notificationService.sendWarning(`Wallet must be unlocked`);
+    }
     pendingBlock.loading = true;
 
     const newBlock = await this.nanoBlock.generateReceive(walletAccount, sourceBlock, this.walletService.isLedgerWallet());
@@ -111,7 +131,7 @@ export class ReceiveComponent implements OnInit {
       this.notificationService.sendSuccess(`Successfully received Nano!`);
     } else {
       if (!this.walletService.isLedgerWallet()) {
-        this.notificationService.sendError(`There was an error receiving the transaction`)
+        this.notificationService.sendError(`There was an error receiving the transaction`);
       }
     }
 
