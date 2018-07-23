@@ -1,5 +1,54 @@
+<div class="container addressbook">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+        <h1>Representatives Overview</h1><button type="submit" class="btn btn-primary content-header" routerLink="/manage-representatives">Manage reps</button>
+      </div>
+    </div>
+    <div class="row defaultTable content">
+        <div class="col-12 text-center">
+            You have delegated voting weight to the following representatives 
+        </div>
+      </div>
+      <div class="row defaultTable">
+          <div class="col-12">
+            <div class="row align-items-center rowTitles">
+              <div class="pl-0 col-3">STATUS</div>
+              <div class="px-0 col-5 text-left">REPRESENTATIVE</div>
+              <div class="col-4 text-right">WEIGHT</div>
+            </div>
+            <div class="row align-items-center rowContent" *ngFor="let rep of representativeOverview">
+              <div class="pl-0 col-3">
+                  <span *ngIf="rep.status === 'alert'" uk-tooltip title="This is an official representative or it has very high (10%+) voting weight.  It is recommended to change to a new representative!"><span uk-icon="icon: warning"></span> Change</span>
+                  <span *ngIf="rep.status === 'warn'" uk-tooltip title="This representative has a high voting weight (1%+).  Consider changing to a new representative."><span uk-icon="icon: warning"></span> Change</span>
+                  <span *ngIf="rep.status === 'trusted'" uk-tooltip title="This representative is marked as trusted.  No change is needed."><span uk-icon="icon: star"></span> Trusted</span>
+                  <span *ngIf="rep.status === 'known'" uk-tooltip title="This representative is saved in your list, as long as it is online, no change is needed."><span uk-icon="icon: check"></span> Known</span>
+                  <span *ngIf="rep.status === 'none'" uk-tooltip title="This representative is not known, consider switching to a known one or add this one to your list"><span uk-icon="icon: question"></span> Unknown</span>
+              </div>
+              <div class="px-0 col-5 text-left" (click)="addSelectedAccounts(rep.accounts)" style="cursor: pointer;" tooltip="Select the accounts which are using this representative">
+                  <span class="circle circle-online" *ngIf="rep.online" uk-tooltip title="Representative is online"></span>
+                  <span class="circle circle-offline" *ngIf="!rep.online" uk-tooltip title="Representative is offline"></span>
+                  <span *ngIf="rep.label">{{ rep.label }}</span> <span *ngIf="!rep.label">{{ rep.id }}</span>
+              </div>
+              <div class="col-4 text-right">
+                  {{ rep.delegatedWeight | qlc: 'mqlc' }}
+              </div>
+            
+            </div>
+            <div *ngIf="!representativeOverview || !representativeOverview.length" class="row align-items-center rowContent">
+              <div class="col-12 text-center">
+                  None of your accounts have delegated any voting weight yet, you must receive a transaction to change your representative!
+              </div>
+            </div>
+            <div class="row align-items-center rowFooter">
+                <div class="px-0 col-12 text-center">Click on a representative to select all of the accounts delegated to it</div>
+              </div>
+          </div>
+        </div>
+  </div>
+
 <div uk-grid>
   <div class="uk-width-1-1">
+    <!--
     <div uk-grid>
       <div class="uk-width-3-4@s">
         <h2>Representatives Overview</h2>
@@ -8,11 +57,11 @@
         <a routerLink="/manage-representatives" class="uk-button uk-button-secondary">Manage Reps</a>
       </div>
     </div>
-
+-->
     <!-- Send Panel -->
     <div uk-grid class="uk-animation-slide-left-small">
       <div class="uk-width-1-1">
-
+<!--
         <div class="uk-card uk-card-default">
           <div class="uk-card-body uk-padding-remove-bottom">
             <p class="uk-text-lead uk-text-center">You have delegated voting weight to the following representatives</p>
@@ -59,7 +108,7 @@
           </div>
         </div>
       </div>
-
+-->
       <!--<div class="uk-width-1-1 uk-margin-small-top">-->
         <!---->
       <!--</div>-->

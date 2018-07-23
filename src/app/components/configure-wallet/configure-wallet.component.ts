@@ -8,7 +8,7 @@ import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 @Component({
   selector: 'app-configure-wallet',
   templateUrl: './configure-wallet.component.html',
-  styleUrls: ['./configure-wallet.component.css']
+  styleUrls: ['./configure-wallet.component.scss']
 })
 export class ConfigureWalletComponent implements OnInit {
   wallet = this.walletService.wallet;

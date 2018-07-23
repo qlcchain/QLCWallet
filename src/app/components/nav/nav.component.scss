@@ -55,12 +55,12 @@ nav {
     		padding-bottom: 60px;
 		}
 		> li.wallet {
-			margin-left: 215px;
+			margin-left: 100px;
 			@media(max-width: 992px) {
 				margin-left: 0;
 			}
 			@media (max-width: 1199px) and (min-width: 992px) {
-				margin-left: 30px;
+				margin-left: 0;
 			}
 		}
 		> li.nav-item {
@@ -104,6 +104,9 @@ nav {
 			}
 			.settings i {
 				background: url('~assets/img/qlc-icon-settings.svg');
+			}
+			.receive i {
+				background-image: url('~assets/img/qlc-icon-receive.svg');
 			}
 			.settings .more {
 				height: 20px;
@@ -181,13 +184,12 @@ nav {
 				@media(max-width: 767px) {
 					padding: 0.6rem 0.55rem;
 				}
-				&:hover {
+				@media (max-width: 1199px) and (min-width: 992px) {
+					padding: 1.282rem 0;
 				}
 				&.active {
 					color: white;
 					background-color: $default;
-					&:hover {
-					}
 					@media(min-width: 991px) {
 
 						&:after {
@@ -207,8 +209,6 @@ nav {
 				&.locked {
 					color: white;
 					background-color: transparent;
-					&:hover {
-					}
 					@media(min-width: 991px) {
 
 						&:after {
@@ -228,18 +228,10 @@ nav {
 			}
 		}
 	}
-	@media (min-width: 1200px) {
-		.navbar-nav > li.nav-item > a.nav-link,
-		.navbar-nav > li.nav-item > a.nav-link:focus {
-		}
-	}
 	@media (min-width: 992px) {
 		border-color: fade-out(white, .7);
 		.navbar-brand {
 			color: fade-out(white, .3);
-			&:focus,
-			&:hover {
-			}
 		}
 		.navbar-nav > li.nav-item > a.nav-link,
 		.navbar-nav > li.nav-item > a.nav-link:focus {
@@ -267,11 +259,6 @@ nav {
 				&:focus,
 				&:hover {
 					color: darken($green, .1);
-				}
-			}
-			.navbar-nav > li.nav-item > a.nav-link,
-			.navbar-nav > li.nav-item > a.nav-link:focus {
-				&:hover {
 				}
 			}
 		}

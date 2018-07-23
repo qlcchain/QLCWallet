@@ -14,7 +14,7 @@ const nacl = window['nacl'];
 @Component({
   selector: 'app-receive',
   templateUrl: './receive.component.html',
-  styleUrls: ['./receive.component.css']
+  styleUrls: ['./receive.component.scss']
 })
 export class ReceiveComponent implements OnInit {
   accounts = this.walletService.wallet.accounts;

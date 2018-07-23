@@ -12,7 +12,7 @@ import { QLCBlockService } from '../../services/qlc-block.service';
 @Component({
   selector: 'app-representatives',
   templateUrl: './representatives.component.html',
-  styleUrls: ['./representatives.component.css']
+  styleUrls: ['./representatives.component.scss']
 })
 export class RepresentativesComponent implements OnInit {
 

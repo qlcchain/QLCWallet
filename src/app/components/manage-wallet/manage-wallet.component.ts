@@ -9,7 +9,7 @@ import * as bip from 'bip39';
 @Component({
   selector: 'app-manage-wallet',
   templateUrl: './manage-wallet.component.html',
-  styleUrls: ['./manage-wallet.component.css']
+  styleUrls: ['./manage-wallet.component.scss']
 })
 export class ManageWalletComponent implements OnInit {
 
@@ -71,7 +71,7 @@ export class ManageWalletComponent implements OnInit {
       return this.notifications.sendError(`Address books with 25 or more entries need to use the file export method.`);
     }
     const base64Data = btoa(JSON.stringify(exportData));
-    const exportUrl = `https://nanovault.io/import-address-book#${base64Data}`;
+    const exportUrl = `https://wallet.qclchain.org/import-address-book#${base64Data}`;
 
     this.addressBookQRExportUrl = exportUrl;
     this.addressBookQRExportImg = await QRCode.toDataURL(exportUrl);
@@ -80,7 +80,7 @@ export class ManageWalletComponent implements OnInit {
 
   exportAddressBookToFile() {
     if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
-    const fileName = `NanoVault-AddressBook.json`;
+    const fileName = `QLC-AddressBook.json`;
 
     const exportData = this.addressBookService.addressBook;
     this.triggerFileDownload(fileName, exportData);
@@ -117,7 +117,7 @@ export class ManageWalletComponent implements OnInit {
   exportToFile() {
     if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
 
-    const fileName = `NanoVault-Wallet.json`;
+    const fileName = `QLC-Wallet.json`;
     const exportData = this.walletService.generateExportData();
     this.triggerFileDownload(fileName, exportData);
 

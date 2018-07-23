@@ -1,12 +1,12 @@
 <div class="container accounts">
     <div class="row">
       <div class="col-12 pl-0 pr-0">
-        <h1>Accounts</h1><button type="submit" class="btn btn-primary content-header" (click)="createAccount()">ADD NEW ACCOUNT</button>
+        <h1>Accounts</h1><button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="(accounts).length">ADD NEW ACCOUNT</button>
       </div>
     </div>
     <div *ngIf="!(accounts).length" class="row defaultTable content">
         <div class="col-12 text-center">
-            You don't have any accounts yet, <a (click)="createAccount()">click here to create one</a>
+            You don't have a wallet configured, <a routerLink="/configure-wallet">click here to create or import one</a>
         </div>
     </div>
     <div *ngFor="let account of accounts" class="row defaultTable account">

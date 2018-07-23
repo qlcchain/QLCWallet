@@ -1,45 +1,51 @@
-<div class="uk-animation-slide-left-small" uk-grid>
-  <div class="uk-width-1-1">
-    <h2>Import Wallet</h2>
-
-    <div class="uk-card uk-card-default uk-margin" *ngIf="activePanel == 'error'">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Bad Import Data</h3>
+<div class="container">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 px-0">
+          <h1>Import Wallet From File</h1>
+        </div>
       </div>
-      <div class="uk-card-body">
-        <p>There was an issue reading the import data for your wallet.  Double check the address and try again.</p>
-      </div>
-    </div>
-
-    <div class="uk-card uk-card-default uk-margin" *ngIf="activePanel == 'import'">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Confirm Wallet Password</h3>
-      </div>
-      <div class="uk-card-body">
-        <p>Almost finished - just enter your wallet password to decrypt your wallet!</p>
-        <div uk-grid>
-          <div class="uk-width-1-1">
-            <input class="uk-input" [(ngModel)]="walletPassword" placeholder="Wallet Password" type="password">
+      
+      <div class="row defaultTable content">
+        <div class="col-12">
+          <div class="row align-items-center rowContent autoHP">
+            <div class="col-12 px-0 pb-3 text-center" *ngIf="activePanel == 'error'">
+                There was an issue reading the import data for your wallet.  Double check the address and try again.
+            </div>
+            <div class="col-12 px-0 pb-3 text-center" *ngIf="activePanel == 'import'">
+                Almost finished - just enter your wallet password to decrypt your wallet! 
+              </div>
+              <div class="col-12 px-0 pb-3 text-center" *ngIf="activePanel == 'imported'">
+                  Your wallet has been successfully imported!
+                </div>
+            
+          </div>
+          <div class="row align-items-center rowContent autoHP">
+            <div class="col-md-12 px-0" *ngIf="activePanel == 'import'">
+              <div class="row align-items-center rowDefault autoHP">
+                <div class="col-12 px-0 py-3 text-truncate dataName">
+                    Confirm Wallet Password
+                </div>
+                <div class="col-12 px-0 pb-3 text-left text-truncate">
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="password" class="form-control" [(ngModel)]="walletPassword" placeholder="Enter your password" type="password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your password'">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row align-items-center justify-content-center rowDefault rowButtons" >
+            <div class="col-lg-3 col-md-5 col-sm-6 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+              <button (click)="decryptWallet()" type="submit" class="btn btn-primary" *ngIf="activePanel == 'import'">Import Wallet</button>
+              <button routerLink="/accounts" type="submit" class="btn btn-primary" *ngIf="activePanel == 'imported'">View Accounts</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="uk-card-footer uk-text-right">
-        <button (click)="decryptWallet()" class="uk-button uk-button-secondary">Import Wallet</button>
-      </div>
+      
     </div>
-
-    <div class="uk-card uk-card-default uk-margin" *ngIf="activePanel == 'imported'">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Wallet Imported</h3>
-      </div>
-      <div class="uk-card-body">
-        <p>Your wallet has been successfully imported!</p>
-      </div>
-      <div class="uk-card-footer uk-text-right">
-        <button routerLink="/accounts" class="uk-button uk-button-secondary">View Accounts</button>
-      </div>
-    </div>
-
-
   </div>
-</div>
+

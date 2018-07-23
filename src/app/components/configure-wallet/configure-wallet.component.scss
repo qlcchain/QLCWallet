@@ -1,0 +1,35 @@
+@import "~scss/mixins";
+.tableQLC {
+	background-color: $default;
+	color: white;
+	min-height: 231px;
+	.rowTitles {
+		color: $superLight;
+		height: auto;
+		border-bottom: none;
+	}
+	.rowDefault {
+		@include latoBold;
+		color: white;
+		font-size: 15px;
+		border-bottom: 1px solid $superLight;
+		word-break: break-all;
+   		word-wrap: break-word;
+   		min-height: 82px;
+	}
+	a {
+		color: $superLight;
+	}
+}
+#import-from-file {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    -webkit-appearance: none;
+    opacity: 0;
+    cursor: pointer;
+}

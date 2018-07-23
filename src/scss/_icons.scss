@@ -53,6 +53,11 @@
 	background-image: url('~assets/img/qlc-icon-send-purple.svg');
 	margin-right: 0;
 }
+.icon.receive {
+	background-image: url('~assets/img/qlc-icon-receive-purple.svg');
+	margin-right: 0;
+}
+
 .icon-text-link {
 	@include latoBold;
 	color: $default;

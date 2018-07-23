@@ -68,11 +68,8 @@ export class SendComponent implements OnInit {
     private workPool: WorkPoolService,
     public settings: AppSettingsService,
     private util: UtilService) {
-    console.log(this.accounts);
     // this.accountTokens = this.accounts[0].account_info.account_infos;
     // this.selectedToken = this.accountTokens[0];
-    console.log(this.accountTokens);
-    console.log(this.selectedToken);
     if (this.accounts !== undefined && this.accounts.length > 0) {
       this.searchAddressBook();
 
@@ -80,9 +77,7 @@ export class SendComponent implements OnInit {
     this.loadBalances();
   }
   async loadBalances() {
-    console.log('loading balances');
     for (let i = 0; i < this.accounts.length; i++) {
-      console.log(this.accounts[i]);
       this.accounts[i].account_info = await this.api.accountInfo(this.accounts[i].id);
     }
 
@@ -245,7 +240,6 @@ export class SendComponent implements OnInit {
     this.fromAddressBook = this.addressBookService.getAccountName(this.fromAccountID);
     this.toAddressBook = this.addressBookService.getAccountName(this.toAccountID);
     this.workPool.addWorkToCache(this.fromAccount.frontier);
-
     this.activePanel = 'confirm';
   }
 
@@ -296,23 +290,20 @@ export class SendComponent implements OnInit {
       return;
     }
 
-    this.amountRaw = this.selectedToken.balance;
+    const amountRaw = this.selectedToken.balance;
 
-    const tokenVal = this.util.qlc.rawToQlc(this.amountRaw).floor();
+    const tokenVal = this.util.qlc.rawToQlc(amountRaw).floor();
     const maxAmount = this.getAmountValueFromBase(this.util.qlc.qlcToRaw(tokenVal));
     this.amount = maxAmount.toNumber();
     this.syncFiatPrice();
   }
 
   resetRaw() {
-    console.log('resetraw');
     this.amountRaw = new BigNumber(0);
     this.amount = '';
   }
 
   selectToken() {
-    console.log('selectToken');
-    console.log(this.selectedTokenSymbol);
     if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
       this.selectedToken = this.accountTokens.find(a => a.symbol === this.selectedTokenSymbol);
     } else {
@@ -322,10 +313,9 @@ export class SendComponent implements OnInit {
   }
 
   selectAccount() {
-    console.log('selectAccount');
     const selectedAccount = this.accounts.find(a => a.id === this.fromAccountID);
-    this.accountTokens = selectedAccount.account_info.account_infos;
-    this.selectedToken = ((this.accountTokens !== undefined && this.accountTokens.length > 0) ? this.accountTokens[0] : {});
+    this.accountTokens = ((selectedAccount !== undefined && selectedAccount.account_info.account_infos !== undefined && selectedAccount.account_info.account_infos.length > 0) ? selectedAccount.account_info.account_infos : []);
+    this.selectedToken = ((this.accountTokens !== undefined && this.accountTokens.length > 0) ? this.accountTokens[0] : []);
     this.selectedTokenSymbol = ((this.selectedToken !== undefined
       && this.selectedToken.symbol !== undefined) ? this.selectedToken.symbol : '');
     this.resetRaw();

@@ -130,3 +130,52 @@
     display: none;
   }
 }
+.confirmTransaction {
+	@include latoBold;
+	text-align: center;
+	font-size: 13px;
+	color: $text;
+	.text-label {
+		text-transform: uppercase;
+		color: $textLight;
+		font-size: 12px;
+	}
+	.sum {
+		color: $default;
+		font-size: $fontSizeTitle;
+		background: #edeef4; 
+		height:1px; 
+		margin-top:20px;
+		margin-bottom:20px;
+	}
+	.sum span {
+		background: #fff; 
+		padding:15px; 
+		position:relative; 
+		top:-15px;
+	}
+	.name {
+		font-size: $fontSizeTitle;
+	}
+	.address {
+		@include lato;
+		word-break: break-all;
+		word-wrap: break-word;
+		color: $text;
+	}
+	.address:hover {
+		color: $superLight;
+	}
+	.transfer {
+	    background: #ffffff url('~assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
+	    background-size: 24px 24px;
+	    border-top: 0;
+	    @media (max-width: 992px) {
+			background: #ffffff url('~assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
+	    	background-size: 24px 24px;
+		}
+	}
+	.fiatrate {
+		color: $textLight;
+	}
+}

@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
 @Component({
   selector: 'app-manage-representatives',
   templateUrl: './manage-representatives.component.html',
-  styleUrls: ['./manage-representatives.component.css']
+  styleUrls: ['./manage-representatives.component.scss']
 })
 export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
 

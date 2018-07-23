@@ -1,195 +1,328 @@
-<h2>Configure Wallet</h2>
-<p>Use the options below to import an existing wallet or create a new one.</p>
-
-<div *ngIf="wallet.seed && (activePanel != 3 && activePanel != 4 && activePanel != 5)" class="uk-alert uk-alert-danger">
-  <b>You already have a wallet configured</b><br>
-  Before going any further, be 100% certain you have backed up the seed to your current wallet!<br>
-  Without it, <b>any funds you have will become completely unrecoverable!</b>
+<div class="container" *ngIf="activePanel == 0">
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1>Configure Wallet</h1>
+    </div>
+  </div>
+  
+  <div class="row defaultTable content" *ngIf="wallet.seed && (activePanel != 3 && activePanel != 4 && activePanel != 5)">
+    <div class="col-12">
+      
+      <div class="row align-items-center rowDefault autoHP">
+        <div class="col-12 px-0 pt-3 pb-1 text-center warning">
+          <b>You already have a wallet configured</b><br>
+          Before going any further, be 100% certain you have backed up the seed to your current wallet!<br>
+          Without it, <b>any funds you have will become completely unrecoverable!</b>
+        </div>
+      </div>
+      
+      
+    </div>
+  </div>
+  <div class="row justify-content-md-center defaultTable content text-center" *ngIf="activePanel == 0">
+    <div class="col-12 px-4 ">
+      <p>Choose an option below to configure your wallet</p>
+    </div>
+    <div class="col-12 px-0 ">
+      <div class="row justify-content-center buttons">
+        <div class="col-xl-3 col-lg-4 col-10">
+          <a (click)="setPanel(11)"><button type="submit" class="btn btn-primary">IMPORT AN EXISTING WALLET</button></a>
+        </div>
+        <div class="col-xl-3 col-lg-4 col-10">
+          <a (click)="setPanel(1)"><button type="submit" class="btn btn-secondary">CREATE NEW WALLET</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 </div>
 
-<div uk-grid *ngIf="activePanel == 0 || activePanel == 1">
-  <div class="uk-width-1-1">
-    <div class="uk-button-group uk-width-1-1">
-      <button (click)="setPanel(0)" class="uk-button uk-width-1-2" [ngClass]="{ 'uk-button-primary': activePanel == 0, 'uk-button-secondary': activePanel != 0 }">Create New Wallet</button>
-      <button (click)="setPanel(1)" class="uk-button uk-width-1-2" [ngClass]="{ 'uk-button-primary': activePanel == 1, 'uk-button-secondary': activePanel != 1 }">Import Existing Wallet</button>
+<div class="container" *ngIf="activePanel == 1">
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1>Create new wallet</h1>
+    </div>
+  </div>
+  <div class="row defaultTable content">
+    <div class="col-12">
+      <div class="row align-items-center rowContent autoHP">
+        <div class="col-12 px-0 pb-3 text-center">When you create a new wallet, a new QLC Wallet seed will be generated which can be used to create brand new accounts on the QLC Chain network. 
+          Your QLC Wallet seed is the master key to all of your accounts and any money inside of them! 
+        </div>
+      </div>
+      <div class="row align-items-center rowContent autoHP">
+        <div class="col-12 px-0 pt-3 pb-1 text-center warning">
+          Make sure you back up your seed, write it down, and keep it incredibly safe! 
+        </div>
+        <div class="col-12 px-0 pb-1 text-center boldbig">
+          There is NO way to recover it after creation, and all funds inside WILL be lost without it!
+        </div>
+        <div class="col-12 px-0 pb-3 text-center boldbig">
+          You have been warned! 
+        </div>
+      </div>
+      <div class="row align-items-center justify-content-center rowDefault rowButtons">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+          <a (click)="createNewWallet()"><button type="submit" class="btn btn-primary">Create new wallet</button></a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="uk-card uk-card-default" *ngIf="activePanel == 0">
-  <div class="uk-card-body">
-    <p>
-      When you create a new wallet, a new Nano seed will be generated which can be used to create brand new accounts
-      on the Nano network.  Your Nano seed is the master key to all of your accounts and any money inside of them!
-    </p>
-    <div class="uk-alert-primary" uk-alert>
-      <p>Make sure you back up your seed, write it down, and keep it incredibly safe!  There is NO way to recover it after
-        creation, and all funds inside WILL be lost without it!  You have been warned!</p>
+<div class="container" *ngIf="activePanel == 3">
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1>New Wallet Created!</h1>
     </div>
   </div>
-  <div class="uk-card-footer uk-text-right">
-    <button class="uk-button uk-button-primary" (click)="createNewWallet()">Create Wallet</button>
+  
+  <div class="row defaultTable content">
+    <div class="col-12">
+      <div class="row align-items-center rowDefault">
+        <div class="col-12 px-0 text-center">Your new QLC Chain Wallet has been created! Below is the mnemonic phrase and seed for your wallet, you can use whichever you prefer. 
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  <div class="row align-items-top">
+    <div class="col-xl-6 px-0 pr-xl-3">
+      <div class="col-12 defaultTable tableQLC content">
+        <div class="row align-items-center rowTitles">
+          <div class="col-12 pb-3">
+            Wallet Mnemonic Phrase
+          </div>
+        </div>
+        <div class="row align-items-center rowDefault">
+          <div class="col-12 pb-3">
+            {{ newWalletMnemonic }}
+          </div>
+        </div>
+        <div class="row align-items-center rowButtons">
+          <div class="col-12 px-0">
+            <a tooltip="Copy Mnemonic To Clipboard" ngxClipboard [cbContent]="newWalletMnemonic" (cbOnSuccess)="copied()" class="icon-text-link"><span class="icon copy light"></span> Copy to clipboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-6 px-0 pl-xl-3">
+      <div class="col-12 defaultTable tableQLC content">
+        <div class="row align-items-center rowTitles">
+          <div class="col-12 pb-3">
+            Wallet Seed
+          </div>
+        </div>
+        <div class="row align-items-center rowDefault">
+          <div class="col-12 pb-3">
+            {{ newWalletSeed }}
+          </div>
+        </div>
+        <div class="row align-items-center rowButtons">
+          <div class="col-12 px-0 align-self-end">
+            <a tooltip="Copy Seed To Clipboard" ngxClipboard [cbContent]="newWalletSeed" (cbOnSuccess)="copied()" class="icon-text-link" ><span class="icon copy light"></span> Copy to clipboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <div class="row defaultTable content">
+    <div class="col-12">
+      <div class="row align-items-center rowContent autoHP">
+        <div class="col-12 px-0 pb-1 text-center boldbig">
+          Make sure to <span class="warning">write down your mnemonic phrase/seed</span> or save it somewhere safe, and never share it with anyone!
+          
+        </div>
+        <div class="col-12 px-0 pb-3 text-center boldbig">
+          It is the master key to all of your accounts, and the only way to recover your funds in an emergency. 
+        </div>
+      </div>
+      
+      <div class="row align-items-center justify-content-center rowDefault rowButtons">
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+          <a (click)="confirmNewSeed()"><button type="submit" class="btn btn-danger">I HAVE SAVED MY SEED/MNEMONIC</button></a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="uk-card uk-card-default" *ngIf="activePanel == 1">
-  <div class="uk-card-body">
-    <p>
-      If you already have a Nano wallet, you can import it below.  When you import a wallet, none of your existing
-      wallets or accounts are affected, and your seed is not stored anywhere besides in your local client.  Use the drop
-      down below to select which type of import you want to use.
-    </p>
-    <div uk-grid>
-      <div class="uk-width-1-1">
-        <div class="uk-form-horizontal">
-          <div class="uk-margin">
-            <label class="uk-form-label" for="form-horizontal-select">Select Import Type</label>
-            <div class="uk-form-controls">
-              <select class="uk-select" [(ngModel)]="selectedImportOption" id="form-horizontal-select">
+<div class="container" *ngIf="activePanel == 4">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 px-0">
+        <h1>Set Wallet Password</h1>
+      </div>
+    </div>
+    
+    <div class="row defaultTable content">
+      <div class="col-12">
+        <div class="row align-items-center rowContent autoHP">
+          <div class="col-12 px-0 pb-3 text-center">The last step is to set a new password for your wallet. Your password is used to encrypt the sensitive parts of your wallet when it is locked, which disables sending, receiving, creating accounts, and other operations. 
+          </div>
+          
+        </div>
+        <div class="row align-items-center rowContent autoHP">
+          <div class="col-md-6 px-0 pr-md-3">
+            <div class="row align-items-center rowDefault autoHP">
+              <div class="col-12 px-0 py-3 text-truncate dataName">
+                SET YOUR WALLET PASSWORD
+              </div>
+              <div class="col-12 px-0 pb-3 text-left text-truncate">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="password" class="form-control" [(ngModel)]="walletPasswordModel" placeholder="Enter your password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your password'">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 px-0 pl-md-3">
+            <div class="row align-items-center rowDefault autoHP">
+              <div class="col-12 px-0 pb-3 py-md-3 text-truncate dataName">
+                REPEAT YOUR WALLET PASSWORD
+              </div>
+              <div class="col-12 px-0 pb-3 text-left text-truncate">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="password" class="form-control" (keyup.enter)="saveWalletPassword()" [(ngModel)]="walletPasswordConfirmModel" placeholder="Repeat Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Repeat Password'">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row align-items-center justify-content-center rowDefault rowButtons">
+          <div class="col-lg-3 col-md-5 col-sm-6 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+            <button (click)="saveWalletPassword()" type="submit" class="btn btn-primary">SET WALLET PASSWORD</button>
+          </div>
+          <div class="col-12 boldBig text-center pt-4">
+            If you lose your password, you can always restore your wallet using your seed.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<div class="container" *ngIf="activePanel == 5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 px-0">
+        <h1>Wallet Configured!</h1>
+      </div>
+    </div>
+    
+    <div class="row defaultTable content">
+      <div class="col-12">
+        <div class="row align-items-center rowContent autoHP">
+          <div class="col-12 px-0 pb-3 text-center">
+            Your wallet has been configured and you are ready to send and receive QLC Chain Tokens! 
+          </div>
+          
+        </div>
+        
+        <div class="row align-items-center justify-content-center rowDefault rowButtons">
+          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+            <button routerLink="/accounts" type="submit" class="btn btn-primary">VIEW ACCOUNT</button>
+          </div>
+          <div class="col-12 boldBig text-center pt-4">
+            If you lose your password, you can always restore your wallet using your seed.
+          </div>
+          <div class="col-12 boldBig text-center pt-4" *ngIf="walletService.isLedgerWallet()">
+            Press the Ledger status bar on the left side to reload your Ledger when connecting or disconnecting it.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="activePanel == 11">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 px-0">
+        <h1>Import Existing Wallet</h1>
+      </div>
+    </div>
+    <div class="row defaultTable content">
+      <div class="col-12">
+        <div class="row align-items-center rowContent autoHP">
+          <div class="col-12 px-0 pb-3 text-center">If you already have a QLC Chain Wallet, you can import it below. When you import a wallet, none of your existing wallets or accounts are affected, and your seed is not stored anywhere besides in your local client. Use the drop down below to select which type of import you want to use. 
+          </div>
+          
+        </div>
+        <div class="row align-items-center rowContent autoHP">
+          <div class="col-12 px-0 pt-3 text-truncate dataName">Import type</div>
+          <div class="col-12 px-0 pt-3 pb-3 text-left text-truncate">
+            <div class="form-group">
+              <select class="custom-select" [(ngModel)]="selectedImportOption">
                 <option *ngFor="let option of importOptions" [value]="option.value">{{ option.name }}</option>
               </select>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <hr class="uk-divider-icon" style="margin-top: 10px;">
-
-    <div uk-grid *ngIf="selectedImportOption === 'file'">
-      <div class="uk-width-1-1">
-        <p>
-          If you have saved your wallet to a file using NanoVault before, use the button below to import it.
-        </p>
-      </div>
-    </div>
-    <div uk-grid *ngIf="selectedImportOption === 'seed'" class="uk-margin-top">
-      <div class="uk-width-1-1">
-        <p>
-          Enter your 64 character seed from any Nano wallet to import it below.
-        </p>
-        <input type="text" class="uk-input" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedModel" placeholder="Your QLC Backup Seed">
-      </div>
-    </div>
-    <div uk-grid *ngIf="selectedImportOption === 'mnemonic'" class="uk-margin-top">
-      <div class="uk-width-1-1">
-        <p>
-          Enter your wallet mnemonic phrase generated from any Nano wallet to import it below.
-        </p>
-        <textarea class="uk-textarea" rows="3" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedMnemonicModel" placeholder="Your QLC Backup Mnemonic Phrase"></textarea>
-      </div>
-    </div>
-    <div uk-grid *ngIf="selectedImportOption === 'ledger'" class="uk-margin-top">
-      <div class="uk-width-1-1">
-        <p>
-          Make sure you have the Nano app installed, then connect your ledger device via USB (Chrome/Opera only). <a href="http://blog.nanovault.io/guides/use-your-ledger-device-with-nanovault/" target="_blank">Learn More</a><br>
-          <br>
-        </p>
-        <div *ngIf="ledger.status === ledgerStatus.NOT_CONNECTED" class="uk-alert uk-alert-warning">
-          <b>Ledger Device Not Connected</b><br>
-          Connect your ledger device via USB and make sure you have the Nano app installed, then press the button below to retry
+        <div class="row align-items-center rowContent autoHP" *ngIf="selectedImportOption === 'seed'">
+          <div class="col-12 px-0 py-3 text-truncate dataName">64 character seed</div>
+          <div class="col-12 px-0 pb-3 text-left text-truncate">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedModel" placeholder="Enter any QLC Chain Wallet’s 64 character seed" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter any QLC Chain Wallet’s 64 character seed'">
+              </div>
+            </div>
+          </div>
         </div>
-        <div *ngIf="ledger.status === ledgerStatus.LOCKED" class="uk-alert uk-alert-warning">
-          <b>Ledger Device Locked</b><br>
-          Unlock your Ledger device, then press the button below to retry
+        <div class="row align-items-center rowContent autoHP" *ngIf="selectedImportOption === 'mnemonic'">
+          <div class="col-12 px-0 py-3 text-truncate dataName">Enter your wallet mnemonic phrase</div>
+          <div class="col-12 px-0 pb-3 text-left text-truncate">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedMnemonicModel" placeholder="Your QLC Backup Mnemonic Phrase" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your QLC Backup Mnemonic Phrase'">
+              </div>
+            </div>
+          </div>
         </div>
-        <div *ngIf="ledger.status === ledgerStatus.READY" class="uk-alert uk-alert-success">
-          <b>Ledger Device Ready</b><br>
-          Press the import button below to use your ledger wallet
+        <div class="row align-items-center rowContent autoHP" *ngIf="selectedImportOption === 'file'">
+          <div class="col-12 px-0 py-3">If you have saved your wallet to a file, use the button below to import it.</div>
+          
+        </div>
+        <div class="row align-items-center rowContent autoHP" *ngIf="selectedImportOption === 'ledger'">
+          <div class="col-12 px-0 py-3">Make sure you have the Nano app installed, then connect your ledger device via USB (Chrome/Opera only).</div>
+          <div class="col-12 px-0 py-3" *ngIf="ledger.status === ledgerStatus.NOT_CONNECTED">
+            <b>Ledger Device Not Connected</b><br>
+            Connect your ledger device via USB and make sure you have the Nano app installed, then press the button below to retry
+          </div>
+          <div class="col-12 px-0 py-3" *ngIf="ledger.status === ledgerStatus.LOCKED">
+            <b>Ledger Device Locked</b><br>
+            Unlock your Ledger device, then press the button below to retry
+          </div>
+          <div class="col-12 px-0 py-3" *ngIf="ledger.status === ledgerStatus.READY">
+            <b>Ledger Device Ready</b><br>
+            Press the import button below to use your ledger wallet
+          </div>
+          
+        </div>
+        <div class="row align-items-center justify-content-center rowDefault rowButtons">
+          <div class="col-lg-4 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+            <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'mnemonic'" (click)="importExistingWallet()">Import Wallet From Mnemonic Phrase</button>
+            <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'seed'" (click)="importExistingWallet()">Import Wallet From Seed</button>
+            <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'file'" (click)="importExistingWallet()">Import Wallet From File</button>
+            <input type="file" id="import-from-file" *ngIf="selectedImportOption === 'file'" (change)="importFromFile($event.target.files)" multiple>
+            <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'ledger' && ledger.status === ledgerStatus.READY" (click)="importLedgerWallet()">Import Wallet From Ledger</button>
+            <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'ledger' && ledger.status !== ledgerStatus.READY" (click)="importLedgerWallet(true)">Refresh Ledger Status</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="uk-card-footer uk-text-right">
-    <div *ngIf="selectedImportOption === 'file'" class="js-upload" uk-form-custom style="display: inline-block;">
-      <input type="file" id="import-from-file" (change)="importFromFile($event.target.files)" multiple>
-      <button class="uk-button uk-button-primary" type="button" tabindex="-1">Import From File</button>
-    </div>
-    <button *ngIf="selectedImportOption === 'mnemonic'" class="uk-button uk-button-primary" (click)="importExistingWallet()">Import From Mnemonic Phrase</button>
-    <button *ngIf="selectedImportOption === 'seed'" class="uk-button uk-button-primary" (click)="importExistingWallet()">Import From Seed</button>
-    <button *ngIf="selectedImportOption === 'ledger' && ledger.status === ledgerStatus.READY" class="uk-button uk-button-primary" (click)="importLedgerWallet()">Import From Ledger</button>
-    <button *ngIf="selectedImportOption === 'ledger' && ledger.status !== ledgerStatus.READY" class="uk-button uk-button-primary" (click)="importLedgerWallet(true)">Refresh Ledger Status</button>
-  </div>
 </div>
 
 
 
-<div class="uk-card uk-card-default" *ngIf="activePanel == 3">
-  <div class="uk-card-header">
-    <h3 class="uk-card-title">Wallet Created!</h3>
-  </div>
-  <div class="uk-card-body">
-    <p>
-      Your new Nano wallet has been created!  Below is the mnemonic phrase and seed for your wallet, you can use whichever you prefer.
-    </p>
-    <div class="uk-alert uk-alert-primary">
-      Make sure to write down your mnemonic phrase/seed or save it somewhere safe, and <strong>never share it with anyone!</strong><br>
-      It is the master key to all of your accounts, and the only way to recover your funds in an emergency.
-    </div>
-    <div uk-grid>
-      <div class="uk-width-1-4">Wallet Mnemonic Phrase</div>
-      <div class="uk-width-3-4">
-        {{ newWalletMnemonic }}<br>
-        <a title="Copy Mnemonic To Clipboard" ngxClipboard [cbContent]="newWalletMnemonic" (cbOnSuccess)="copied()" uk-tooltip>Copy mnemonic to clipboard</a>
-      </div>
-    </div>
-    <div uk-grid>
-      <div class="uk-width-1-4">Wallet Seed</div>
-      <div class="uk-width-3-4 uk-text-truncate">
-        {{ newWalletSeed }}<br>
-        <a title="Copy Seed To Clipboard" ngxClipboard [cbContent]="newWalletSeed" (cbOnSuccess)="copied()" uk-tooltip>Copy seed to clipboard</a>
-      </div>
-    </div>
-  </div>
-  <div class="uk-card-footer">
-    <button class="uk-button uk-button-danger" (click)="confirmNewSeed()">I've Saved My Seed/Mnemonic</button>
-  </div>
-</div>
 
-<div class="uk-card uk-card-default" *ngIf="activePanel == 4">
-  <div class="uk-card-header">
-    <h3 class="uk-card-title">Set Wallet Password</h3>
-  </div>
-  <div class="uk-card-body">
-    <p>
-      The last step is to set a new password for your wallet.  Your password is used to encrypt the sensitive parts of
-      your wallet when it is locked, which disables sending, receiving, creating accounts, and other operations.
-    </p>
-
-    <p>
-      Set your wallet password below:
-    </p>
-    <div uk-grid>
-      <div class="uk-width-1-2@m">
-        <input type="password" class="uk-input" [(ngModel)]="walletPasswordModel" placeholder="New Wallet Password">
-      </div>
-      <div class="uk-width-1-2@m">
-        <input type="password" class="uk-input" (keyup.enter)="saveWalletPassword()" [(ngModel)]="walletPasswordConfirmModel" placeholder="Confirm Wallet Password">
-      </div>
-    </div>
-  </div>
-  <div class="uk-card-footer uk-text-right">
-    <button class="uk-button uk-button-primary" (click)="saveWalletPassword()">Set Wallet Password</button>
-  </div>
-</div>
-
-<div class="uk-card uk-card-default" *ngIf="activePanel == 5">
-  <div class="uk-card-header">
-    <h3 class="uk-card-title">Wallet Configured!</h3>
-  </div>
-  <div class="uk-card-body">
-    <p>
-      Your wallet has been configured and you are ready to send and receive Nano!
-    </p>
-  </div>
-  <div class="uk-card-footer uk-text-right">
-    <button routerLink="/accounts" class="uk-button uk-button-primary">View Accounts</button>
-  </div>
-</div>
-
-<div *ngIf="(activePanel == 4 || activePanel == 5) && !walletService.isLedgerWallet()" class="uk-alert-primary" uk-alert>
-  <p><b>ProTip:</b> If you lose your password, you can always restore your wallet using your seed.</p>
-</div>
-<div *ngIf="activePanel == 5 && walletService.isLedgerWallet()" class="uk-alert-primary" uk-alert>
-  <p><b>ProTip:</b> Press the Ledger status bar on the left side to reload your Ledger when connecting or disconnecting it.</p>
-</div>

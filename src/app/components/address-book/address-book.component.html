@@ -1,74 +1,74 @@
 <div class="container addressbook" *ngIf="activePanel == 0">
-    <div class="row">
-      <div class="col-12 pl-0 pr-0">
-        <h1>Address Book</h1><button type="submit" class="btn btn-primary content-header" (click)="activePanel = 1;">Add new contact</button>
-      </div>
-    </div>
-    <div class="row defaultTable">
-      <div class="col-12" *ngIf="activePanel == 0" >
-        <div class="row align-items-center rowTitles">
-          <div class="col-md-2 pl-0 col-4">Name</div>
-          <div class="px-0 col-1 d-none d-md-block"></div>
-          <div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6">Account ID</div>
-          <div class="px-0 col-1 d-none d-md-block"></div>
-          <div class="col-md-2 col-1 px-0 price text-right d-none d-md-block">Options</div>
-        </div>
-        <div class="row align-items-center rowContent" *ngFor="let addressBook of addressBook$ | async;" [attr.data-account]="addressBook.account">
-          <div class="col-md-2 pl-0 col-4 text-truncate name" (click)="editEntry(addressBook)" >{{ addressBook.name }}</div>
-          <div class="px-0 col-1 d-none d-md-block"><a href="#" tooltip="Drag to move" class="icon drag"></a></div>
-          <div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6 text-truncate" tooltip="View account details" ><a [routerLink]="'/account/' + addressBook.account" class="address">{{ addressBook.account }}</a></div>
-          <div class="px-0 col-1 text-center"><a ngxClipboard [cbContent]="addressBook.account" (cbOnSuccess)="copied()" tooltip="Copy to clipboard" class="icon copy"></a></div>
-          <div class="col-md-2 col-1 px-0 text-right"><a (click)="deleteAddress(addressBook.account)" tooltip="Delete contact" class="icon delete"></a></div>
-        </div>
-        
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 px-0 content">
-        <p>
-          Use the address book to store a label for your own accounts and others you frequently transact with, which are visible throughout the application. 
-        </p>
-      </div>
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+      <h1>Address Book</h1><button type="submit" class="btn btn-primary content-header" (click)="activePanel = 1;">Add new contact</button>
     </div>
   </div>
-
-  <div class="container" *ngIf="activePanel == 1">
-      <div class="row">
-        <div class="col-12 px-0">
-          <h1>Add/Edit Contact</h1>
-        </div>
+  <div class="row defaultTable">
+    <div class="col-12" *ngIf="activePanel == 0" >
+      <div class="row align-items-center rowTitles">
+        <div class="col-md-2 pl-0 col-4">Name</div>
+        <div class="px-0 col-1 d-none d-md-block"></div>
+        <div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6">Account ID</div>
+        <div class="px-0 col-1 d-none d-md-block"></div>
+        <div class="col-md-2 col-1 px-0 price text-right d-none d-md-block">Options</div>
       </div>
-        <div class="row defaultTable content">
-          <div class="col-12">
-            <div class="row align-items-center rowContent">
-              <div class="col-md-2 px-0 text-truncate dataName">Account ID</div>
-              <div class="col-md-10 px-0 text-left text-truncate">
-                <div class="form-group">
-                  <div class="input-group">
-                    <input type="text" class="form-control" id=""  onfocus="this.placeholder = ''" onblur="this.placeholder = 'Account ID'" placeholder="Account ID" [(ngModel)]="newAddressAccount" >
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row align-items-center rowContent mobile-break">
-              <div class="col-md-2 px-0 text-truncate dataName">Name</div>
-              <div class="col-md-10 px-0 text-left text-truncate">
-                <div class="form-group">
-                  <div class="input-group">
-                    <input type="text" class="form-control" id=""  onfocus="this.placeholder = ''" onblur="this.placeholder = 'Examples: Exchange Deposit Address, Marin Trading Account, Friend’s Name, etc'" placeholder="Examples: Exchange Deposit Address, Marin Trading Account, Friend’s Name, etc"  [(ngModel)]="newAddressName" (keyup.enter)="saveNewAddress()">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row align-items-center align-items-center rowDefault">
-              <div class="col-md-2 px-0 text-truncate dataName"></div>
-              <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pr-md-2 text-center text-truncate mobile-break">
-                <button type="submit" class="btn btn-danger" (click)="cancelNewAddress()">Cancel</button>
-              </div>
-              <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pl-md-2 text-left text-truncate">
-                <button type="submit" class="btn btn-primary" (click)="saveNewAddress()">Save contact</button>
-              </div>
+      <div class="row align-items-center rowContent" *ngFor="let addressBook of addressBook$ | async;" [attr.data-account]="addressBook.account">
+        <div class="col-md-2 pl-0 col-4 text-truncate name" (click)="editEntry(addressBook)" >{{ addressBook.name }}</div>
+        <div class="px-0 col-1 d-none d-md-block"><a href="#" tooltip="Drag to move" class="icon drag"></a></div>
+        <div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6 text-truncate" tooltip="View account details" ><a [routerLink]="'/account/' + addressBook.account" class="address">{{ addressBook.account }}</a></div>
+        <div class="px-0 col-1 text-center"><a ngxClipboard [cbContent]="addressBook.account" (cbOnSuccess)="copied()" tooltip="Copy to clipboard" class="icon copy"></a></div>
+        <div class="col-md-2 col-1 px-0 text-right"><a (click)="deleteAddress(addressBook.account)" tooltip="Delete contact" class="icon delete"></a></div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 px-0 content">
+      <p>
+        Use the address book to store a label for your own accounts and others you frequently transact with, which are visible throughout the application. 
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="activePanel == 1">
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1>Add/Edit Contact</h1>
+    </div>
+  </div>
+  <div class="row defaultTable content">
+    <div class="col-12">
+      <div class="row align-items-center rowContent">
+        <div class="col-md-2 px-0 text-truncate dataName">Account ID</div>
+        <div class="col-md-10 px-0 text-left text-truncate">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Account ID'" placeholder="Account ID" [(ngModel)]="newAddressAccount" >
             </div>
           </div>
         </div>
+      </div>
+      <div class="row align-items-center rowContent mobile-break">
+        <div class="col-md-2 px-0 text-truncate dataName">Name</div>
+        <div class="col-md-10 px-0 text-left text-truncate">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Examples: Exchange Deposit Address, Marin Trading Account, Friend’s Name, etc'" placeholder="Examples: Exchange Deposit Address, Marin Trading Account, Friend’s Name, etc"  [(ngModel)]="newAddressName" (keyup.enter)="saveNewAddress()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row align-items-center align-items-center rowDefault">
+        <div class="col-md-2 px-0 text-truncate dataName"></div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pr-md-2 text-center text-truncate mobile-break">
+          <button type="submit" class="btn btn-danger" (click)="cancelNewAddress()">Cancel</button>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pl-md-2 text-left text-truncate">
+          <button type="submit" class="btn btn-primary" (click)="saveNewAddress()">Save contact</button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
