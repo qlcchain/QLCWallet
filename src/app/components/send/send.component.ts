@@ -50,7 +50,7 @@ export class SendComponent implements OnInit {
   fromAccount: any = {};
   fromAccountID: any = '';
   fromAddressBook = '';
-  toAccount: any = false;
+  // toAccount: any = false;
   toAccountID = '';
   bookContact = '';
   toAddressBook = '';
@@ -201,17 +201,22 @@ export class SendComponent implements OnInit {
     }
 
     const from = await this.api.accountInfoByToken(this.fromAccountID, this.selectedToken.token_hash);
-    const to = await this.api.accountInfoByToken(this.toAccountID, this.selectedToken.token_hash);
+    // let to = await this.api.accountInfoByToken(this.toAccountID, this.selectedToken.token_hash);
     if (!from) {
       return this.notificationService.sendError(`From account not found`);
     }
     if (this.fromAccountID === this.toAccountID) {
       return this.notificationService.sendWarning(`From and to account cannot be the same`);
     }
+
+    // if (!to) {
+    //   console.log('to account does not exit ');
+    //   to = {};
+    // }
     from.balanceBN = new BigNumber(from.balance || 0);
-    to.balanceBN = new BigNumber(to.balance || 0);
+    // to.balanceBN = new BigNumber(to.balance || 0);
     this.fromAccount = from;
-    this.toAccount = to;
+    // this.toAccount = to;
 
     // to be transfered amount
     const rawAmount = this.getAmountBaseValue(this.amount || 0);
@@ -259,7 +264,7 @@ export class SendComponent implements OnInit {
       const newHash = await this.qlcBlock.generateSend(walletAccount, this.toAccountID, this.selectedToken.token_hash, this.rawAmount,
         this.walletService.isLedgerWallet());
       if (newHash) {
-        this.notificationService.sendSuccess(`Successfully sent ${this.amount} ${this.selectedAmount.shortName}!`);
+        this.notificationService.sendSuccess(`Successfully sent ${this.amount} ${this.selectedToken.token}!`);
         this.activePanel = 'send';
         this.amount = null;
         this.amountFiat = null;
