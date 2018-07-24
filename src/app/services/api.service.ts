@@ -23,6 +23,7 @@ export class ApiService {
         if (err.status === 500 || err.status === 0) {
           this.node.setOffline(); // Hard error, node is offline
         }
+        console.log (`${data.action}, ${err.message}: ${err.statck}`);
         throw err;
       });
   }
