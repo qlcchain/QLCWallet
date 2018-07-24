@@ -80,7 +80,12 @@ nav {
 				margin-top:0;
 				background-color: $darkest;
 				border-radius: 0;
-    			border: none;
+				border: none;
+				@media(max-width: 992px) {
+					position: absolute;
+    				width: 100%;
+				}
+				
 				> .dropdown-item {
 					color: white;
 					font-size: $fontSize;

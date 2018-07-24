@@ -6,10 +6,10 @@
     </a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
     data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-    aria-label="Toggle navigation">
+    aria-label="Toggle navigation" (click)="isCollapsed = !isCollapsed" aria-expanded="false">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarResponsive">
+  <div class="collapse navbar-collapse" id="navbarResponsive" [collapse]=isCollapsed>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
         <a class="nav-link account"  routerLink="/accounts" routerLinkActive="active" >
@@ -26,15 +26,15 @@
         <a  routerLink="/receive" routerLinkActive="active" class="nav-link receive"><div><i></i><p>{{ 'NAV.receive' | translate }}</p></div></a>
       </li>
       <li class="nav-item">
-        <a routerLink="/address-book" routerLinkActive="active" class="nav-link addressbook"><div><i></i><p>Address Book</p></div></a>
+        <a routerLink="/address-book" routerLinkActive="active" class="nav-link addressbook"><div><i></i><p>{{ 'NAV.addressbook' | translate }}</p></div></a>
       </li>
       <li class="nav-item dropdown" dropdown>
-        <a (click)=false class="nav-link settings" id="navbarDropdown" dropdownToggle  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><div><i></i><p>Settings</p><span class="more"></span></div></a>
+        <a (click)=false class="nav-link settings" id="navbarDropdown" dropdownToggle  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><div><i></i><p>{{ 'NAV.settings' | translate }}</p><span class="more"></span></div></a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown"  *dropdownMenu>
-          <a routerLink="/representatives" routerLinkActive="active" class="dropdown-item" href="#">Representatives</a>
-          <a routerLink="/configure-app" routerLinkActive="active" class="dropdown-item" href="#">App Settings</a>
-          <a routerLink="/manage-wallet" routerLinkActive="active" class="dropdown-item" href="#">Manage Wallet</a>
-          <a routerLink="/configure-wallet" routerLinkActive="active" class="dropdown-item" href="#">Configure New Wallet</a>
+          <a routerLink="/representatives" routerLinkActive="active" class="dropdown-item" href="#">{{ 'NAV.representatives' | translate }}</a>
+          <a routerLink="/configure-app" routerLinkActive="active" class="dropdown-item" href="#">{{ 'NAV.appsettings' | translate }}</a>
+          <a routerLink="/manage-wallet" routerLinkActive="active" class="dropdown-item" href="#">{{ 'NAV.managewallet' | translate }}</a>
+          <a routerLink="/configure-wallet" routerLinkActive="active" class="dropdown-item" href="#">{{ 'NAV.configurenewwallet' | translate }}</a>
         </div>
       </li>
       <li class="nav-item wallet">

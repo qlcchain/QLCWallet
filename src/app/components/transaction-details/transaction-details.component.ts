@@ -8,7 +8,7 @@ import {AddressBookService} from "../../services/address-book.service";
 @Component({
   selector: 'app-transaction-details',
   templateUrl: './transaction-details.component.html',
-  styleUrls: ['./transaction-details.component.css']
+  styleUrls: ['./transaction-details.component.scss']
 })
 export class TransactionDetailsComponent implements OnInit {
   nano = 1000000000000000000000000;
@@ -23,6 +23,7 @@ export class TransactionDetailsComponent implements OnInit {
   fromAccountID = '';
   toAddressBook = '';
   fromAddressBook = '';
+  token = '';
 
   transactionJSON = '';
   showBlockData = false;
@@ -53,6 +54,7 @@ export class TransactionDetailsComponent implements OnInit {
     this.fromAddressBook = '';
     this.transactionJSON = '';
     this.showBlockData = false;
+    this.token = '';
     let legacyFromAccount = '';
     this.amountRaw = new BigNumber(0);
     const hash = this.route.snapshot.params.transaction;
@@ -67,7 +69,7 @@ export class TransactionDetailsComponent implements OnInit {
     hashData.contents = hashContents;
 
     this.transactionJSON = JSON.stringify(hashData.contents, null ,4);
-
+    this.token = hashData.contents.Token_name;
     this.blockType = hashData.contents.type;
     if (this.blockType === 'state') {
       const isOpen = hashData.contents.previous === "0000000000000000000000000000000000000000000000000000000000000000";

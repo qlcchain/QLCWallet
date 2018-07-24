@@ -49,6 +49,7 @@ import { LedgerService } from './services/ledger.service';
 
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { NavComponent } from './components/nav/nav.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -96,7 +97,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     ClipboardModule,
     TooltipModule.forRoot(),
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    CollapseModule.forRoot()
   ],
   providers: [
     UtilService,

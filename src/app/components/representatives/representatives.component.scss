@@ -10,7 +10,7 @@
 }
 
 @import "~scss/mixins";
-.addressbook {
+.representatives {
 	button.btn.content-header {
 		width: auto;
 		position: absolute;
@@ -19,14 +19,13 @@
 		padding-left: 20px;
 		padding-right: 20px;
 	}
-	.rowContent {
-		.icon {
-			
-			@media(min-width: 992px) {
-				display: none;
-			}
-		}
-	}
+	.newrepresentative {
+    position: absolute;
+    top: 16px;
+    width: 90%;
+    height: 38px;
+    border-right: none;
+  }
 	.rowContent:hover {
 		.icon {
 			display: inline-block;

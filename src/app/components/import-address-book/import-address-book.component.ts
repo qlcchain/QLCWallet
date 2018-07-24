@@ -6,7 +6,7 @@ import {AddressBookService} from "../../services/address-book.service";
 @Component({
   selector: 'app-import-address-book',
   templateUrl: './import-address-book.component.html',
-  styleUrls: ['./import-address-book.component.css']
+  styleUrls: ['./import-address-book.component.scss']
 })
 export class ImportAddressBookComponent implements OnInit {
   activePanel = 'error';

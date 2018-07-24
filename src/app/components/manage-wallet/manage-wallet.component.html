@@ -1,9 +1,14 @@
 <div class="container settings">
-    <div class="row">
+    <div class="row defaultTable content nomin" *ngIf="!(accounts).length">
+        <div class="col-12 text-center">
+            {{ 'NO_WALLET_CONFIGURED' | translate }}<a routerLink='/configure-wallet'>{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+        </div>
+      </div>
+    <div class="row" *ngIf="(accounts).length">
       <div class="col-lg-6 px-0 pr-lg-3">
         <div class="col-12 px-0" *ngIf="!walletService.isLedgerWallet()">
           <div class="col-12 px-0">
-            <h1>Change Wallet Password</h1>
+            <h1>{{ 'MANAGE_WALLET.change_wallet_password' | translate }}</h1>
           </div>	
           <div class="col-12">
             <div class="row defaultTable content">
@@ -11,7 +16,7 @@
                 <div class="row align-items-center rowContent">
                   <div class="col-12 px-0">
                     <div class="input-group">
-                      <input type="password" class="form-control" [(ngModel)]="newPassword" placeholder="Enter your new password">
+                      <input type="password" class="form-control" [(ngModel)]="newPassword" placeholder="{{ 'MANAGE_WALLET.password' | translate }}">
                       
                     </div>
                   </div>
@@ -20,14 +25,14 @@
                 <div class="row align-items-center rowContent">
                   <div class="col-12 px-0">
                     <div class="input-group">
-                      <input type="password" class="form-control" [(ngModel)]="confirmPassword" placeholder="Enter your new password again">
+                      <input type="password" class="form-control" [(ngModel)]="confirmPassword" placeholder="{{ 'MANAGE_WALLET.password_confirm' | translate }}">
                       
                     </div>
                   </div>
                 </div>
                 <div class="row align-items-center rowButtons">
                   <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 text-left text-truncate">
-                    <button type="submit" (click)="changePassword()" class="btn btn-primary">Update password</button>
+                    <button type="submit" (click)="changePassword()" class="btn btn-primary">{{ 'MANAGE_WALLET.change_wallet_password_button' | translate }}</button>
                   </div>
                 </div>
               </div>
@@ -43,40 +48,24 @@
             <div class="seperator"></div>
           </div>
           <div class="col-12 px-0">
-            <h1>Export Wallet</h1>
+            <h1>{{ 'MANAGE_WALLET.export_wallet' | translate }}</h1>
           </div>	
           <div class="col-12">
             <div class="row defaultTable content">
               <div class="col-12">
                 <div class="row align-items-center rowContent autoH">
-                  <div class="col-12 px-0">
-                    Use this export tool to simplify wallet transfer to other devices. 
-                    Your data will be encrypted by your password, and then imported into NanoVault on your new device! 
-                    <br><br>
-                    The export does not contain your address book.
+                  <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_wallet_text' | translate">
                   </div>
-
                 </div>
                 <div *ngIf="showQRExport" >
                     <div class="row align-items-center rowDefault">
-                  
                         <div class="col-12 px-0 py">
-      
                           <div class="qrcode"><img [src]="QRExportImg"></div>
                         </div>
-      
-      
                       </div>
-      
                       <div class="row align-items-center rowContent autoH">
-                        
-                        <div class="col-12 px-0">
-                          Scan the QR code on any device to load your QLC Chain wallet!
-                          <br><br>
-                          If you do not have a QR code scanner, you can also import your wallet by using the URL below.
+                        <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_wallet_text2' | translate">
                         </div>
-      
-      
                       </div>
                       <div class="row align-items-center rowContent">
                         <div class="col-12 px-0">
@@ -88,16 +77,16 @@
                       </div>
                       <div class="row align-items-center rowContent">
                         <div class="col-12 px-0">
-                          <a ngxClipboard [cbContent]="QRExportUrl" (cbOnSuccess)="notifications.sendSuccess('Wallet export copied to clipboard!')" class="icon-text-link"><span class="icon copy"></span> Copy to clipboard</a>
+                          <a ngxClipboard [cbContent]="QRExportUrl" (cbOnSuccess)="notifications.sendSuccess('Wallet export copied to clipboard!')" class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
                         </div>
                       </div>
                 </div>
                 <div class="row align-items-center rowButtons">
                   <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pr-sm-2 text-left text-truncate">
-                    <button type="submit" (click)="exportToFile()" class="btn btn-primary">Export as file</button>
+                    <button type="submit" (click)="exportToFile()" class="btn btn-primary">{{ 'MANAGE_WALLET.export_as_file' | translate }}</button>
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pl-sm-2 text-left text-truncate">
-                    <button type="submit" (click)="exportWallet()" class="btn btn-primary">Export QR code</button>
+                    <button type="submit" (click)="exportWallet()" class="btn btn-primary">{{ 'MANAGE_WALLET.export_qr_code' | translate }}</button>
                   </div>
                 </div>
               </div>
@@ -110,20 +99,20 @@
             <div class="seperator"></div>
           </div>
           <div class="col-12 px-0">
-            <h1>Import Address Book</h1>
+            <h1>{{ 'MANAGE_WALLET.import_address_book' | translate }}</h1>
           </div>	
           <div class="col-12">
             <div class="row defaultTable content nomin">
               <div class="col-12">
                 <div class="row align-items-center rowContent autoH">
                   <div class="col-12 px-0">
-                    Use this option to import your address book from a file.
+                      {{ 'MANAGE_WALLET.import_address_book_text' | translate }}
                   </div>
 
                 </div>
                 <div class="row align-items-center rowButtons">
                   <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pr-sm-2 text-left text-truncate">
-                    <button type="submit" class="btn btn-primary">Upload file</button>
+                    <button type="submit" class="btn btn-primary">{{ 'MANAGE_WALLET.upload_file' | translate }}</button>
                     <input type="file" id="import-from-file" (change)="importFromFile($event.target.files)" multiple>
                     
                   </div>
@@ -140,20 +129,20 @@
             <div class="seperator"></div>
           </div>
           <div class="col-12 px-0">
-            <h1>Backup Wallet</h1>
+            <h1>{{ 'MANAGE_WALLET.backup_wallet' | translate }}</h1>
           </div>	
           <div class="col-12">
             <div class="row defaultTable content">
               <div class="col-12">
                 <div class="row align-items-center rowContent autoHP"  *ngIf="wallet.locked">
                   <div class="col-12 px-0 pb-2">
-                      To access backup options, unlock your wallet.
+                      {{ 'MANAGE_WALLET.backup_wallet_text1' | translate }}
                   </div>
                 </div>
                 <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
                   <div class="col-12 px-0 pb-2">
-                    To backup your wallet mnemonic phrase, <br>
-                    <a ngxClipboard [cbContent]="seedMnemonic()" (cbOnSuccess)="notifications.sendSuccess('Wallet mnemonic copied to clipboard!')">click here</a> to copy it to your clipboard.
+                      {{ 'MANAGE_WALLET.backup_wallet_text2' | translate }}<br>
+                    <a ngxClipboard [cbContent]="seedMnemonic()" (cbOnSuccess)="notifications.sendSuccess('Wallet mnemonic copied to clipboard!')">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
 
 
                   </div>
@@ -161,8 +150,8 @@
                 </div>
                 <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
                   <div class="col-12 px-0 py-2">
-                    To backup your wallet seed,  <br>
-                    <a ngxClipboard [cbContent]="wallet.seed" (cbOnSuccess)="notifications.sendSuccess('Wallet seed copied to clipboard!')">click here</a> to copy it to your clipboard.
+                      {{ 'MANAGE_WALLET.backup_wallet_text4' | translate }}<br>
+                    <a ngxClipboard [cbContent]="wallet.seed" (cbOnSuccess)="notifications.sendSuccess('Wallet seed copied to clipboard!')">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
                   </div>
                 </div>
               </div>
@@ -175,16 +164,13 @@
             <div class="seperator"></div>
           </div>
           <div class="col-12 px-0">
-            <h1>Export Address Book</h1>
+            <h1>{{ 'MANAGE_WALLET.export_address_book' | translate }}</h1>
           </div>	
           <div class="col-12">
             <div class="row defaultTable content">
               <div class="col-12">
                 <div class="row align-items-center rowContent autoH">
-                  <div class="col-12 px-0">
-                    Use this tool to simplify transferring your address book between devices. Use the options below to export your address book from a file or QR Code/URL. 
-                    <br><br>
-                    Your address book is not encrypted by your wallet password. 
+                  <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_address_book_text1' | translate">
                   </div>
 
 
@@ -202,11 +188,8 @@
 
                 <div class="row align-items-center rowContent autoH">
                   
-                  <div class="col-12 px-0">
-                    Scan the QR code on any device to load your QLC Chain wallet!
-                    <br><br>
-                    If you do not have a QR code scanner, you can also import your wallet by using the URL below.
-                  </div>
+                  <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_address_book_text2' | translate">
+                   </div>
 
 
                 </div>
@@ -220,7 +203,7 @@
                 </div>
                 <div class="row align-items-center rowContent">
                   <div class="col-12 px-0">
-                    <a ngxClipboard [cbContent]="addressBookQRExportUrl" (cbOnSuccess)="notifications.sendSuccess('Address book export copied to clipboard!')" class="icon-text-link"><span class="icon copy"></span> Copy to clipboard</a>
+                    <a ngxClipboard [cbContent]="addressBookQRExportUrl" (cbOnSuccess)="notifications.sendSuccess('Address book export copied to clipboard!')" class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
                   </div>
                 </div>
               </div>

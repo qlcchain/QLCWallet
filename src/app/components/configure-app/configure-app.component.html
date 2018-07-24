@@ -1,13 +1,13 @@
 <div class="container">
   <div class="row">
     <div class="col-12 px-0">
-      <h1>App Settings</h1>
+      <h1>{{ 'APP_SETTINGS.app_settings_title' | translate }}</h1>
     </div>
   </div>
     <div class="row defaultTable content">
       <div class="col-12">
         <div class="row align-items-center rowContent autoHP pb-2">
-          <div class="col-md-2 px-0 text-truncate dataName">Language</div>
+          <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.language' | translate }}</div>
           <div class="col-md-10 px-0 text-left text-truncate">
             <div class="form-group">
               <select class="custom-select" [(ngModel)]="selectedLang" >
@@ -16,7 +16,7 @@
             </div></div>
           </div>
           <div class="row align-items-center rowContent autoHP py-2">
-            <div class="col-md-2 px-0 text-truncate dataName">Fiat currency</div>
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.fiat_currency' | translate }}</div>
             <div class="col-md-10 px-0 text-left text-truncate">
               <div class="form-group">
                 <select class="custom-select" [(ngModel)]="selectedCurrency" id="form-horizontal-select">
@@ -25,7 +25,7 @@
               </div></div>
             </div>
             <div class="row align-items-center rowContent autoHP py-2">
-              <div class="col-md-2 px-0 text-truncate dataName">Lock on exit</div>
+              <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_on_exit' | translate }}</div>
               <div class="col-md-10 px-0 text-left text-truncate">
                 <div class="form-group">
                   <select class="custom-select" [(ngModel)]="selectedLockOption">
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="row align-items-center rowContent autoHP py-2">
-              <div class="col-md-2 px-0 text-truncate dataName">Lock after inactivity</div>
+              <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_after_inactivity' | translate }}</div>
               <div class="col-md-10 px-0 text-left text-truncate">
                 <div class="form-group">
                     <select class="custom-select" [(ngModel)]="selectedInactivityMinutes">
@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="row align-items-center rowContent autoHP py-2">
-              <div class="col-md-2 px-0 text-truncate dataName">Wallet storage</div>
+              <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.wallet_storage' | translate }}</div>
               <div class="col-md-10 px-0 text-left text-truncate">
                 <div class="form-group">
                     <select class="custom-select" [(ngModel)]="selectedStorage">
@@ -57,29 +57,29 @@
             <div class="row align-items-center rowAmount">
               <div class="col-md-2 px-0 text-truncate dataName"></div>
               <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 pr-md-0 text-left text-truncate">
-                <button (click)="updateAppSettings()" class="btn btn-primary">Update app settings</button>
+                <button (click)="updateAppSettings()" class="btn btn-primary">{{ 'APP_SETTINGS.app_settings_button' | translate }}</button>
               </div>
             </div>
           </div>
         </div>
       <div class="row">
         <div class="col-12 px-0 pt-5">
-          <h1>Advanced Settings</h1>
+          <h1>{{ 'APP_SETTINGS.advanced_settings_title' | translate }}</h1>
         </div>
       </div>
       <div class="row defaultTable content appSettings">
         <div class="col-12">
           <div class="row align-items-center rowDefault">
             
-            <div class="col-lg-2 px-lg-0 text-truncate dataName pl-0">You can't undo this</div>
+            <div class="col-lg-2 px-lg-0 text-truncate dataName pl-0">{{ 'APP_SETTINGS.advanced_settings_text' | translate }}</div>
             <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 pr-lg-2 text-left text-truncate">
-              <button (click)="clearWorkCache()" class="btn btn-danger">Clear work catche</button>
+              <button (click)="clearWorkCache()" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button1' | translate }}</button>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
-              <button (click)="clearWalletData()" type="submit" class="btn btn-danger">Delete wallet data</button>
+              <button (click)="clearWalletData()" type="submit" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button2' | translate }}</button>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
-              <button (click)="clearAllData()"  class="btn btn-danger">Delete all data</button>
+              <button (click)="clearAllData()"  class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button3' | translate }}</button>
             </div>
           </div>
         </div>

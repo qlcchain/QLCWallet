@@ -37,7 +37,11 @@ export class ConfigureWalletComponent implements OnInit {
 
   async ngOnInit() {
     const toggleImport = this.router.snapshot.queryParams.import;
+    const toggleSet = this.router.snapshot.queryParams.set;
     if (toggleImport) {
+      this.activePanel = 11;
+    }
+    if (toggleSet) {
       this.activePanel = 1;
     }
 

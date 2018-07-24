@@ -1,146 +1,150 @@
-<div class="uk-animation-slide-left-small" uk-grid>
-  <div class="uk-width-1-1">
-    <h2>Transaction Details</h2>
-
-    <div class="uk-alert uk-alert-primary" *ngIf="!transaction">
-      Unable to load the transaction, double check that the hash is correct and try again!
+<div class="container">
+  
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1>{{ 'TRANSACTION_DETAILS.transaction_details' | translate }}</h1>
     </div>
-
-    <div class="uk-width-1-1" *ngIf="transaction">
-      <div class="uk-card uk-card-default uk-width-1-1 uk-text-center" *ngIf="blockType !== 'change'">
-        <span style="display: block; padding-top: 8px;">
-          <span *ngIf="blockType == 'send'">Send</span>
-          <span *ngIf="blockType == 'open'">Receive</span>
-          <span *ngIf="blockType == 'receive'">Receive</span>
-        </span>
-        <span style="display:block; font-size: 32px;">{{ transaction?.amount | qlc: settings.settings.displayDenomination }}</span>
-        <span *ngIf="amountRaw.gt(0)" style="display:block; font-size: 12px;">+{{ amountRaw.toString(10) }} raw</span>
-      </div>
-      <div class="uk-card uk-card-default uk-width-1-1 uk-text-center" *ngIf="blockType == 'change'">
-        <span style="display:block; font-size: 32px;">Change Representative</span>
-      </div>
-      <br>
-      <div uk-grid>
-        <div class="uk-width-1-2@s">
-          <div class="uk-card uk-card-default">
-
-            <div class="uk-card-header uk-text-truncate" style="padding: 20px 20px;">
-
-              <span class="confirm-title">
-                <a [routerLink]="'/account/' + fromAccountID" class="uk-link-reset" uk-tooltip title="View Account Details">
-                  <span class="uk-label" *ngIf="fromAddressBook">{{ fromAddressBook }}</span> {{ fromAccountID }}
-                </a>
-              </span>
-              <span class="confirm-subtitle" *ngIf="blockType != 'change'">From Account</span>
-              <span class="confirm-subtitle" *ngIf="blockType == 'change'">Account</span>
-            </div>
+  </div>
+  <div *ngIf="!transaction" class="row defaultTable content">
+    <div class="col-12 text-center">
+        {{ 'TRANSACTION_DETAILS.transaction_error' | translate }}
+    </div>
+  </div>
+  <div *ngIf="transaction">
+    <div class="row defaultTable transactionDetails">
+      <div class="col-12">
+        <div class="row align-items-center title">
+          <div class="col-12 px-0 ">
+            <span *ngIf="blockType == 'send'">{{ 'TRANSACTION_DETAILS.send' | translate }}</span>
+            <span *ngIf="blockType == 'open'">{{ 'TRANSACTION_DETAILS.receive' | translate }}</span>
+            <span *ngIf="blockType == 'receive'">{{ 'TRANSACTION_DETAILS.receive' | translate }}</span>
+            <span *ngIf="blockType == 'change'">{{ 'TRANSACTION_DETAILS.change_representative' | translate }}</span>
           </div>
         </div>
-        <div class="uk-width-1-2@s">
-          <div class="uk-card uk-card-default">
-            <div class="uk-card-header uk-text-truncate" style="padding: 20px 20px;">
-              <span class="confirm-title">
-                <a [routerLink]="'/account/' + toAccountID" class="uk-link-reset" uk-tooltip title="View Account Details">
-                  <span class="uk-label" *ngIf="toAddressBook">{{ toAddressBook }}</span> {{ toAccountID }}
-                </a>
-              </span>
-              <span class="confirm-subtitle" *ngIf="blockType != 'change'">To Account</span>
-              <span class="confirm-subtitle" *ngIf="blockType == 'change'">New Representative</span>
-            </div>
+        <div class="row align-items-center fromText">
+          <div class="col-12 ">
+              {{ 'TRANSACTION_DETAILS.from_address' | translate }}
           </div>
         </div>
+        <div class="row align-items-center fromAddress">
+          <div class="col-12 ">
+            <a [routerLink]="'/account/' + fromAccountID" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
+              <span class="name" *ngIf="fromAddressBook">{{ fromAddressBook }}</span> <span class="address">{{ fromAccountID }}</span>
+            </a>
+            
+            
+            
+          </div>
+        </div>
+        <div class="row align-items-center ">
+          <div class="col-12 presum">
+          </div>
+          <div class="col-12 sum">
+            <span>{{ transaction?.amount | qlc: settings.settings.displayDenomination }} {{ token }}</span>
+          </div>
+          <div class="col-12 postsum">
+          </div>
+        </div>
+        <div class="row align-items-center toText">
+          <div class="col-12 ">
+              {{ 'TRANSACTION_DETAILS.to_address' | translate }}
+          </div>
+        </div>
+        <div class="row align-items-center toAddress">
+          <div class="col-12 ">
+            <a [routerLink]="'/account/' + toAccountID" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
+              <span class="name" *ngIf="toAddressBook">{{ toAddressBook }}</span> <span class="address">{{ toAccountID }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+    </div>
+    <div class="seperator"></div>
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+        <h1>{{ 'TRANSACTION_DETAILS.block_details' | translate }}</h1>
       </div>
     </div>
-
-    <div class="uk-card uk-card-default uk-margin" *ngIf="transaction">
-      <div class="uk-card-body uk-padding-small uk-form-horizontal">
-
-        <div class="uk-margin">
-          <label class="uk-form-label">Block:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            {{ hashID }}
-          </div>
+    <div class="row defaultTable">
+      <div class="col-12">
+        <div class="row align-items-center rowContent">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.block' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate">{{ hashID }}</div>
         </div>
-        <div class="uk-margin">
-          <label class="uk-form-label">Type:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            {{ transaction?.contents?.type }}
-          </div>
+        <div class="row align-items-center rowContent">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.type' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate">{{ transaction?.contents?.type }}</div>
         </div>
-        <div class="uk-margin">
-          <label class="uk-form-label">Date:</label>
-          <div class="uk-form-controls uk-text-truncate">
+        <div class="row align-items-center rowContent">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.date' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate">
             <span *ngIf="transaction.timestamp">{{ transaction?.timestamp | date: 'short' }}</span>
-            <span *ngIf="!transaction.timestamp" class="uk-text-muted">N/A</span>
+            <span *ngIf="!transaction.timestamp">{{ 'N_A' | translate }}N/A</span>
           </div>
         </div>
-        <div class="uk-margin" *ngIf="transaction?.contents?.balance">
-          <label class="uk-form-label">Balance:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            {{ (isStateBlock ? getBalanceFromDec(transaction?.contents?.balance) : getBalanceFromHex(transaction?.contents?.balance)) | qlc: settings.settings.displayDenomination }}<br>
-            <span class="uk-text-small">{{ transaction?.contents?.balance }}</span>
+        <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.balance">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.balance' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate">
+            {{ (isStateBlock ? getBalanceFromDec(transaction?.contents?.balance) : getBalanceFromHex(transaction?.contents?.balance)) | qlc: settings.settings.displayDenomination }} {{ token }}<br>
+            <span class="uk-text-small">{{ transaction?.contents?.balance }} {{ token }}</span>
           </div>
         </div>
-        <div class="uk-margin" *ngIf="transaction?.contents?.representative">
-          <label class="uk-form-label">Representative:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            <a [routerLink]="'/account/' + transaction?.contents?.representative" class="uk-link-text" uk-tooltip title="View Account Details">{{ transaction?.contents?.representative }}</a>
+        <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.representative">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.representative' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
+            <a [routerLink]="'/account/' + transaction?.contents?.representative">{{ transaction?.contents?.representative }}</a>
           </div>
         </div>
-        <div class="uk-margin" *ngIf="transaction?.contents?.previous">
-          <label class="uk-form-label">Previous:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            <a [routerLink]="'/transaction/' + transaction?.contents?.previous" class="uk-link-text" uk-tooltip title="View Block Details">{{ transaction?.contents?.previous }}</a>
+        <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.previous">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.previous' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_BLOCK_DETAILS' | translate }}">
+            <a [routerLink]="'/transaction/' + transaction?.contents?.previous">{{ transaction?.contents?.previous }}</a>
           </div>
         </div>
-        <div class="uk-margin" *ngIf="transaction?.contents?.source">
-          <label class="uk-form-label">Source:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            <a [routerLink]="'/transaction/' + transaction?.contents?.source" class="uk-link-text" uk-tooltip title="View Block Details">{{ transaction?.contents?.source }}</a>
+        <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.source">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.source' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_BLOCK_DETAILS' | translate }}">
+            <a [routerLink]="'/transaction/' + transaction?.contents?.source">{{ transaction?.contents?.source }}</a>
           </div>
         </div>
-        <div class="uk-margin" *ngIf="transaction?.contents?.link && blockType == 'receive'">
-          <label class="uk-form-label">Link (Source):</label>
-          <div class="uk-form-controls uk-text-truncate">
-            <a [routerLink]="'/transaction/' + transaction?.contents?.link" class="uk-link-text" uk-tooltip title="View Block Details">{{ transaction?.contents?.link }}</a>
+        <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.link && blockType == 'receive'">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.link_source' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_BLOCK_DETAILS' | translate }}">
+              <a [routerLink]="'/transaction/' + transaction?.contents?.link">{{ transaction?.contents?.link }}</a>
           </div>
         </div>
-        <div class="uk-margin" *ngIf="transaction?.contents?.link_as_account && blockType == 'send'">
-          <label class="uk-form-label">Link (Destination):</label>
-          <div class="uk-form-controls uk-text-truncate">
-            <a [routerLink]="'/account/' + transaction?.contents?.link_as_account" class="uk-link-text" uk-tooltip title="View Account Details">{{ transaction?.contents?.link_as_account }}</a>
+        <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.link_as_account && blockType == 'send'">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.link_destination' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
+              <a [routerLink]="'/account/' + transaction?.contents?.link_as_account">{{ transaction?.contents?.link_as_account }}</a>
           </div>
         </div>
-        <div class="uk-margin">
-          <label class="uk-form-label">Work:</label>
-          <div class="uk-form-controls uk-text-truncate">
-            {{ transaction?.contents?.work }}
-          </div>
+        <div class="row align-items-center rowContent">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.work' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate">{{ transaction?.contents?.work }}</div>
         </div>
-        <div class="uk-margin">
-          <label class="uk-form-label">Signature:</label>
-          <div class="uk-form-controls uk-text-small uk-text-truncate">
-            {{ transaction?.contents?.signature }}
-          </div>
+        <div class="row align-items-center rowContent">
+          <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.signature' | translate }}:</div>
+          <div class="col-9 px-0 text-left text-truncate">{{ transaction?.contents?.signature }}</div>
         </div>
-
       </div>
     </div>
-
-    <div uk-grid>
-      <div class="uk-width-1-1 uk-text-center">
-        <a (click)="showBlockData = !showBlockData" class="uk-link-text">{{ showBlockData ? 'Hide' : 'Show' }} Block Data</a>
+    <div class="seperator"></div>
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+        <h1>{{ 'TRANSACTION_DETAILS.raw_block_data' | translate }}</h1>
       </div>
     </div>
-
-    <div class="uk-card uk-card-default uk-margin" *ngIf="transaction && transactionJSON && showBlockData">
-      <div class="uk-card-header">
-        Raw Block Data
-      </div>
-      <div class="uk-card-body uk-padding-small uk-form-horizontal">
-        <pre><code>{{ transactionJSON }}</code></pre>
+    <div class="row defaultTable">
+      <div class="col-12">
+        <div class="row align-items-center rowContent autoH">
+          
+          <pre><code>{{ transactionJSON }}</code></pre>
+        </div>
       </div>
     </div>
-
   </div>
 </div>

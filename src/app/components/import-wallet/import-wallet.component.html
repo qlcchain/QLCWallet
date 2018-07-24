@@ -2,7 +2,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12 px-0">
-          <h1>Import Wallet From File</h1>
+          <h1>{{ 'IMPORT_WALLET.import_wallet_title' | translate }}</h1>
         </div>
       </div>
       
@@ -10,13 +10,13 @@
         <div class="col-12">
           <div class="row align-items-center rowContent autoHP">
             <div class="col-12 px-0 pb-3 text-center" *ngIf="activePanel == 'error'">
-                There was an issue reading the import data for your wallet.  Double check the address and try again.
+                {{ 'IMPORT_WALLET.error' | translate }}
             </div>
             <div class="col-12 px-0 pb-3 text-center" *ngIf="activePanel == 'import'">
-                Almost finished - just enter your wallet password to decrypt your wallet! 
+                {{ 'IMPORT_WALLET.import' | translate }}
               </div>
               <div class="col-12 px-0 pb-3 text-center" *ngIf="activePanel == 'imported'">
-                  Your wallet has been successfully imported!
+                  {{ 'IMPORT_WALLET.imported' | translate }}
                 </div>
             
           </div>
@@ -24,12 +24,12 @@
             <div class="col-md-12 px-0" *ngIf="activePanel == 'import'">
               <div class="row align-items-center rowDefault autoHP">
                 <div class="col-12 px-0 py-3 text-truncate dataName">
-                    Confirm Wallet Password
+                    {{ 'IMPORT_WALLET.confirm' | translate }}
                 </div>
                 <div class="col-12 px-0 pb-3 text-left text-truncate">
                   <div class="form-group">
                     <div class="input-group">
-                      <input type="password" class="form-control" [(ngModel)]="walletPassword" placeholder="Enter your password" type="password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your password'">
+                      <input type="password" class="form-control" [(ngModel)]="walletPassword" placeholder="{{ 'IMPORT_WALLET.confirm_placeholder' | translate }}" type="password" onfocus="this.placeholder = ''">
                     </div>
                   </div>
                 </div>
@@ -39,8 +39,8 @@
           
           <div class="row align-items-center justify-content-center rowDefault rowButtons" >
             <div class="col-lg-3 col-md-5 col-sm-6 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
-              <button (click)="decryptWallet()" type="submit" class="btn btn-primary" *ngIf="activePanel == 'import'">Import Wallet</button>
-              <button routerLink="/accounts" type="submit" class="btn btn-primary" *ngIf="activePanel == 'imported'">View Accounts</button>
+              <button (click)="decryptWallet()" type="submit" class="btn btn-primary" *ngIf="activePanel == 'import'">{{ 'IMPORT_WALLET.import_wallet' | translate }}</button>
+              <button routerLink="/accounts" type="submit" class="btn btn-primary" *ngIf="activePanel == 'imported'">{{ 'IMPORT_WALLET.view_accounts' | translate }}</button>
             </div>
           </div>
         </div>

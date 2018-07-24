@@ -14,6 +14,7 @@ import * as bip from 'bip39';
 export class ManageWalletComponent implements OnInit {
 
   wallet = this.walletService.wallet;
+  accounts = this.walletService.wallet.accounts;
 
   newPassword = '';
   confirmPassword = '';

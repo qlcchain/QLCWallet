@@ -3,13 +3,13 @@
   <div class="row">
     <div class="col-lg-6 px-0 pr-lg-3">
       <div class="col-12 px-0">
-        <h1>Account Details</h1>
+        <h1>{{ 'ACCOUNT_DETAILS.account_details_title' | translate }}</h1>
       </div>	
       <div class="col-12">
         <div class="row defaultTable">
           <div class="col-12">
             <div class="row align-items-center rowTitles">
-              <div class="col-12 pl-0">Account</div>
+              <div class="col-12 pl-0">{{ 'ACCOUNT_DETAILS.account' | translate }}</div>
             </div>
             <div class="row rowDefault rowAccountDetails">
               <div class="col-md-7 px-0">
@@ -18,8 +18,8 @@
                 <h3 *ngIf="addressBookEntry">{{ accountID }}</h3>
                 <div class="row">
                   <div class="col-12 px-0 d-block d-md-none py-4 text-center">
-                    <a href="#" class="icon-text-link"><span class="icon edit"></span> Edit name</a>
-                    <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> Copy address</a>
+                    <a href="#" class="icon-text-link"><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a>
+                    <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_ADDRESS' | translate }}</a>
                   </div>
                 </div>
               </div>
@@ -31,12 +31,12 @@
             <div class="row rowDefault rowAccountDetails">
               <div class="col-md-7 px-0 d-none d-md-block">
                 <div class="row">
-                  <a href="#" class="icon-text-link"><span class="icon edit"></span> Edit name</a>
-                  <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> Copy address</a>
+                  <a href="#" class="icon-text-link"><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a>
+                  <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_ADDRESS' | translate }}</a>
                 </div>
               </div>
               <div class="col-md-5 px-0 text-center">
-                <p>SCAN TO RECEIVE</p>
+                <p>{{ 'SCAN_TO_RECEIVE' | translate }}</p>
               </div>
             </div>
           </div>
@@ -49,15 +49,15 @@
         <div class="seperator"></div>
       </div>
       <div class="col-12 px-0">
-        <h1>Balances</h1>
+        <h1>{{ 'ACCOUNT_DETAILS.balances_title' | translate }}</h1>
       </div>	
       <div class="col-12">
         <div class="row defaultTable">
           <div class="col-12">
             <div class="row align-items-center rowTitles">
-              <div class="col-4 pl-0">Token</div>
-              <div class="col-5 text-right">Balance</div>
-              <div class="col-3 pr-0 text-right">Value</div>
+              <div class="col-4 pl-0">{{ 'ACCOUNT_DETAILS.token' | translate }}</div>
+              <div class="col-5 text-right">{{ 'ACCOUNT_DETAILS.balance' | translate }}</div>
+              <div class="col-3 pr-0 text-right">{{ 'ACCOUNT_DETAILS.value' | translate }}</div>
             </div>
             <div class="row align-items-center rowContent" *ngFor="let balance of account.account_infos">
               <div class="col-4 pl-0 text-truncate"><span class="tokenIcon {{ balance.token | lowercase }}"></span>{{ balance.symbol }}</div>
@@ -75,20 +75,20 @@
   <div class="seperator"></div>
   <div class="row">
     <div class="col-12 pl-0 pr-0">
-      <h1>Pending Transactions</h1>
+      <h1>{{ 'ACCOUNT_DETAILS.pending_transactions' | translate }}</h1>
     </div>
   </div>
   <div class="row defaultTable">
     <div class="col-12">
       <div class="row align-items-center rowTitles">
-        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">Date</div>
-        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">Account</div>
-        <div class="col-3 col-md-2 price text-right">Amount</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">Token</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">Hash</div>
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">{{ 'ACCOUNT_DETAILS.date' | translate }}</div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">{{ 'ACCOUNT_DETAILS.account' | translate }}</div>
+        <div class="col-3 col-md-2 price text-right">{{ 'ACCOUNT_DETAILS.amount' | translate }}</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ 'ACCOUNT_DETAILS.token' | translate }}</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">{{ 'ACCOUNT_DETAILS.hash' | translate }}</div>
       </div>
       <div *ngFor="let pending of pendingBlocks" class="row align-items-center rowContent">
-        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="!pending.timestamp">N/A</span><span *ngIf="pending.timestamp">{{ pending.timestamp | date: 'short' }}</span></div>
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="!pending.timestamp">{{ 'ACCOUNT_DETAILS.n_a' | translate }}</span><span *ngIf="pending.timestamp">{{ pending.timestamp | date: 'short' }}</span></div>
         <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate ">
           <a [routerLink]="'/account/' + pending.account">
             <span *ngIf="pending.addressBookName" class="name">{{ pending.addressBookName }}</span> 
@@ -104,21 +104,21 @@
   <div class="seperator"></div>
   <div class="row">
     <div class="col-12 pl-0 pr-0">
-      <h1>Recent Transactions</h1>
+      <h1>{{ 'ACCOUNT_DETAILS.recent_transactions' | translate }}</h1>
     </div>
   </div>
   <div class="row defaultTable">
     <div class="col-12">
       <div class="row align-items-center rowTitles">
-        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">Date</div>
-        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">Account</div>
-        <div class="col-3 col-md-2 price text-right">Amount</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">Token</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">Hash</div>
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">{{ 'ACCOUNT_DETAILS.date' | translate }}</div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">{{ 'ACCOUNT_DETAILS.account' | translate }}</div>
+        <div class="col-3 col-md-2 price text-right">{{ 'ACCOUNT_DETAILS.amount' | translate }}</div>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ 'ACCOUNT_DETAILS.token' | translate }}</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">{{ 'ACCOUNT_DETAILS.hash' | translate }}</div>
       </div>
       <div class="row align-items-center rowContent" *ngFor="let history of accountHistory">
-        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</span><span *ngIf="!history.timestamp">N/A</span></div>
-        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate" tooltip="View account details">
+        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</span><span *ngIf="!history.timestamp">{{ 'ACCOUNT_DETAILS.n_a' | translate }}</span></div>
+        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate" tooltip="{{ 'ACCOUNT_DETAILS.view_account_details' | translate }}">
           <a [routerLink]="'/account/' + (history.link_as_account || history.account)">
             <span class="name" *ngIf="history.addressBookName">{{ history.addressBookName }}</span> 
             <span class="address">{{ history.link_as_account || history.account }}</span>
@@ -126,7 +126,7 @@
         </div>
         <div class="col-3 col-md-2 price text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ (history.type == 'send' || history.subtype == 'send') ? '-' : '+' }}{{ history.amount | qlc: settings.settings.displayDenomination }}</div>
         <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right {{ (history.type == 'send' || history.subtype == 'send') ? 'negative_change' : 'positive_change' }}">{{ history.token }}</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate" tooltip="View transaction details"><a [routerLink]="'/transaction/' + history.hash">{{ history.hash }}</a></div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate" tooltip="{{ 'ACCOUNT_DETAILS.view_transaction_details' | translate }}"><a [routerLink]="'/transaction/' + history.hash">{{ history.hash }}</a></div>
       </div>
     </div>
   </div>

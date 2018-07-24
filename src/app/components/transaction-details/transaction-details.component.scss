@@ -1,0 +1,106 @@
+.confirm-title {
+  font-weight: bolder;
+  /*display: block;*/
+  font-size: 24px;
+}
+
+.confirm-currency {
+  font-weight: bolder;
+  display: block;
+  font-size: 20px;
+}
+
+.confirm-subtitle {
+  display: block;
+  font-size: 10px;
+}
+
+@import "~scss/mixins";
+.transactionDetails {
+	@include latoBold;
+	text-align: center;
+	padding-bottom: 40px;
+	> div > .title {
+		@include latoBold;
+		font-size: 12px;
+		color: white;
+		height: 60px;
+		text-transform: uppercase;
+		background-color: $green;
+	}
+	> div > .fromText {
+		@include latoBold;
+		font-size: 12px;
+		color: $textLight;
+		text-transform: uppercase;
+		margin-top: 40px;
+	}
+	> div > .fromAddress {
+		@include lato;
+		font-size: 13px;
+		color: $text;
+		text-transform: uppercase;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		word-break: break-all;
+		word-wrap: break-word;
+		> div > .name {
+			@include latoBold;
+			color: $default;
+    }
+    > div > a > .address {
+      @include lato;
+      color: $text;
+    }
+	}
+	.sum {
+		color: $default;
+		font-size: $fontSizeTitle;
+		background: #edeef4; 
+		height:1px; 
+		margin-top:20px;
+		margin-bottom:20px;
+	}
+	.sum span {
+		background: #fff; 
+		padding:15px; 
+		position:relative; 
+		top:-15px;
+	}
+	.presum {
+		height: 30px;
+	    background: #ffffff url('~assets/img/qlc-icon-arrow-transaction-line-grey.svg') no-repeat center center;
+	    background-size: 24px 24px;
+	    border-top: 0;
+	}
+	.postsum {
+	    height: 30px;
+	    background: #ffffff url('~assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
+	    background-size: 24px 24px;
+	    border-top: 0;
+	}
+	> div > .toText {
+		@include latoBold;
+		font-size: 12px;
+		color: $textLight;
+		text-transform: uppercase;
+		margin-top: 20px;
+	}
+	> div > .toAddress {
+		@include lato;
+		font-size: 13px;
+		color: $text;
+		text-transform: uppercase;
+		margin-top: 20px;
+		word-break: break-all;
+		word-wrap: break-word;
+		> div > .name {
+			@include latoBold;
+			color: $default;
+		}
+    > div > a > .address {
+      @include lato;
+      color: $text;
+    }
+	}
+}

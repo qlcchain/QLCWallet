@@ -1,88 +1,68 @@
-<div class="uk-animation-slide-left-small" uk-grid>
-  <div class="uk-width-1-1">
-    <h2>Import Address Book</h2>
+<div class="container addressbook">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+      <h1>{{ 'IMPORT_ADDRESS_BOOK.import_address_book_title' | translate }}</h1>
+    </div>
+  </div>
+  <div *ngIf="activePanel == 'error'" class="row defaultTable content">
+    <div class="col-12 text-center">
+        <b>{{ 'IMPORT_ADDRESS_BOOK.error_title' | translate }}</b><br>
+        {{ 'IMPORT_ADDRESS_BOOK.error_text' | translate }}
+    </div>
+  </div>
 
-    <div class="uk-card uk-card-default uk-margin" *ngIf="activePanel == 'error'">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Bad Import Data</h3>
+  <div *ngIf="activePanel == 'imported'" class="row defaultTable content">
+      <div class="col-12 text-center">
+          <b>{{ 'IMPORT_ADDRESS_BOOK.imported_title' | translate }}</b><br>
+          {{ 'IMPORT_ADDRESS_BOOK.imported_text' | translate }}
       </div>
-      <div class="uk-card-body">
-        <p>There was an issue reading the import data for your address book.  Double check the address and try again.</p>
-      </div>
+      <div class="col-12 px-0 ">
+          <div class="row justify-content-center buttons">
+            <div class="col-xl-3 col-lg-4 col-10">
+              <a routerLink="/accounts"><button type="submit" class="btn btn-primary">{{ 'IMPORT_ADDRESS_BOOK.imported_button' | translate }}</button></a>
+            </div>
+          </div>
+        </div>
     </div>
 
-    <div class="uk-card uk-card-default uk-margin" *ngIf="activePanel == 'import'">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Confirm Import</h3>
-      </div>
-      <div class="uk-card-body">
-        <p class="uk-text-center">
+
+
+
+  <div class="row defaultTable content" *ngIf="activePanel == 'import'">
+    <div class="col-12"  >
+      <div class="row align-items-center rowDefault">
+        <div class="col-12 text-center">
           <span class="import-warning" *ngIf="conflictingEntries">
-            {{ conflictingEntries }} Labels already exist and will have their name changed.
+            {{ conflictingEntries }} {{ 'IMPORT_ADDRESS_BOOK.label_exist' | translate }}
           </span>
           <span class="import-warning" *ngIf="newEntries">
-            {{ newEntries }} New labels will be added.
+            {{ newEntries }} {{ 'IMPORT_ADDRESS_BOOK.label_new' | translate }}
           </span>
           <span class="import-warning" *ngIf="existingEntries">
-            {{ existingEntries }} Labels already exist and will not be modified.
+            {{ existingEntries }} {{ 'IMPORT_ADDRESS_BOOK.label_modified' | translate }}
           </span>
-        </p>
-
-        <div uk-grid>
-          <div class="uk-width-1-1">
-            <ul class="uk-list uk-list-striped" style="margin-bottom: 0;">
-              <li style="background: #fff; border-bottom: 0;">
-                <div uk-grid style="color: #999; text-transform: uppercase; font-size: .875rem; font-weight: 400;">
-                  <div class="uk-width-1-4">New Label</div>
-                  <div class="uk-width-1-4">Current Label</div>
-                  <div class="uk-width-1-2 uk-text-truncate" style="padding-left: 0;">Account</div>
-                </div>
-              </li>
-            </ul>
-            <ul class="uk-list uk-list-striped" style="margin-top: 0;">
-              <li *ngFor="let entry of importData" [ngClass]="{ 'uk-text-success': !entry.originalName, 'uk-text-warning': entry.originalName && entry.originalName !== entry.name, 'uk-text-muted': entry.originalName == entry.name }">
-                <div uk-grid>
-                  <div class="uk-width-1-4 uk-text-truncate">
-                    {{ entry.name }}
-                  </div>
-                  <div class="uk-width-1-4 uk-text-truncate">
-                    {{ entry.originalName }}
-                  </div>
-                  <div class="uk-width-1-2 uk-text-truncate">
-                    {{ entry.account }}
-                  </div>
-                </div>
-
-              </li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-      <div class="uk-card-footer">
-        <div uk-grid>
-          <div class="uk-width-1-2 uk-text-left">
-            <button routerLink="/address-book" class="uk-button uk-button-danger">Cancel</button>
-          </div>
-          <div class="uk-width-1-2 uk-text-right">
-            <button (click)="confirmImport()" class="uk-button uk-button-secondary">Import Address Book</button>
-          </div>
         </div>
       </div>
+      <div class="row align-items-center rowTitles">
+        <div class="col-3 pl-0">{{ 'IMPORT_ADDRESS_BOOK.new_label' | translate }}</div>
+        <div class="col-3 pr-2 pr-md-0">{{ 'IMPORT_ADDRESS_BOOK.current_label' | translate }}</div>
+        <div class="col-6 px-0 ">{{ 'IMPORT_ADDRESS_BOOK.account' | translate }}</div>
+      </div>
+      <div class="row align-items-center rowContent" *ngFor="let entry of importData">
+        <div class="col-3 pl-0 text-truncate name" >{{ entry.name }}</div>
+        <div class="col-3 pr-2 pr-md-0 text-truncate name">{{ entry.originalName }}</div>
+        <div class="col-6 px-0 text-truncate">{{ entry.account }}</div>
+      </div>
+      <div class="row align-items-center align-items-center rowButtons">
+        <div class="col-md-2 px-0 text-truncate dataName"></div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pr-md-2 text-center text-truncate mobile-break">
+          <button type="submit" class="btn btn-danger" routerLink="/address-book">{{ 'CANCEL' | translate }}</button>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 px-0 pl-md-2 text-left text-truncate">
+          <button type="submit" class="btn btn-primary" (click)="confirmImport()">{{ 'IMPORT_ADDRESS_BOOK.import' | translate }}</button>
+        </div>
+      </div>
+      
     </div>
-
-    <div class="uk-card uk-card-default uk-margin" *ngIf="activePanel == 'imported'">
-      <div class="uk-card-header">
-        <h3 class="uk-card-title">Address Book Imported</h3>
-      </div>
-      <div class="uk-card-body">
-        <p>Your address book has been successfully imported!</p>
-      </div>
-      <div class="uk-card-footer uk-text-right">
-        <button routerLink="/address-book" class="uk-button uk-button-secondary">View Address Book</button>
-      </div>
-    </div>
-
-
   </div>
 </div>

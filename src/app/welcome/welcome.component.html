@@ -1,32 +1,32 @@
 <div class="container">
     <div class="row">
       <div class="col-12 px-0 text-center">
-        <h1>Welcome to QLC Chain Multidimensional Block Lattice!</h1>
+        <h1>{{ 'WELCOME.title' | translate }}</h1>
       </div>
     </div>
     <div class="row justify-content-md-center defaultTable content text-center"  *ngIf="!wallet.seed">
       <div class="col-12 px-4 ">
-        <p>To get started, choose an option below to configure your wallet</p>
+        <p>{{ 'WELCOME.text_start' | translate }}</p>
       </div>
       <div class="col-12 px-0 ">
         <div class="row justify-content-center buttons">
           <div class="col-xl-3 col-lg-4 col-10">
-            <a routerLink="/configure-wallet" [queryParams]="{ import: 1}" ><button type="submit" class="btn btn-primary">IMPORT AN EXISTING WALLET</button></a>
+            <a routerLink="/configure-wallet" [queryParams]="{ import: 1}" ><button type="submit" class="btn btn-primary">{{ 'WELCOME.button_import' | translate }}</button></a>
           </div>
           <div class="col-xl-3 col-lg-4 col-10">
-            <a routerLink="/configure-wallet"><button type="submit" class="btn btn-secondary">CREATE NEW WALLET</button></a>
+            <a routerLink="/configure-wallet" [queryParams]="{ set: 1}"><button type="submit" class="btn btn-secondary">{{ 'WELCOME.button_create' | translate }}</button></a>
           </div>
         </div>
       </div>
     </div>
     <div class="row justify-content-md-center defaultTable content text-center"  *ngIf="wallet.seed">
         <div class="col-12 px-4 ">
-          <p>It looks like your wallet is already configured.</p>
+          <p>{{ 'WELCOME.text_already_exsist' | translate }}</p>
         </div>
         <div class="col-12 px-0 ">
           <div class="row justify-content-center buttons">
             <div class="col-xl-3 col-lg-4 col-10">
-              <a routerLink="/accounts"><button type="submit" class="btn btn-primary">View My Accounts</button></a>
+              <a routerLink="/accounts"><button type="submit" class="btn btn-primary">{{ 'WELCOME.button_view_accounts' | translate }}</button></a>
             </div>
           </div>
         </div>

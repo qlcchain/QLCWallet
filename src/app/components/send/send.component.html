@@ -1,18 +1,18 @@
 <div class="container" *ngIf="activePanel == 'send'">
   <div class="row">
     <div class="col-12 px-0">
-      <h1>Send Tokens</h1>
+      <h1>{{ 'SEND_TOKENS_TAB.send_tokens_title' | translate }}</h1>
     </div>
   </div>
   <div *ngIf="!(accounts).length" class="row defaultTable content">
     <div class="col-12 text-center">
-      You don't have a wallet configured, <a routerLink="/configure-wallet">click here to create or import one</a>
+        {{ 'NO_WALLET_CONFIGURED' | translate }}<a routerLink='/configure-wallet'>{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
     </div>
   </div>
   <div *ngIf="(accounts).length" class="row defaultTable sendTokens">
     <div class="col-12">
       <div class="row align-items-center rowContent autoHP pb-3">
-        <div class="col-md-2 px-0 pb-3 pb-md-0 text-truncate dataName">From account</div>
+        <div class="col-md-2 px-0 pb-3 pb-md-0 text-truncate dataName">{{ 'SEND_TOKENS_TAB.from_account' | translate }}</div>
         <div class="col-md-10 px-0 text-left text-truncate">
           <div class="form-group">
             <select class="custom-select" [(ngModel)]="fromAccountID" (change)="selectAccount()">
@@ -21,19 +21,19 @@
           </div></div>
         </div>
         <div class="row align-items-center rowContent autoHP">
-          <div class="col-md-2 px-0 pb-3 pb-md-0 text-truncate dataName">To account</div>
+          <div class="col-md-2 px-0 pb-3 pb-md-0 text-truncate dataName">{{ 'SEND_TOKENS_TAB.to_account' | translate }}</div>
           <div class="col-md-10 px-0 text-left text-truncate py-3">
             <div class="form-group">
               <select class="custom-select contacts" [(ngModel)]="bookContact" (change)="selectFromBook()" [ngClass]="{ 'success': toAccountStatus === 2, 'dangerRight': toAccountStatus === 0 }">
                 <option *ngFor="let book of addressBookResults$ | async" [value]="book.account">{{book.name}} {{book.account}}</option>
               </select>
-              <input type="text" class="form-control toaccount" placeholder="To account" onfocus="this.placeholder = ''" (blur)="validateDestination();" [(ngModel)]="toAccountID" [ngClass]="{ 'success': toAccountStatus === 2, 'dangerLeft': toAccountStatus === 0 }">
+              <input type="text" class="form-control toaccount" placeholder="{{ 'SEND_TOKENS_TAB.to_account_placeholder' | translate }}" onfocus="this.placeholder = ''" (blur)="validateDestination();" [(ngModel)]="toAccountID" [ngClass]="{ 'success': toAccountStatus === 2, 'dangerLeft': toAccountStatus === 0 }">
             </div>
           </div>
         </div>
         
         <div class="row rowContent autoHP py-3">
-          <div class="col-md-2 px-0 text-truncate dataName pb-3 pb-md-0">Amount</div>
+          <div class="col-md-2 px-0 text-truncate dataName pb-3 pb-md-0">{{ 'SEND_TOKENS_TAB.amount' | translate }}</div>
           <div class="col-md-10 px-0">
             <div class="row align-items-center">
               <div class="col-md-6 pb-3 pb-md-0">
@@ -41,10 +41,10 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">{{ selectedToken.symbol }}</div>
                   </div>
-                  <input type="text" class="form-control inlineForm" [(ngModel)]="amount" placeholder="Amount to send" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Amount to send'">
+                  <input type="text" class="form-control inlineForm" [(ngModel)]="amount" placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}" onfocus="this.placeholder = ''" >
                   <div class="input-group-append">
                     <a (click)="setMaxAmount()" >
-                      <div class="input-group-text maxLink">Max</div>
+                      <div class="input-group-text maxLink">{{ 'SEND_TOKENS_TAB.max' | translate }}</div>
                     </a>
                   </div>
                 </div>
@@ -54,13 +54,13 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">USD/$</div>
                   </div>
-                  <input type="text" class="form-control inlineForm2" placeholder="Amount to send" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Amount to send'">
+                  <input type="text" class="form-control inlineForm2" [(ngModel)]="amountFiat" placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}" onfocus="this.placeholder = ''" >
                   
                 </div>
               </div>
               <div class="col-md-6 pt-2 pt-md-0">
                 <div class="row align-items-center">
-                  <div class="col-md-2 dataName pb-3 pb-md-0">TOKEN</div>
+                  <div class="col-md-2 dataName pb-3 pb-md-0">{{ 'TOKEN' | translate }}</div>
                   <div class="col-md-10">
                     <div class="form-group">
                       <select class="custom-select" [(ngModel)]="selectedTokenSymbol" (change)="selectToken()">
@@ -78,12 +78,12 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">USD/$</div>
                   </div>
-                  <input type="text" class="form-control inlineForm2" placeholder="Amount to send">
+                  <input type="text" class="form-control inlineForm2" placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="row align-items-center">
-                  <div class="col-md-2 dataName pb-3 pb-md-0">BALANCE</div>
+                  <div class="col-md-2 dataName pb-3 pb-md-0">{{ 'BALANCE' | translate }}</div>
                   <div class="col-md-10 ">
                     <div class="row">
                       <div class="col-6 pr-0 balance">{{ selectedToken.balance | qlc: settings.settings.displayDenomination }}</div>
@@ -99,7 +99,7 @@
         <div class="row align-items-center rowAmount">
           <div class="col-md-2 px-0 text-truncate dataName"></div>
           <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 text-left text-truncate">
-            <button type="submit" class="btn btn-primary" (click)="sendTransaction()">Send</button>
+            <button type="submit" class="btn btn-primary" (click)="sendTransaction()">{{ 'SEND_TOKENS_TAB.send' | translate }}</button>
           </div>
         </div>
       </div>
@@ -110,14 +110,14 @@
     
     <div class="row">
       <div class="col-12 px-0">
-        <h1>Confirm Transaction</h1>
+        <h1>{{ 'SEND_TOKENS_TAB.confirm_transaction' | translate }}</h1>
       </div>
     </div>
     <div class="row defaultTable content confirmTransaction">
       <div class="col-12">
         <div class="row align-items-center fromText">
           <div class="col-12 text-label">
-            You are about to send
+              {{ 'SEND_TOKENS_TAB.you_are_about_to_send' | translate }}
           </div>
         </div>
         <div class="row align-items-center ">
@@ -132,28 +132,28 @@
         </div>
         <div class="row transfer">
           <div class="col-lg-6 text-center pt-4 pb-4">
-            <div class="text-label pb-0">From account</div>
+            <div class="text-label pb-0">{{ 'SEND_TOKENS_TAB.from_account' | translate }}</div>
             <div class="pl-5 pr-5 text-truncate pt-1 pb-1"><a [routerLink]="'/account/' + fromAccountID" class="name"><span *ngIf="fromAddressBook">{{ fromAddressBook }}</span><span *ngIf="!fromAddressBook">{{ fromAccountID }}</span></a></div>
             <div class="pl-5 pr-5 pb-4"><a [routerLink]="'/account/' + fromAccountID" class="address">{{ fromAccountID }}</a></div>
             <div class="pt-2 text-bold negative_change">-{{ rawAmount | qlc: 'mqlc' }} {{ selectedTokenSymbol }}</div>
-            <div class="text-label pb-3">Amount to send</div>
+            <div class="text-label pb-3">{{ 'SEND_TOKENS_TAB.amount_to_send' | translate }}</div>
           </div>
           <div class="col-lg-6 text-center pt-4 pb-4">
-            <div class="text-label pb-0">To account</div>
+            <div class="text-label pb-0">{{ 'SEND_TOKENS_TAB.to_account' | translate }}</div>
             <div class="pl-5 pr-5 text-truncate pt-1 pb-1"><a [routerLink]="'/account/' + toAccountID" class="name"><span *ngIf="toAddressBook">{{ toAddressBook }}</span><span *ngIf="!toAddressBook">{{ toAccountID }}</span></a></div>
             <div class="pl-5 pr-5 pb-4"><a [routerLink]="'/account/' + toAccountID" class="address">{{ toAccountID }}</a></div>
             <div class="pt-2 text-bold positive_change">+{{ rawAmount | qlc: 'mqlc' }} {{ selectedTokenSymbol }}</div>
-            <div class="text-label pb-3">Amount to send</div>
+            <div class="text-label pb-3">{{ 'SEND_TOKENS_TAB.amount_to_send' | translate }}</div>
           </div>
         </div>
         
         <div class="row align-items-center justify-content-center rowDefault rowButtons">
           <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 pr-sm-2 text-left text-truncate mobile-break">
-            <button type="submit" class="btn btn-danger" (click)="activePanel = 'send'">Cancel</button>
+            <button type="submit" class="btn btn-danger" (click)="activePanel = 'send'">{{ 'CANCEL' | translate }}</button>
           </div>
           <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
-            <button type="submit" class="btn btn-secondary" *ngIf="!confirmingTransaction" (click)="confirmTransaction()">Confirm & Send</button>
-            <button type="submit" class="btn btn-secondary" *ngIf="confirmingTransaction">Loading</button>
+            <button type="submit" class="btn btn-secondary" *ngIf="!confirmingTransaction" (click)="confirmTransaction()">{{ 'SEND_TOKENS_TAB.confirm_send' | translate }}</button>
+            <button type="submit" class="btn btn-secondary" *ngIf="confirmingTransaction">{{ 'LOADING' | translate }}</button>
           </div>
         </div>
       </div>

@@ -57,7 +57,26 @@
 	background-image: url('~assets/img/qlc-icon-receive-purple.svg');
 	margin-right: 0;
 }
-
+.icon.online {
+	background-image: url('~assets/img/qlc-icon-status-online.svg');
+	margin-right: 5px;
+	margin-left: 0;
+}
+.icon.offline {
+	background-image: url('~assets/img/qlc-icon-status-offline.svg');
+	margin-right: 5px;
+	margin-left: 0;
+}
+.icon.trusted {
+	background-image: url('~assets/img/qlc-icon-status-trusted.svg');
+	margin-right: 5px;
+	margin-left: 0;
+}
+.icon.avoid {
+	background-image: url('~assets/img/qlc-icon-status-avoid.svg');
+	margin-right: 5px;
+	margin-left: 0;
+}
 .icon-text-link {
 	@include latoBold;
 	color: $default;

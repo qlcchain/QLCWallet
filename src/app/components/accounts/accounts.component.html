@@ -1,30 +1,30 @@
 <div class="container accounts">
     <div class="row">
-      <div class="col-12 pl-0 pr-0">
-        <h1>Accounts</h1><button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="(accounts).length">ADD NEW ACCOUNT</button>
+      <div class="col-12 px-0">
+        <h1>{{ 'ACCOUNTS.title' | translate }}</h1><button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="(accounts).length">{{ 'ACCOUNTS.title_button' | translate }}</button>
       </div>
     </div>
     <div *ngIf="!(accounts).length" class="row defaultTable content">
         <div class="col-12 text-center">
-            You don't have a wallet configured, <a routerLink="/configure-wallet">click here to create or import one</a>
+            {{ 'NO_WALLET_CONFIGURED' | translate }}<a routerLink='/configure-wallet'>{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
         </div>
     </div>
     <div *ngFor="let account of accounts" class="row defaultTable account">
       <div class="col-12">
         <div class="row align-items-center accountHeader">
-          <div class="col-lg-10 col-7 pl-0 text-truncate" tooltip="Wallet details">
+          <div class="col-lg-10 col-7 pl-0 text-truncate" tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}">
               <a [routerLink]="'/account/' + account.id">
                 <span *ngIf="account.addressBookName" class="name" >{{ account.addressBookName }}</span> <span class="address" >{{ account.id }}</span>
               </a>
           </div>
-          <div class="col-lg-2 col-5 pr-0 text-right options"><a  ngxClipboard [cbContent]="account.id" (cbOnSuccess)="copied()" class="icon copy" tooltip="Copy Address"></a><a href="#" class="icon edit" tooltip="Edit Name"></a><a href="#" class="icon send" tooltip="Send Tokens"></a></div>
+          <div class="col-lg-2 col-5 pr-0 text-right options"><a  ngxClipboard [cbContent]="account.id" (cbOnSuccess)="copied()" class="icon copy" tooltip="{{ 'COPY_ADDRESS' | translate }}"></a><a href="#" class="icon edit" tooltip="{{ 'EDIT_NAME' | translate }}"></a><a href="#" class="icon send" tooltip="{{ 'SEND_TOKENS' | translate }}"></a></div>
         </div>
         <div class="row align-items-center rowTitles">
-          <div class="col-md-4 pl-0 col-6">Token</div>
-          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">Quantity</div>
-          <div class="col-2 price text-right">Price</div>
-          <div class="col-2 pricechange text-right">24H</div>
-          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">Total Value</div>
+          <div class="col-md-4 pl-0 col-6">{{ 'ACCOUNTS.token' | translate }}</div>
+          <div class="col-lg-2 pr-0 col-md-4 col-6 text-right">{{ 'ACCOUNTS.quantity' | translate }}</div>
+          <div class="col-2 price text-right">{{ 'ACCOUNTS.price' | translate }}</div>
+          <div class="col-2 pricechange text-right">{{ 'ACCOUNTS.24H' | translate }}</div>
+          <div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">{{ 'ACCOUNTS.total_value' | translate }}</div>
         </div>
         <div class="row align-items-center rowContent" *ngFor="let balance of account.account_info.account_infos">
           <div class="col-md-4 pl-0 col-6 text-truncate"><span class="tokenIcon {{ balance.token | lowercase }}"></span> {{ balance.token }}</div>
