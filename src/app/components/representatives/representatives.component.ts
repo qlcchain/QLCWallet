@@ -283,6 +283,14 @@ export class RepresentativesComponent implements OnInit {
       return this.notifications.sendWarning(`Representative is not a valid account`);
     }
 
+    const infos = await this.api.accountInfo(newRep);
+    const token_infos = infos.account_infos;
+    const root_token = token_infos ? token_infos.filter(token_info => token_info.token === 'Root_Token')[0] : null;
+    if (root_token === undefined || root_token == null) {
+      this.changingRepresentatives = false;
+      return this.notifications.sendWarning(`Representative ${newRep} does not exist.`);
+    }
+
     const allAccounts = accounts.find(a => a.id === 'All Accounts');
     const accountsToChange = allAccounts ? this.wallet.wallet.accounts : accounts;
 
