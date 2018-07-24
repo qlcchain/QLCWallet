@@ -16,6 +16,10 @@ export class RepresentativeService {
       id: 'qlc_3oftfjxu9x9pcjh1je3xfpikd441w1wo313qjc6ie1es5aobwed5x4pjojic',
       name: 'QLCChain genesis Rep',
       trusted: true,
+    }, {
+      id: 'qlc_1fgjjb6se11atyyij6xkkkxyhc1psbhdg7s6xau1d8hguz3miausjqfpxc8q',
+      name: 'QLCChain Wallet Rep',
+      trusted: true,
     }
   ];
 

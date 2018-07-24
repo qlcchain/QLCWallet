@@ -66,8 +66,8 @@ export class RepresentativesComponent implements OnInit {
       const repOnline = onlineReps.indexOf(representative.account) !== -1;
       const knownRep = this.representativeService.getRepresentative(representative.account);
 
-      const nanoWeight = this.util.qlc.rawToMqlc(representative.weight || 0);
-      const percent = nanoWeight.div(totalSupply).times(100);
+      const qlcWeight = this.util.qlc.rawToMqlc(representative.weight || 0);
+      const percent = qlcWeight.div(totalSupply).times(100);
 
       // Determine the status based on some factors
       let status = 'none';
@@ -85,7 +85,7 @@ export class RepresentativesComponent implements OnInit {
 
       const repOverview = {
         id: representative.account,
-        weight: nanoWeight,
+        weight: qlcWeight,
         delegatedWeight: representative.delegatedWeight,
         percent: percent,
         status: status,
@@ -111,7 +111,15 @@ export class RepresentativesComponent implements OnInit {
           .then(res => {
             res.id = account.id;
             res.addressBookName = account.addressBookName;
-
+            const token_account_infos = res.account_infos;
+            const root_token_info = token_account_infos.filter(token_account_info => token_account_info.token === 'Root_Token')[0];
+            if (root_token_info !== undefined) {
+              res.representative = root_token_info.representative;
+              res.balance = root_token_info.balance;
+              console.log(`${account.id} resp: ${res.representative} balance: ${res.balance}`);
+            } else {
+              console.log(`${account.id} does not hold any Root_Token`);
+            }
             return res;
           })
       )
@@ -281,15 +289,11 @@ export class RepresentativesComponent implements OnInit {
     // Remove any that don't need their represetatives to be changed
     const accountsNeedingChange = accountsToChange.filter(account => {
       const accountInfo = this.fullAccounts.find(a => a.id === account.id);
-      if (!accountInfo || accountInfo.error) {
-        return false; // Cant find info, update the account
+      // token account exist and token account holder ROOT_TOKEN
+      if (accountInfo && accountInfo.representative) {
+        return accountInfo.representative.toLowerCase() !== newRep.toLowerCase();
       }
-
-      if (accountInfo.representative.toLowerCase() === newRep.toLowerCase()) {
-        return false; // This account already has this representative, reject it
-      }
-
-      return true;
+      return false;
     });
 
     if (!accountsNeedingChange.length) {

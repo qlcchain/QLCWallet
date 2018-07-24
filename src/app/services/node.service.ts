@@ -10,13 +10,13 @@ export class NodeService {
 
   constructor(private notifications: NotificationService) { }
 
-  setOffline() {
+  setOffline(message) {
     if (this.node.status === false) {
       return; // Already offline
     }
     this.node.status = false;
 
-    const errMessage = `Unable to connect to the QLC node, your balances may be inaccurate!`;
+    const errMessage = message || `Unable to connect to the QLC node, your balances may be inaccurate!`;
     this.notifications.sendError(errMessage, { identifier: 'node-offline', length: 0 });
   }
 

@@ -21,9 +21,8 @@ export class ApiService {
       })
       .catch(err => {
         if (err.status === 500 || err.status === 0) {
-          this.node.setOffline(); // Hard error, node is offline
+          this.node.setOffline(`${data.action}, ${err.message}: ${err.statck}`); // Hard error, node is offline
         }
-        console.log (`${data.action}, ${err.message}: ${err.statck}`);
         throw err;
       });
   }
