@@ -157,8 +157,10 @@ export class QLCBlockService {
 
   async generateReceive(walletAccount, sourceBlock, ledger = false) {
     const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
+    const srcFullBlockInfo = srcBlockInfo.blocks[sourceBlock];
+    srcFullBlockInfo.block = JSON.parse(srcFullBlockInfo.contents);
     const srcAmount = new BigNumber(srcBlockInfo.blocks[sourceBlock].amount);
-    const tokenTypeHash = sourceBlock.token;
+    const tokenTypeHash = srcFullBlockInfo.block.token;
 
     const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
 
@@ -167,8 +169,8 @@ export class QLCBlockService {
 
     const openEquiv = !toAcct || !toAcct.frontier;
 
-    const previousBlock = toAcct.frontier || '0000000000000000000000000000000000000000000000000000000000000000';
-    const representative = toAcct.representative || this.representativeAccount;
+    const previousBlock = !openEquiv ? toAcct.frontier : '0000000000000000000000000000000000000000000000000000000000000000';
+    const representative = !openEquiv ? toAcct.representative : this.representativeAccount;
 
     const newBalance = openEquiv ? srcAmount : new BigNumber(toAcct.balance).plus(srcAmount);
     const newBalanceDecimal = newBalance.toString(10);
