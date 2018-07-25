@@ -6,9 +6,7 @@ import { promise } from 'protractor';
 @Injectable()
 export class ApiService {
 
-  // rpcUrl = `https://nanovault.io/api/node-api`;
-  // FIXME: change to https?
-  rpcUrl = `http://localhost:8888/api/node-api`;
+  rpcUrl = `https://api.qlcchain.online`;
 
   constructor(private http: HttpClient, private node: NodeService) { }
 
