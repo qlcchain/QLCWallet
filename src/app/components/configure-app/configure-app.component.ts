@@ -303,7 +303,7 @@ export class ConfigureAppComponent implements OnInit {
   
   loadFromSettings() {
     const settings = this.appSettings.settings;
-    
+   
     const matchingLang = this.languages.find(d => d.value === settings.lang);
     this.selectedLang = matchingLang.value || this.languages[0].value;
     
@@ -316,10 +316,10 @@ export class ConfigureAppComponent implements OnInit {
     const matchingStorage = this.storageOptions.find(d => d.value === settings.walletStore);
     this.selectedStorage = matchingStorage.value || this.storageOptions[0].value;
     
-    const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value === settings.lockInactivityMinutes);
+    const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value == settings.lockInactivityMinutes);
     this.selectedInactivityMinutes = matchingInactivityMinutes ? matchingInactivityMinutes.value : this.inactivityOptions[4].value;
     
-    const matchingLockOption = this.lockOptions.find(d => d.value === settings.lockOnClose);
+    const matchingLockOption = this.lockOptions.find(d => d.value == settings.lockOnClose);
     this.selectedLockOption = matchingLockOption ? matchingLockOption.value : this.lockOptions[0].value;
     
     const matchingPowOption = this.powOptions.find(d => d.value === settings.powSource);
@@ -341,7 +341,7 @@ export class ConfigureAppComponent implements OnInit {
       displayDenomination: this.selectedDenomination,
       lang: newLang
     };
-    
+    console.log(newSettings);
     this.appSettings.setAppSettings(newSettings);
     this.notifications.sendSuccess(this.msg23);
     

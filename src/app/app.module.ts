@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
+import { LangService } from './services/lang.service';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -29,7 +29,7 @@ import { ManageWalletComponent } from './components/manage-wallet/manage-wallet.
 import { WorkPoolService } from './services/work-pool.service';
 import { ConfigureAppComponent } from './components/configure-app/configure-app.component';
 import { AppSettingsService } from './services/app-settings.service';
-import { LangService } from './services/lang.service';
+
 import { WebsocketService } from './services/websocket.service';
 import { QLCBlockService } from './services/qlc-block.service';
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
@@ -103,6 +103,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ModalModule.forRoot()
   ],
   providers: [
+    LangService,
     UtilService,
     WalletService,
     NotificationService,
@@ -111,7 +112,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ModalService,
     WorkPoolService,
     AppSettingsService,
-    LangService,
     WebsocketService,
     QLCBlockService,
     PriceService,

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { RepresentativeService } from './services/representative.service';
 import { NodeService } from './services/node.service';
 import { LangService } from './services/lang.service';
-import Nano from 'hw-app-nano';
+
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 
 @Component({

@@ -85,8 +85,8 @@ export class SendComponent implements OnInit {
     private util: UtilService,
     private trans: TranslateService
   ) {
-    // this.accountTokens = this.accounts[0].account_info.account_infos;
-    // this.selectedToken = this.accountTokens[0];
+    //this.accountTokens = this.accounts[0].account_info.account_infos;
+    //this.selectedToken = this.accountTokens[0];
     if (this.accounts !== undefined && this.accounts.length > 0) {
       this.searchAddressBook();
       
@@ -189,6 +189,7 @@ export class SendComponent implements OnInit {
     this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
       this.loadLang();
     });
+    this.loadBalances();
   }
   
   // An update to the Nano amount, sync the fiat value
@@ -387,6 +388,7 @@ export class SendComponent implements OnInit {
     }
     
     selectAccount() {
+      
       const selectedAccount = this.accounts.find(a => a.id === this.fromAccountID);
       this.accountTokens = ((selectedAccount !== undefined && selectedAccount.account_info.account_infos !== undefined && selectedAccount.account_info.account_infos.length > 0) ? selectedAccount.account_info.account_infos : []);
       this.selectedToken = ((this.accountTokens !== undefined && this.accountTokens.length > 0) ? this.accountTokens[0] : []);

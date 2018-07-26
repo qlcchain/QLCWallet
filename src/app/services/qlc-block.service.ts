@@ -8,6 +8,7 @@ import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 import { WalletService } from './wallet.service';
 import { LedgerService } from './ledger.service';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 const nacl = window['nacl'];
 
 const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000006';
@@ -16,19 +17,65 @@ const STATE_BLOCK_PREAMBLE = '00000000000000000000000000000000000000000000000000
 export class QLCBlockService {
   representativeAccount = 'qlc_3oftfjxu9x9pcjh1je3xfpikd441w1wo313qjc6ie1es5aobwed5x4pjojic'; // QLC Representative
 
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  msg6:string = '';
+  msg7:string = '';
+
   constructor(
     private api: ApiService,
     private util: UtilService,
     private workPool: WorkPoolService,
     private notifications: NotificationService,
     private ledgerService: LedgerService,
-    public settings: AppSettingsService) { }
+    public settings: AppSettingsService,
+    private trans: TranslateService
+  ) {
+    this.loadLang();
+    this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.loadLang();
+    });
+   }
+
+   loadLang() {
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg6').subscribe((res: string) => {
+      console.log(res);
+      this.msg6 = res;
+    });
+    this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg7').subscribe((res: string) => {
+      console.log(res);
+      this.msg7 = res;
+    });
+  }
 
   async generateChange(walletAccount, representativeAccount, ledger = false) {
     const tokenTypeHash = '125998E086F7011384F89554676B69FCD86769642080CE7EED4A8AA83EF58F36';
     const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
     if (!toAcct) {
-      throw new Error(`Account of ${toAcct.token} must have an open block first`);
+      throw new Error(this.msg1+` ${toAcct.token} `+this.msg2);
     }
 
     let blockData;
@@ -58,7 +105,7 @@ export class QLCBlockService {
     }
 
     if (!this.workPool.workExists(toAcct.frontier)) {
-      this.notifications.sendInfo(`Generating Proof of Work...`);
+      this.notifications.sendInfo(this.msg3);
     }
 
     blockData = {
@@ -91,7 +138,7 @@ export class QLCBlockService {
   async generateSend(walletAccount, toAccountID, tokenTypeHash, rawAmount, ledger = false) {
     const fromAccount = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
     if (!fromAccount) {
-      throw new Error(`Unable to get account information for ${walletAccount.id}`);
+      throw new Error(this.msg4+` ${walletAccount.id}`);
     }
 
     const remaining = new BigNumber(fromAccount.balance).minus(rawAmount);
@@ -122,7 +169,7 @@ export class QLCBlockService {
     }
 
     if (!this.workPool.workExists(fromAccount.frontier)) {
-      this.notifications.sendInfo(`Generating Proof of Work...`);
+      this.notifications.sendInfo(this.msg3);
     }
 
     blockData = {
@@ -145,7 +192,7 @@ export class QLCBlockService {
 
     const processResponse = await this.api.process(blockData);
     if (!processResponse || !processResponse.hash) {
-      throw new Error(processResponse.error || `Node returned an error`);
+      throw new Error(processResponse.error || this.msg5);
     }
 
     walletAccount.frontier = processResponse.hash;
@@ -197,7 +244,7 @@ export class QLCBlockService {
         signature = sig.signature.toUpperCase();
       } catch (err) {
         this.notifications.removeNotification('ledger-sign');
-        this.notifications.sendWarning(`Transaction denied on Ledger device`);
+        this.notifications.sendWarning(this.msg6);
         return;
       }
     }
@@ -220,7 +267,7 @@ export class QLCBlockService {
     }
 
     if (!this.workPool.workExists(workBlock)) {
-      this.notifications.sendInfo(`Generating Proof of Work...`);
+      this.notifications.sendInfo(this.msg3);
     }
 
     blockData.work = await this.workPool.getWork(workBlock);
@@ -257,10 +304,10 @@ export class QLCBlockService {
   }
 
   sendLedgerDeniedNotification() {
-    this.notifications.sendWarning(`Transaction denied on Ledger device`);
+    this.notifications.sendWarning(this.msg6);
   }
   sendLedgerNotification() {
-    this.notifications.sendInfo(`Waiting for confirmation on Ledger Device...`, { identifier: 'ledger-sign', length: 0 });
+    this.notifications.sendInfo(this.msg7, { identifier: 'ledger-sign', length: 0 });
   }
   clearLedgerNotification() {
     this.notifications.removeNotification('ledger-sign');

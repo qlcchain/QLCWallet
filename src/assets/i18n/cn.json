@@ -29,7 +29,7 @@
     "wallet_details":"账户详情"
   },
   "ACCOUNT_DETAILS": {
-     "account_details_title":"账户详情",
+    "account_details_title":"账户详情",
     "account":"账户",
     "balances_title":"余额",
     "token":"Token",
@@ -45,7 +45,7 @@
     "view_account_details":"查看账户详情"
   },
   "TRANSACTION_DETAILS": {
-       "transaction_details":"交易详情",
+    "transaction_details":"交易详情",
     "transaction_error":"无法加载交易，请检查Hash值后重试。",
     "send":"发送",
     "receive":"接收",
@@ -300,83 +300,84 @@
     "export_address_book_text2":"扫描任何设备上的二维码以加载QLC Chain钱包。<br> <br>如果无法扫描，可以使用下面的URL导入你的钱包。",
     "export_address_book_copied":"地址簿已复制至剪贴板"
   },
-  "WALLET":{
-    "wallet_locked":"已锁定",
-    "wallet_unlocked":"未锁定",
-    "configure_wallet":"配置钱包",
-    "unlock_wallet":"解锁钱包",
-    "enter_wallet_password":"输入钱包密码",
-    "cancel":"取消",
-    "unlock":"解锁"
-  },
   "WALLET_WARNINGS":{
-    "msg1":"CN - Wallet unlocked",
-    "msg2":"CN - Invalid password, please try again!",
-    "msg3":"CN - You must set a password on your wallet - it is currently blank!",
-    "msg4":"CN - Wallet locked",
-    "msg5":"CN - Unable to lock wallet",
-    "msg6":"CN - Checking Ledger Status...",
-    "msg7":"CN - Successfully connected to Ledger device"
+    "msg1":"钱包未锁定",
+    "msg2":"无效密码，请重试。",
+    "msg3":"密码不可为空。",
+    "msg4":"钱包已锁定",
+    "msg5":"无法锁定钱包",
+    "msg6":"Ledger状态查询中",
+    "msg7":"成功连接Ledger设备"
   },
   "SEND_WARNINGS": {
-    "msg1":"Account not found",
-    "msg2":"To account address is not valid",
-    "msg3":"From and to account are required",
-    "msg4":"From account not found",
-    "msg5":"From and to account cannot be the same",
-    "msg6":"Amount is invalid",
-    "msg7":"Transactions for less than 1 qlc will be ignored by the node.  Send raw amounts with at least 1 qlc.",
-    "msg8":"From account does not have enough",
-    "msg9":"Unable to find sending account in wallet",
-    "msg10":"Wallet must be unlocked",
-    "msg11":"Successfully sent",
-    "msg12":"There was an error sending your transaction, please try again.",
-    "msg13":"There was an error sending your transaction:"
+    "msg1":"未找到此账户",
+    "msg2":"接收账户无效",
+    "msg3":"发送及接收账户无可为空",
+    "msg4":"无法找到发送账户",
+    "msg5":"发送账户和接收账户不可相同",
+    "msg6":"数量无效",
+    "msg7":"最少发送 1 QLC，否则节点将无视此交易。",
+    "msg8":"发送账户余额不足",
+    "msg9":"无法在钱包中找到发送账户",
+    "msg10":"请解锁钱包",
+    "msg11":"发送成功",
+    "msg12":"发生错误，请重试",
+    "msg13":"发生错误"
   },
   "REPS_WARNINGS": {
-    "msg1":"Unable to determine online status of representatives",
-    "msg2":"Wallet must be unlocked",
-    "msg3":"You must select at least one account to change",
-    "msg4":"Representative is not a valid account",
-    "msg5":"Representative",
-    "msg6":"does not exist.",
-    "msg7":"None of the accounts selected need to be updated",
-    "msg8":"Error changing representative for",
-    "msg9":", please try again",
-    "msg10":"Successfully updated representatives!"
+    "msg1":"无法确定代表节点的在线状态",
+    "msg2":"请解锁钱包",
+    "msg3":"需选定一个账户",
+    "msg4":"非有效账户",
+    "msg5":"代表节点",
+    "msg6":"不存在",
+    "msg7":"所选账户无需更新",
+    "msg8":"发生错误",
+    "msg9":"，请重试",
+    "msg10":"成功更新代表节点！"
   },
   "RECEIVE_WARNINGS": {
-    "msg1":"unable to find receiving account in wallet",
-    "msg2":"Wallet must be unlocked",
-    "msg3":"Successfully received",
-    "msg4":"There was an error receiving the transaction",
-    "msg5":"Successfully copied to clipboard!"
+    "msg1":"无法找到接收账户",
+    "msg2":"请解锁钱包W",
+    "msg3":"接收成功",
+    "msg4":"发生错误",
+    "msg5":"成功复制至剪贴板"
   },
   "MANAGE_WALLET_WARNINGS": {
-    "msg1":"Passwords do not match",
-    "msg2":"Password cannot be empty",
-    "msg3":"Wallet must be unlocked",
-    "msg4":"Wallet password successfully updated",
-    "msg5":"Wallet must be unlocked",
-    "msg6":"Wallet seed copied to clipboard!",
-    "msg7":"Address books with 25 or more entries need to use the file export method.",
-    "msg8":"Address book export downloaded!",
-    "msg9":"Wallet export downloaded!",
-    "msg10":"Bad import data, make sure you selected a NanoVault Address Book export",
-    "msg11":"Unable to parse import data, make sure you selected the right file!"
+    "msg1":"密码不符",
+    "msg2":"密码不可为空",
+    "msg3":"请解锁钱包",
+    "msg4":"成功更新钱包密码",
+    "msg5":"请解锁钱包",
+    "msg6":"钱包Seed复制至剪贴板",
+    "msg7":"地址簿包含25或更多条目，请导出为文件。",
+    "msg8":"地址簿已下载",
+    "msg9":"钱包已下载",
+    "msg10":"发生错误，请选择NanoVault地址簿",
+    "msg11":"发生错误，请选择正确的文件"
+  },
+  "MANAGE_REPS_WARNINGS": {
+    "msg1":"请输入账户和名称",
+    "msg2":"账户ID无效",
+    "msg3":"成功保存新代表节点",
+    "msg4":"无法保存：",
+    "msg5":"账户地址复制至剪贴板",
+    "msg6":"无法确定代表节点的在线状态",
+    "msg7":"成功删除代表节点",
+    "msg8":"无法删除代表节点："
   },
   "IMPORT_WALLET_WARNINGS": {
-    "msg1":"No import data found.  Check your link and try again.",
-    "msg2":"Bad import data.  Check your link and try again.",
-    "msg3":"Unable to decode import data.  Check your link and try again.",
-    "msg4":"Invalid password, please try again"
+    "msg1":"无法找到导入数据，请检查后重试。",
+    "msg2":"导入数据发生错误，请检查后重试。",
+    "msg3":"无法解码导入数据，请检查后重试",
+    "msg4":"密码无效"
   },
   "IMPORT_ADDRESS_BOOK_WARNINGS": {
-    "msg1":"No import data found.  Check your link and try again.",
-    "msg2":"Bad import data.  Check your link and try again.",
-    "msg3":"Unable to decode import data.  Check your link and try again.",
-    "msg4":"Successfully imported",
-    "msg5":"address book entries"
+    "msg1":"无法找到导入数据，请检查后重试。",
+    "msg2":"导入数据发生错误，请检查后重试。",
+    "msg3":"无法解码导入数据，请检查后重试。",
+    "msg4":"成功导入",
+    "msg5":"地址簿条目"
   },
   "CONFIGURE_WALLET_WARNINGS": {
     "msg1":"CN - QLC Seed",
@@ -431,6 +432,55 @@
     "msg27":"Successfully deleted all wallet data!",
     "msg28":"<p style='text-align: center;'>You are about to delete ALL of your data stored in NanoVault.<br>This includes all of your wallet data, your address book, and your application settings!<br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
     "msg29":"Successfully deleted ALL locally stored data!"
+  },
+  "ADDRESS_BOOK_WARNINGS": {
+    "msg1":"Updated address book order",
+    "msg2":"Account and name are required",
+    "msg3":"This name is already in use!  Please use a unique name",
+    "msg4":"Account ID is not a valid account",
+    "msg5":"Successfully created new name for account!",
+    "msg6":"Unable to save entry:",
+    "msg7":"Account address copied to clipboard!",
+    "msg8":"Successfully deleted address book entry",
+    "msg9":"Unable to delete entry:"
+  },
+  "ACCOUNTS_WARNINGS": {
+    "msg1":"Wallet is locked.",
+    "msg2":"Wallet is not configured",
+    "msg3":"You can only track up to 20 accounts at a time.",
+    "msg4":"Successfully created new account",
+    "msg5":"Successfully copied to clipboard!",
+    "msg6":"Wallet must be unlocked.",
+    "msg7":"Successfully removed account",
+    "msg8":"Unable to delete account:",
+    "msg9":"Ledger device must be ready",
+    "msg10":"Confirming account address on Ledger device...",
+    "msg11":"Account address confirmed on Ledger",
+    "msg12":"Account address denied - if it is wrong do not use the wallet!"
+  },
+  "ACCOUNT_DETAILS_WARNINGS": {
+    "msg1":"Wallet must be unlocked",
+    "msg2":"Account ID is not a valid account",
+    "msg3":"Error changing representative, please try again",
+    "msg4":"Successfully changed representative",
+    "msg5":"Successfully removed address book entry!",
+    "msg6":"Saved address book entry!",
+    "msg7":"Successfully copied to clipboard!"
+  },
+  "SERVICE_WARNINGS_ADDRESS_BOOK": {
+    "msg1":"Name already exists in the address book"
+  },
+  "SERVICE_WARNINGS_NODE": {
+    "msg1":"Unable to connect to the QLC node, your balances may be inaccurate!"
+  },
+  "SERVICE_WARNINGS_QLC_SERVICE": {
+    "msg1":"Account of",
+    "msg2":"must have an open block first",
+    "msg3":"Generating Proof of Work...",
+    "msg4":"Unable to get account information for",
+    "msg5":"Node returned an error",
+    "msg6":"Transaction denied on Ledger device",
+    "msg7":"Waiting for confirmation on Ledger Device..."
   },
   "NO_WALLET_CONFIGURED": "未有已配置的钱包",
   "NO_WALLET_CONFIGURED_CLICK": "创建或导入",

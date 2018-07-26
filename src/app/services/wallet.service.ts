@@ -243,7 +243,7 @@ export class WalletService {
     const base64Data = btoa(JSON.stringify(exportData));
 
     // FIXME: change url
-    return `https://wallet.qlcchain.org/import-wallet#${base64Data}`;
+    return `https://wallet.qlcchain.online/import-wallet#${base64Data}`;
   }
 
   lockWallet() {
