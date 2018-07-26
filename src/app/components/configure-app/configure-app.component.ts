@@ -9,6 +9,7 @@ import { AddressBookService } from '../../services/address-book.service';
 import { ApiService } from '../../services/api.service';
 import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 import { LangService } from '../../services/lang.service';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import BigNumber from 'bignumber.js';
 
 @Component({
@@ -18,51 +19,81 @@ import BigNumber from 'bignumber.js';
 })
 export class ConfigureAppComponent implements OnInit {
   wallet = this.walletService.wallet;
-
+  
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  msg6:string = '';
+  msg7:string = '';
+  msg8:string = '';
+  msg9:string = '';
+  msg10:string = '';
+  msg11:string = '';
+  msg12:string = '';
+  msg13:string = '';
+  msg14:string = '';
+  msg15:string = '';
+  msg16:string = '';
+  msg17:string = '';
+  msg18:string = '';
+  msg19:string = '';
+  msg20:string = '';
+  msg21:string = '';  
+  msg22:string = '';
+  msg23:string = '';
+  msg24:string = '';
+  msg25:string = '';
+  msg26:string = '';
+  msg27:string = '';
+  msg28:string = '';
+  msg29:string = '';
+  
   denominations = [
-    { name: 'QLC (1 Mqlc)', value: 'mqlc' },
-    { name: 'kqlc (0.001 Mqlc)', value: 'kqlc' },
-    { name: 'qlc (0.000001 Mqlc)', value: 'qlc' },
+    { name: this.msg1, value: 'mqlc' },
+    { name: this.msg2, value: 'kqlc' },
+    { name: this.msg3, value: 'qlc' },
   ];
   selectedDenomination = this.denominations[0].value;
-
+  
   languages = [
-    { name: 'English', value: 'en' },
-    { name: 'Chinese', value: 'cn' }
+    { name: this.msg4, value: 'en' },
+    { name: this.msg5, value: 'cn' }
   ];
   selectedLang = this.languages[0].value;
-
+  
   storageOptions = [
-    { name: 'Browser Local Storage', value: 'localStorage' },
-    { name: 'None', value: 'none' },
+    { name: this.msg6, value: 'localStorage' },
+    { name: this.msg7, value: 'none' },
   ];
   selectedStorage = this.storageOptions[0].value;
-
+  
   currencies = [
-    { name: 'None', value: '' },
-    { name: 'USD - US Dollar', value: 'USD' },
-    { name: 'BTC - Bitcoin', value: 'BTC' },
-    { name: 'CNY - Chinese Yuan', value: 'CNY' }
+    { name: this.msg8, value: '' },
+    { name: this.msg9, value: 'USD' },
+    { name: this.msg10, value: 'BTC' },
+    { name: this.msg11, value: 'CNY' }
   ];
   selectedCurrency = this.currencies[0].value;
-
+  
   inactivityOptions = [
-    { name: 'Never', value: 0 },
-    { name: '1 Minute', value: 1 },
-    { name: '5 Minutes', value: 5 },
-    { name: '15 Minutes', value: 15 },
-    { name: '30 Minutes', value: 30 },
-    { name: '1 Hour', value: 60 },
-    { name: '6 Hours', value: 360 },
+    { name: this.msg12, value: 0 },
+    { name: this.msg13, value: 1 },
+    { name: this.msg14, value: 5 },
+    { name: this.msg15, value: 15 },
+    { name: this.msg16, value: 30 },
+    { name: this.msg17, value: 60 },
+    { name: this.msg18, value: 360 },
   ];
   selectedInactivityMinutes = this.inactivityOptions[4].value;
-
+  
   lockOptions = [
-    { name: 'Lock Wallet On Close', value: 1 },
-    { name: 'Do Not Lock Wallet On Close', value: 0 },
+    { name: this.msg19, value: 1 },
+    { name: this.msg20, value: 0 },
   ];
   selectedLockOption = 1;
-
+  
   powOptions = [
     { name: 'Best Option Available', value: 'best' },
     { name: 'Client Side - WebGL (Chrome/Firefox)', value: 'clientWebGL' },
@@ -70,14 +101,14 @@ export class ConfigureAppComponent implements OnInit {
     { name: 'Server - NanoVault Server', value: 'server' },
   ];
   selectedPoWOption = this.powOptions[0].value;
-
+  
   blockOptions = [
-    { name: 'Legacy Blocks', value: false },
-    { name: 'State Blocks', value: true },
+    { name: this.msg21, value: false },
+    { name: this.msg22, value: true },
   ];
   selectedBlockOption = this.blockOptions[0].value;
   langService: LangService;
-
+  
   constructor(
     private walletService: WalletService,
     private notifications: NotificationService,
@@ -88,39 +119,213 @@ export class ConfigureAppComponent implements OnInit {
     private ledgerService: LedgerService,
     private workPool: WorkPoolService,
     private price: PriceService,
-    private lang: LangService) {
+    private lang: LangService,
+    private trans: TranslateService
+  ) {
     this.langService = lang;
+    this.loadLang();
   }
-
+  
   async ngOnInit() {
     this.loadFromSettings();
+    this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.loadLang();
+    });
   }
-
+  
+  loadLang() {
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg6').subscribe((res: string) => {
+      console.log(res);
+      this.msg6 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg7').subscribe((res: string) => {
+      console.log(res);
+      this.msg7 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg8').subscribe((res: string) => {
+      console.log(res);
+      this.msg8 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg9').subscribe((res: string) => {
+      console.log(res);
+      this.msg9 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg10').subscribe((res: string) => {
+      console.log(res);
+      this.msg10 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg11').subscribe((res: string) => {
+      console.log(res);
+      this.msg11 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg12').subscribe((res: string) => {
+      console.log(res);
+      this.msg12 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg13').subscribe((res: string) => {
+      console.log(res);
+      this.msg13 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg14').subscribe((res: string) => {
+      console.log(res);
+      this.msg14 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg15').subscribe((res: string) => {
+      console.log(res);
+      this.msg15 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg16').subscribe((res: string) => {
+      console.log(res);
+      this.msg16 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg17').subscribe((res: string) => {
+      console.log(res);
+      this.msg17 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg18').subscribe((res: string) => {
+      console.log(res);
+      this.msg18 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg19').subscribe((res: string) => {
+      console.log(res);
+      this.msg19 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg20').subscribe((res: string) => {
+      console.log(res);
+      this.msg20 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg21').subscribe((res: string) => {
+      console.log(res);
+      this.msg21 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg22').subscribe((res: string) => {
+      console.log(res);
+      this.msg22 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg23').subscribe((res: string) => {
+      console.log(res);
+      this.msg23 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg24').subscribe((res: string) => {
+      console.log(res);
+      this.msg24 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg25').subscribe((res: string) => {
+      console.log(res);
+      this.msg25 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg26').subscribe((res: string) => {
+      console.log(res);
+      this.msg26 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg27').subscribe((res: string) => {
+      console.log(res);
+      this.msg27 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg28').subscribe((res: string) => {
+      console.log(res);
+      this.msg28 = res;
+    });
+    this.trans.get('CONFIGURE_APP_WARNINGS.msg29').subscribe((res: string) => {
+      console.log(res);
+      this.msg29 = res;
+    });
+    this.denominations = [
+      { name: this.msg1, value: 'mqlc' },
+      { name: this.msg2, value: 'kqlc' },
+      { name: this.msg3, value: 'qlc' },
+    ];
+    
+    this.languages = [
+      { name: this.msg4, value: 'en' },
+      { name: this.msg5, value: 'cn' }
+    ];
+    
+    this.storageOptions = [
+      { name: this.msg6, value: 'localStorage' },
+      { name: this.msg7, value: 'none' },
+    ];
+    
+    this.currencies = [
+      { name: this.msg8, value: '' },
+      { name: this.msg9, value: 'USD' },
+      { name: this.msg10, value: 'BTC' },
+      { name: this.msg11, value: 'CNY' }
+    ];
+    
+    this.inactivityOptions = [
+      { name: this.msg12, value: 0 },
+      { name: this.msg13, value: 1 },
+      { name: this.msg14, value: 5 },
+      { name: this.msg15, value: 15 },
+      { name: this.msg16, value: 30 },
+      { name: this.msg17, value: 60 },
+      { name: this.msg18, value: 360 },
+    ];
+    
+    this.lockOptions = [
+      { name: this.msg19, value: 1 },
+      { name: this.msg20, value: 0 },
+    ];
+    
+    this.powOptions = [
+      { name: 'Best Option Available', value: 'best' },
+      { name: 'Client Side - WebGL (Chrome/Firefox)', value: 'clientWebGL' },
+      { name: 'Client Side - CPU', value: 'clientCPU' },
+      { name: 'Server - NanoVault Server', value: 'server' },
+    ];
+    
+    this.blockOptions = [
+      { name: this.msg21, value: false },
+      { name: this.msg22, value: true },
+    ];
+  }
+  
   loadFromSettings() {
     const settings = this.appSettings.settings;
-
+    
     const matchingLang = this.languages.find(d => d.value === settings.lang);
     this.selectedLang = matchingLang.value || this.languages[0].value;
-
+    
     const matchingCurrency = this.currencies.find(d => d.value === settings.displayCurrency);
     this.selectedCurrency = matchingCurrency.value || this.currencies[0].value;
-
+    
     const matchingDenomination = this.denominations.find(d => d.value === settings.displayDenomination);
     this.selectedDenomination = matchingDenomination.value || this.denominations[0].value;
-
+    
     const matchingStorage = this.storageOptions.find(d => d.value === settings.walletStore);
     this.selectedStorage = matchingStorage.value || this.storageOptions[0].value;
-
+    
     const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value === settings.lockInactivityMinutes);
     this.selectedInactivityMinutes = matchingInactivityMinutes ? matchingInactivityMinutes.value : this.inactivityOptions[4].value;
-
+    
     const matchingLockOption = this.lockOptions.find(d => d.value === settings.lockOnClose);
     this.selectedLockOption = matchingLockOption ? matchingLockOption.value : this.lockOptions[0].value;
-
+    
     const matchingPowOption = this.powOptions.find(d => d.value === settings.powSource);
     this.selectedPoWOption = matchingPowOption ? matchingPowOption.value : this.powOptions[0].value;
   }
-
+  
   async updateAppSettings() {
     const newStorage = this.selectedStorage;
     const resaveWallet = this.appSettings.settings.walletStore !== newStorage;
@@ -128,7 +333,7 @@ export class ConfigureAppComponent implements OnInit {
     const reloadFiat = this.appSettings.settings.displayCurrency !== newCurrency;
     const newLang = this.selectedLang;
     const reloadLang = this.appSettings.settings.lang !== newLang;
-
+    
     const newSettings = {
       walletStore: newStorage,
       lockOnClose: this.selectedLockOption,
@@ -136,14 +341,14 @@ export class ConfigureAppComponent implements OnInit {
       displayDenomination: this.selectedDenomination,
       lang: newLang
     };
-
+    
     this.appSettings.setAppSettings(newSettings);
-    this.notifications.sendSuccess(`App settings successfully updated!`);
-
+    this.notifications.sendSuccess(this.msg23);
+    
     if (reloadLang) {
       this.langService.changeLang(newLang); // If swapping the storage engine, resave the wallet
     }
-
+    
     if (resaveWallet) {
       this.walletService.saveWalletExport(); // If swapping the storage engine, resave the wallet
     }
@@ -154,57 +359,50 @@ export class ConfigureAppComponent implements OnInit {
       this.walletService.reloadFiatBalances();
     }
   }
-
+  
   async clearWorkCache() {
     const UIkit = window['UIkit'];
     try {
-      const confirmMessage = `<p style="text-align: center;">
-      You are about to delete all locally cached Proof of Work values
-      <br><br><b>Are you sure?</b></p>`;
+      const confirmMessage = this.msg24;
       await UIkit.modal.confirm(confirmMessage);
       this.workPool.clearCache();
-      this.notifications.sendSuccess(`Successfully cleared the work cache!`);
+      this.notifications.sendSuccess(this.msg25);
     } catch (err) {
-
+      
     }
   }
-
+  
   async clearWalletData() {
     const UIkit = window['UIkit'];
     try {
-      const confirmMessage = `<p style="text-align: center;">
-      You are about to delete all of your wallet data stored in NanoVault!<br><b>Make sure you have your seed backed up!!
-      </b><br><br><b>Are you sure?</b></p>`;
+      const confirmMessage = this.msg26;
       await UIkit.modal.confirm(confirmMessage);
       this.walletService.resetWallet();
       this.walletService.removeWalletData();
-
-      this.notifications.sendSuccess(`Successfully deleted all wallet data!`);
+      
+      this.notifications.sendSuccess(this.msg27);
     } catch (err) {
-
+      
     }
   }
-
+  
   async clearAllData() {
     const UIkit = window['UIkit'];
     try {
-      const confirmMessage = `<p style="text-align: center;">
-      You are about to delete ALL of your data stored in NanoVault.<br>
-      This includes all of your wallet data, your address book, and your application settings!
-      <br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>`;
+      const confirmMessage = this.msg28;
       await UIkit.modal.confirm(confirmMessage);
       this.walletService.resetWallet();
       this.walletService.removeWalletData();
-
+      
       this.workPool.deleteCache();
       this.addressBook.clearAddressBook();
       this.appSettings.clearAppSettings();
-
+      
       this.loadFromSettings();
-
-      this.notifications.sendSuccess(`Successfully deleted ALL locally stored data!`);
+      
+      this.notifications.sendSuccess(this.msg29);
     } catch (err) {
-
+      
     }
   }
 }

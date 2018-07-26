@@ -4,7 +4,7 @@ import { NotificationService } from '../../services/notification.service';
 import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-wallet-widget',
@@ -30,8 +30,14 @@ export class WalletWidgetComponent implements OnInit {
   msg6:string = '';
   msg7:string = '';
   
-  constructor(public walletService: WalletService, private notificationService: NotificationService,
-    public ledgerService: LedgerService,private modalService: BsModalService,private trans: TranslateService) { }
+  constructor(
+    public walletService: WalletService,
+    private notificationService: NotificationService,
+    public ledgerService: LedgerService,
+    private modalService: BsModalService,
+    private trans: TranslateService) {
+      this.loadLang();
+    }
     
     ngOnInit() {
       const UIkit = (window as any).UIkit;
@@ -41,7 +47,10 @@ export class WalletWidgetComponent implements OnInit {
       this.ledgerService.ledgerStatus$.subscribe((ledgerStatus: string) => {
         this.ledgerStatus = ledgerStatus;
       });
-      this.loadLang();
+      this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+        this.loadLang();
+      });
+      
     }
     
     loadLang() {

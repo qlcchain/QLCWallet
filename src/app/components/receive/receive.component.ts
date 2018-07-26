@@ -9,6 +9,7 @@ import { UtilService } from '../../services/util.service';
 import { WorkPoolService } from '../../services/work-pool.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 const nacl = window['nacl'];
 
 @Component({
@@ -18,10 +19,16 @@ const nacl = window['nacl'];
 })
 export class ReceiveComponent implements OnInit {
   accounts = this.walletService.wallet.accounts;
-
+  
   pendingAccountModel = 0;
   pendingBlocks = [];
-
+  
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  
   constructor(
     private walletService: WalletService,
     private notificationService: NotificationService,
@@ -30,20 +37,50 @@ export class ReceiveComponent implements OnInit {
     private workPool: WorkPoolService,
     public settings: AppSettingsService,
     private nanoBlock: QLCBlockService,
-    private util: UtilService) { }
-
+    private util: UtilService,
+    private trans: TranslateService
+  ) {
+    this.loadLang();
+  }
+  
   async ngOnInit() {
     await this.loadPendingForAll();
+    this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.loadLang();
+    });
   }
-
+  
+  loadLang() {
+    this.trans.get('RECEIVE_WARNINGS.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('RECEIVE_WARNINGS.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('RECEIVE_WARNINGS.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('RECEIVE_WARNINGS.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('RECEIVE_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+  }
+  
   async loadPendingForAll() {
     this.pendingBlocks = [];
-
+    
     const pending = await this.api.accountsPending(this.accounts.map(a => a.id));
     if (!pending || !pending.blocks) {
       return;
     }
-
+    
     for (const account in pending.blocks) {
       if (!pending.blocks.hasOwnProperty(account)) {
         continue;
@@ -64,7 +101,7 @@ export class ReceiveComponent implements OnInit {
         this.pendingBlocks.push(pendingTx);
       }
     }
-
+    
     // Now, only if we have results, do a unique on the account names, and run account info on all of them?
     if (this.pendingBlocks.length) {
       const frontiers = await this.api.accountsFrontiers(this.pendingBlocks.map(p => p.account));
@@ -82,15 +119,15 @@ export class ReceiveComponent implements OnInit {
       }
     }
   }
-
+  
   async loadPendingForAccount(account) {
     this.pendingBlocks = [];
-
+    
     const pending = await this.api.pending(account, 50);
     if (!pending || !pending.blocks) {
       return;
     }
-
+    
     Object.keys(pending.blocks).map(block => {
       const pendingTx = {
         block: block,
@@ -103,7 +140,7 @@ export class ReceiveComponent implements OnInit {
       this.pendingBlocks.push(pendingTx);
     });
   }
-
+  
   async getPending(account) {
     if (!account || account === 0) {
       await this.loadPendingForAll();
@@ -111,40 +148,40 @@ export class ReceiveComponent implements OnInit {
       await this.loadPendingForAccount(account);
     }
   }
-
+  
   async receivePending(pendingBlock) {
     const sourceBlock = pendingBlock.block;
-
+    console.log(pendingBlock);
     const walletAccount = this.walletService.wallet.accounts.find(a => a.id === pendingBlock.account);
     if (!walletAccount) {
-      throw new Error(`unable to find receiving account in wallet`);
+      throw new Error(this.msg1);
     }
-
+    
     if (this.walletService.walletIsLocked()) {
-      return this.notificationService.sendWarning(`Wallet must be unlocked`);
+      return this.notificationService.sendWarning(this.msg2);
     }
     pendingBlock.loading = true;
-
+    
     const newBlock = await this.nanoBlock.generateReceive(walletAccount, sourceBlock, this.walletService.isLedgerWallet());
-
+    
     if (newBlock) {
       console.log(sourceBlock);
       console.log(newBlock);
-      this.notificationService.sendSuccess(`Successfully received `+sourceBlock.tokenName);
+      this.notificationService.sendSuccess(this.msg3+` `+pendingBlock.tokenName);
     } else {
       if (!this.walletService.isLedgerWallet()) {
-        this.notificationService.sendError(`There was an error receiving the transaction`);
+        this.notificationService.sendError(this.msg4);
       }
     }
-
+    
     pendingBlock.loading = false;
-
+    
     await this.walletService.reloadBalances();
     await this.loadPendingForAll();
   }
-
+  
   copied() {
-    this.notificationService.sendSuccess(`Successfully copied to clipboard!`);
+    this.notificationService.sendSuccess(this.msg5);
   }
-
+  
 }

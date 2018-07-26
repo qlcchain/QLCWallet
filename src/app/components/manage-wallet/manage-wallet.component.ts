@@ -4,6 +4,7 @@ import {NotificationService} from "../../services/notification.service";
 import * as QRCode from 'qrcode';
 import {AddressBookService} from "../../services/address-book.service";
 import {Router} from "@angular/router";
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import * as bip from 'bip39';
 
 @Component({
@@ -12,89 +13,155 @@ import * as bip from 'bip39';
   styleUrls: ['./manage-wallet.component.scss']
 })
 export class ManageWalletComponent implements OnInit {
-
+  
   wallet = this.walletService.wallet;
   accounts = this.walletService.wallet.accounts;
-
+  
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  msg6:string = '';
+  msg7:string = '';
+  msg8:string = '';
+  msg9:string = '';
+  msg10:string = '';
+  msg11:string = '';
+  
   newPassword = '';
   confirmPassword = '';
-
+  
   showQRExport = false;
   QRExportUrl = '';
   QRExportImg = '';
   addressBookShowQRExport = false;
   addressBookQRExportUrl = '';
   addressBookQRExportImg = '';
-
+  
   constructor(
     public walletService: WalletService,
     private addressBookService: AddressBookService,
     public notifications: NotificationService,
-    private router: Router) { }
-
+    private router: Router,
+    private trans: TranslateService
+  ) {
+    this.loadLang();
+  }
+  
   async ngOnInit() {
     this.wallet = this.walletService.wallet;
+    this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.loadLang();
+    });
   }
-
+  
+  loadLang() {
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg6').subscribe((res: string) => {
+      console.log(res);
+      this.msg6 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg7').subscribe((res: string) => {
+      console.log(res);
+      this.msg7 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg8').subscribe((res: string) => {
+      console.log(res);
+      this.msg8 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg9').subscribe((res: string) => {
+      console.log(res);
+      this.msg9 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg10').subscribe((res: string) => {
+      console.log(res);
+      this.msg10 = res;
+    });
+    this.trans.get('MANAGE_WALLET_WARNINGS.msg11').subscribe((res: string) => {
+      console.log(res);
+      this.msg11 = res;
+    });
+  }
+  
   async changePassword() {
-    if (this.newPassword !== this.confirmPassword) return this.notifications.sendError(`Passwords do not match`);
-    if (this.newPassword.length < 1) return this.notifications.sendError(`Password cannot be empty`);
-    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
-
+    if (this.newPassword !== this.confirmPassword) return this.notifications.sendError(this.msg1);
+    if (this.newPassword.length < 1) return this.notifications.sendError(this.msg2);
+    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(this.msg3);
+    
     this.walletService.wallet.password = this.newPassword;
     this.walletService.saveWalletExport();
-
+    
     this.newPassword = '';
     this.confirmPassword = '';
-    this.notifications.sendSuccess(`Wallet password successfully updated`);
+    this.notifications.sendSuccess(this.msg4);
   }
-
+  
   async exportWallet() {
-    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
-
+    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(this.msg5);
+    
     const exportUrl = this.walletService.generateExportUrl();
     this.QRExportUrl = exportUrl;
     this.QRExportImg = await QRCode.toDataURL(exportUrl);
     this.showQRExport = true;
   }
-
+  
   copied() {
-    this.notifications.sendSuccess(`Wallet seed copied to clipboard!`);
+    this.notifications.sendSuccess(this.msg6);
   }
-
+  
   seedMnemonic() {
     return bip.entropyToMnemonic(this.wallet.seed);
   }
-
+  
   async exportAddressBook() {
     const exportData = this.addressBookService.addressBook;
     if (exportData.length >= 25) {
-      return this.notifications.sendError(`Address books with 25 or more entries need to use the file export method.`);
+      return this.notifications.sendError(this.msg7);
     }
     const base64Data = btoa(JSON.stringify(exportData));
-    const exportUrl = `https://wallet.qclchain.org/import-address-book#${base64Data}`;
-
+    const exportUrl = `https://wallet.qclchain.online/import-address-book#${base64Data}`;
+    
     this.addressBookQRExportUrl = exportUrl;
     this.addressBookQRExportImg = await QRCode.toDataURL(exportUrl);
     this.addressBookShowQRExport = true;
   }
-
+  
   exportAddressBookToFile() {
-    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
+    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(this.msg3);
     const fileName = `QLC-AddressBook.json`;
-
+    
     const exportData = this.addressBookService.addressBook;
     this.triggerFileDownload(fileName, exportData);
-
-    this.notifications.sendSuccess(`Address book export downloaded!`);
+    
+    this.notifications.sendSuccess(this.msg8);
   }
-
+  
   triggerFileDownload(fileName, exportData) {
     const blob = new Blob([JSON.stringify(exportData)], { type: 'application/json' });
-
+    
     // Check for iOS, which is weird with saving files
     const iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
+    
     if (window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveBlob(blob, fileName);
     } else {
@@ -114,20 +181,20 @@ export class ManageWalletComponent implements OnInit {
       }, 200);
     }
   }
-
+  
   exportToFile() {
-    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(`Wallet must be unlocked`);
-
+    if (this.walletService.walletIsLocked()) return this.notifications.sendWarning(this.msg3);
+    
     const fileName = `QLC-Wallet.json`;
     const exportData = this.walletService.generateExportData();
     this.triggerFileDownload(fileName, exportData);
-
-    this.notifications.sendSuccess(`Wallet export downloaded!`);
+    
+    this.notifications.sendSuccess(this.msg9);
   }
-
+  
   importFromFile(files) {
     if (!files.length) return;
-
+    
     const file = files[0];
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -135,17 +202,17 @@ export class ManageWalletComponent implements OnInit {
       try {
         const importData = JSON.parse(fileData);
         if (!importData.length || !importData[0].account) {
-          return this.notifications.sendError(`Bad import data, make sure you selected a NanoVault Address Book export`)
+          return this.notifications.sendError(this.msg10)
         }
-
+        
         const walletEncrypted = btoa(JSON.stringify(importData));
         this.router.navigate(['import-address-book'], { fragment: walletEncrypted });
       } catch (err) {
-        this.notifications.sendError(`Unable to parse import data, make sure you selected the right file!`);
+        this.notifications.sendError(this.msg11);
       }
     };
-
+    
     reader.readAsText(file);
   }
-
+  
 }

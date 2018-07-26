@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NotificationService} from "../../services/notification.service";
 import {ActivatedRoute} from "@angular/router";
 import {AddressBookService} from "../../services/address-book.service";
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-import-address-book',
@@ -10,29 +11,42 @@ import {AddressBookService} from "../../services/address-book.service";
 })
 export class ImportAddressBookComponent implements OnInit {
   activePanel = 'error';
-
+  
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  
   validImportData = false;
   importData: any = null;
-
+  
   conflictingEntries = 0;
   newEntries = 0;
   existingEntries = 0;
-
-  constructor(private route: ActivatedRoute, private notifications: NotificationService, private addressBook: AddressBookService) { }
-
+  
+  constructor(
+    private route: ActivatedRoute, 
+    private notifications: NotificationService, 
+    private addressBook: AddressBookService,
+    private trans: TranslateService
+  ) {
+    this.loadLang();
+  }
+  
   ngOnInit() {
     const importData = this.route.snapshot.fragment;
-    if (!importData || !importData.length) return this.importDataError(`No import data found.  Check your link and try again.`);
-
+    if (!importData || !importData.length) return this.importDataError(this.msg1);
+    
     const decodedData = atob(importData);
-
+    
     try {
       const importBlob = JSON.parse(decodedData);
-      if (!importBlob || !importBlob.length) return this.importDataError(`Bad import data.  Check your link and try again.`);
+      if (!importBlob || !importBlob.length) return this.importDataError(this.msg2);
       this.validImportData = true;
       this.importData = importBlob;
       this.activePanel = 'import';
-
+      
       // Now, find conflicting accounts
       for (let entry of importBlob) {
         if (!entry.account || !entry.name) continue; // Data missing?
@@ -45,12 +59,38 @@ export class ImportAddressBookComponent implements OnInit {
           this.conflictingEntries++;
         }
       }
-
+      
     } catch (err) {
-      return this.importDataError(`Unable to decode import data.  Check your link and try again.`);
+      return this.importDataError(this.msg3);
     }
+    this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.loadLang();
+    });
   }
-
+  
+  loadLang() {
+    this.trans.get('IMPORT_ADDRESS_BOOK_WARNINGS.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('IMPORT_ADDRESS_BOOK_WARNINGS.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('IMPORT_ADDRESS_BOOK_WARNINGS.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('IMPORT_ADDRESS_BOOK_WARNINGS.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('IMPORT_ADDRESS_BOOK_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+  }
+  
   async confirmImport() {
     // Go through our address book and see which ones need to be saved
     let importedCount = 0;
@@ -63,14 +103,14 @@ export class ImportAddressBookComponent implements OnInit {
         importedCount++;
       }
     }
-
-    this.notifications.sendSuccess(`Successfully imported ${importedCount} address book entries`);
+    
+    this.notifications.sendSuccess(this.msg4 + ` ${importedCount} `+ this.msg5);
     this.activePanel = 'imported';
   }
-
+  
   importDataError(message) {
     this.activePanel = 'error';
     return this.notifications.sendError(message);
   }
-
+  
 }

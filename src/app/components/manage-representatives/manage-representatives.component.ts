@@ -6,6 +6,7 @@ import { ModalService } from '../../services/modal.service';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { RepresentativeService } from '../../services/representative.service';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -14,9 +15,18 @@ import 'rxjs/add/operator/map';
   styleUrls: ['./manage-representatives.component.scss']
 })
 export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
-
+  
   activePanel = 0;
-
+  
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  msg6:string = '';
+  msg7:string = '';
+  msg8:string = '';
+  
   // Set the online status of each representative
   representatives$ = this.repService.representatives$.map(reps => {
     return reps.map(rep => {
@@ -24,14 +34,14 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
       return rep;
     });
   });
-
+  
   newRepAccount = '';
   newRepName = '';
   newRepTrusted = false;
   newRepWarn = false;
-
+  
   onlineReps = [];
-
+  
   constructor(
     private api: ApiService,
     private addressBookService: AddressBookService,
@@ -40,17 +50,59 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
     public modal: ModalService,
     private repService: RepresentativeService,
     private router: Router,
-    private nodeApi: ApiService) { }
-
+    private nodeApi: ApiService,
+    private trans: TranslateService
+  ) { 
+    this.loadLang();
+  }
+  
   async ngOnInit() {
     this.repService.loadRepresentativeList();
     this.onlineReps = await this.getOnlineRepresentatives();
     this.repService.representatives$.next(this.repService.representatives); // Forcefully repush rep list once we have online status
+    this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.loadLang();
+    });
   }
-
+  
   ngAfterViewInit() {
   }
-
+  
+  loadLang() {
+    this.trans.get('MANAGE_REPS_WARNINGS.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg6').subscribe((res: string) => {
+      console.log(res);
+      this.msg6 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg7').subscribe((res: string) => {
+      console.log(res);
+      this.msg7 = res;
+    });
+    this.trans.get('MANAGE_REPS_WARNINGS.msg8').subscribe((res: string) => {
+      console.log(res);
+      this.msg8 = res;
+    });
+  }
+  
   editEntry(representative) {
     this.newRepAccount = representative.id;
     this.newRepName = representative.name;
@@ -61,32 +113,32 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
       document.getElementById('new-address-name').focus();
     }, 150);
   }
-
+  
   async saveNewRepresentative() {
     if (!this.newRepAccount || !this.newRepName) {
-      const invalidAccountMsg = 'Account and name are required';
+      const invalidAccountMsg = this.msg1;
       return this.notificationService.sendError(invalidAccountMsg);
     }
-
+    
     this.newRepAccount = this.newRepAccount.replace(/ /g, ''); // Remove spaces
-
+    
     // Make sure the address is valid
     const valid = await this.nodeApi.validateAccountNumber(this.newRepAccount);
     if (!valid || valid.valid !== '1') {
-      const invalidAccountMsg = 'Account ID is not a valid account';
+      const invalidAccountMsg = this.msg2;
       return this.notificationService.sendWarning(invalidAccountMsg);
     }
-
+    
     try {
       await this.repService.saveRepresentative(this.newRepAccount, this.newRepName, this.newRepTrusted, this.newRepWarn);
-      this.notificationService.sendSuccess(`Successfully saved new representative!`);
-
+      this.notificationService.sendSuccess(this.msg3);
+      
       this.cancelNewRep();
     } catch (err) {
-      this.notificationService.sendError(`Unable to save entry: ${err.message}`)
+      this.notificationService.sendError(this.msg4 + ` ${err.message}`)
     }
   }
-
+  
   cancelNewRep() {
     this.newRepName = '';
     this.newRepAccount = '';
@@ -94,11 +146,11 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
     this.newRepWarn = false;
     this.activePanel = 0;
   }
-
+  
   copied() {
-    this.notificationService.sendSuccess(`Account address copied to clipboard!`);
+    this.notificationService.sendSuccess(this.msg5);
   }
-
+  
   async getOnlineRepresentatives() {
     const representatives = [];
     try {
@@ -110,19 +162,19 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
         representatives.push(representative);
       }
     } catch (err) {
-      this.notificationService.sendWarning(`Unable to determine online status of representatives`);
+      this.notificationService.sendWarning(this.msg6);
     }
-
+    
     return representatives;
   }
-
+  
   async deleteRepresentative(accountID) {
     try {
       this.repService.deleteRepresentative(accountID);
-      this.notificationService.sendSuccess(`Successfully deleted representative`);
+      this.notificationService.sendSuccess(this.msg7);
     } catch (err) {
-      this.notificationService.sendError(`Unable to delete representative: ${err.message}`);
+      this.notificationService.sendError(this.msg8 + ` ${err.message}`);
     }
   }
-
+  
 }
