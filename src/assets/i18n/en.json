@@ -300,6 +300,46 @@
       "export_address_book_text2":"Scan the QR code on any device to load your QLC Chain wallet!<br><br>If you do not have a QR code scanner, you can also import your wallet by using the URL below.",
       "export_address_book_copied":"Address book export copied to clipboard!"
     },
+    "WALLET":{
+      "wallet_locked":"Wallet Locked",
+      "wallet_unlocked":"Wallet Unlocked",
+      "configure_wallet":"Configure Wallet",
+      "unlock_wallet":"Unlock Wallet",
+      "enter_wallet_password":"Enter wallet password",
+      "cancel":"Cancel",
+      "unlock":"Unlock"
+    },
+    "WALLET_WARNINGS":{
+      "msg1":"Wallet unlocked",
+      "msg2":"Invalid password, please try again!",
+      "msg3":"You must set a password on your wallet - it is currently blank!",
+      "msg4":"Wallet locked",
+      "msg5":"Unable to lock wallet",
+      "msg6":"Checking Ledger Status...",
+      "msg7":"Successfully connected to Ledger device"
+    },
+    "SEND_WARNINGS": {
+      "msg1":"Account not found",
+      "msg2":"To account address is not valid",
+      "msg3":"From and to account are required",
+      "msg4":"From account not found",
+      "msg5":"From and to account cannot be the same",
+      "msg6":"Amount is invalid",
+      "msg7":"Transactions for less than 1 qlc will be ignored by the node.  Send raw amounts with at least 1 qlc.",
+      "msg8":"From account does not have enough",
+      "msg9":"dummy"
+    },
+    "dummy": {
+      "msg1":"dummy",
+      "msg2":"dummy",
+      "msg3":"dummy",
+      "msg4":"dummy",
+      "msg5":"dummy",
+      "msg6":"dummy",
+      "msg7":"dummy",
+      "msg8":"dummy",
+      "msg9":"dummy"
+    },
     "NO_WALLET_CONFIGURED": "You don't have a wallet configured, ",
     "NO_WALLET_CONFIGURED_CLICK": "click here to create or import one",
     "COPY_ADDRESS": "Copy Address",

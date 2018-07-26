@@ -13,6 +13,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { PriceService } from '../../services/price.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
+import { TranslateService } from '@ngx-translate/core';
 import { ValueTransformer } from '@angular/compiler/src/util';
 
 const nacl = window['nacl'];
@@ -34,6 +35,15 @@ export class SendComponent implements OnInit {
   addressBookResults$ = new BehaviorSubject([]);
   showAddressBook = false;
   addressBookMatch = '';
+
+  msg1:string = '';
+  msg2:string = '';
+  msg3:string = '';
+  msg4:string = '';
+  msg5:string = '';
+  msg6:string = '';
+  msg7:string = '';
+  msg8:string = '';
 
   amounts = [
     { name: 'QLC (1 Mqlc)', shortName: 'QLC', value: 'mqlc' },
@@ -67,7 +77,8 @@ export class SendComponent implements OnInit {
     public price: PriceService,
     private workPool: WorkPoolService,
     public settings: AppSettingsService,
-    private util: UtilService) {
+    private util: UtilService,
+    private trans: TranslateService) {
     // this.accountTokens = this.accounts[0].account_info.account_infos;
     // this.selectedToken = this.accountTokens[0];
     if (this.accounts !== undefined && this.accounts.length > 0) {
@@ -75,6 +86,40 @@ export class SendComponent implements OnInit {
 
     }
     this.loadBalances();
+  }
+  loadLang() {
+    this.trans.get('WALLET_WARNINGS.msg1').subscribe((res: string) => {
+      console.log(res);
+      this.msg1 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg2').subscribe((res: string) => {
+      console.log(res);
+      this.msg2 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg3').subscribe((res: string) => {
+      console.log(res);
+      this.msg3 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg4').subscribe((res: string) => {
+      console.log(res);
+      this.msg4 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msg5 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg6').subscribe((res: string) => {
+      console.log(res);
+      this.msg6 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg7').subscribe((res: string) => {
+      console.log(res);
+      this.msg7 = res;
+    });
+    this.trans.get('WALLET_WARNINGS.msg8').subscribe((res: string) => {
+      console.log(res);
+      this.msg8 = res;
+    });
   }
   async loadBalances() {
     for (let i = 0; i < this.accounts.length; i++) {
@@ -175,7 +220,7 @@ export class SendComponent implements OnInit {
     // const accountInfo = await this.walletService.walletApi.accountInfo(this.toAccountID);
     const accountInfo = await this.api.accountInfo(this.toAccountID);
     if (accountInfo.error) {
-      if (accountInfo.error === 'Account not found') {
+      if (accountInfo.error === this.msg1) {
         this.toAccountStatus = 1;
       } else {
         this.toAccountStatus = 0;
@@ -189,19 +234,19 @@ export class SendComponent implements OnInit {
   async sendTransaction() {
     const isValid = await this.api.validateAccountNumber(this.toAccountID);
     if (!isValid || isValid.valid === '0') {
-      return this.notificationService.sendWarning(`To account address is not valid`);
+      return this.notificationService.sendWarning(this.msg2);
     }
     if (!this.fromAccountID || !this.toAccountID) {
-      return this.notificationService.sendWarning(`From and to account are required`);
+      return this.notificationService.sendWarning(this.msg3);
     }
 
     const from = await this.api.accountInfoByToken(this.fromAccountID, this.selectedToken.token_hash);
     // let to = await this.api.accountInfoByToken(this.toAccountID, this.selectedToken.token_hash);
     if (!from) {
-      return this.notificationService.sendError(`From account not found`);
+      return this.notificationService.sendError(this.msg4);
     }
     if (this.fromAccountID === this.toAccountID) {
-      return this.notificationService.sendWarning(`From and to account cannot be the same`);
+      return this.notificationService.sendWarning(this.msg5);
     }
 
     // if (!to) {
@@ -220,14 +265,14 @@ export class SendComponent implements OnInit {
     const qlcAmount = this.rawAmount.div(this.qlc);
 
     if (this.amount < 0 || rawAmount.lessThan(0)) {
-      return this.notificationService.sendWarning(`Amount is invalid`);
+      return this.notificationService.sendWarning(this.msg6);
     }
     if (qlcAmount.lessThan(1)) {
-      const warnMessage = `Transactions for less than 1 qlc will be ignored by the node.  Send raw amounts with at least 1 qlc.`;
+      const warnMessage = this.msg7;
       return this.notificationService.sendWarning(warnMessage);
     }
     if (from.balanceBN.minus(rawAmount).lessThan(0)) {
-      return this.notificationService.sendError(`From account does not have enough ${this.selectedToken.token}`);
+      return this.notificationService.sendError( this.msg8 + `${this.selectedToken.token}`);
     }
 
     // Determine a proper raw amount to show in the UI, if a decimal was entered

@@ -82,7 +82,7 @@
           <div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.date' | translate }}:</div>
           <div class="col-9 px-0 text-left text-truncate">
             <span *ngIf="transaction.timestamp">{{ transaction?.timestamp | date: 'short' }}</span>
-            <span *ngIf="!transaction.timestamp">{{ 'N_A' | translate }}N/A</span>
+            <span *ngIf="!transaction.timestamp">{{ 'N_A' | translate }}</span>
           </div>
         </div>
         <div class="row align-items-center rowContent" *ngIf="transaction?.contents?.balance">

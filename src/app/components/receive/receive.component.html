@@ -55,8 +55,8 @@
           </a>
         </div>
         <div class="col-3 col-md-2 price text-right">{{ block.amount | qlc: settings.settings.displayDenomination }}</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">TOKEN</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
+        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ block.tokenName }}</div>
+        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate">
           <button *ngIf="!block.loading" (click)="receivePending(block)" type="submit" class="btn btn-primary" >{{ 'RECEIVE.receive' | translate }}</button>
           <button *ngIf="block.loading" type="submit" class="btn btn-primary" >{{ 'RECEIVE.loading' | translate }}</button>
         </div>
