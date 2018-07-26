@@ -39,7 +39,7 @@ export class AccountsComponent implements OnInit {
     private ledger: LedgerService,
     private trans: TranslateService
   ) {
-    console.log(this.wallet);
+    // console.log(this.wallet);
     this.loadBalances();
     this.loadLang();
   }

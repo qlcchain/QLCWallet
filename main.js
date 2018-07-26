@@ -1,5 +1,5 @@
 const { app, BrowserWindow, shell, Menu, protocol, webFrame } = require('electron');
-const autoUpdater = require('electron-updater').autoUpdater;
+// const autoUpdater = require('electron-updater').autoUpdater;
 const url = require('url');
 const path = require('path');
 
@@ -77,11 +77,11 @@ app.on('activate', function () {
   }
 });
 
-function checkForUpdates() {
-  autoUpdater.checkForUpdatesAndNotify()
-    .then(() => {})
-    .catch(console.log);
-}
+// function checkForUpdates() {
+//   autoUpdater.checkForUpdatesAndNotify()
+//     .then(() => {})
+//     .catch(console.log);
+// }
 
 // Build up the menu bar options based on platform
 function getApplicationMenu() {
@@ -126,28 +126,28 @@ function getApplicationMenu() {
       submenu: [
         {
           label: 'View GitHub',
-          click () { loadExternal('https://github.com/cronoh/nanovault') }
+          click () { loadExternal('https://github.com/qlcchain/qlcwallet') }
         },
         {
           label: 'Submit Issue',
-          click () { loadExternal('https://github.com/cronoh/nanovault/issues/new') }
+          click () { loadExternal('https://github.com/qlcchain/qlcwallet/issues/new') }
         },
-        {type: 'separator'},
-        {
-          type: 'normal',
-          label: `NanoVault Version: ${autoUpdater.currentVersion}`,
-        },
+        // {type: 'separator'},
+        // {
+        //   type: 'normal',
+        //   label: `NanoVault Version: ${autoUpdater.currentVersion}`,
+        // },
         {
           label: 'View Latest Updates',
-          click () { loadExternal('https://github.com/cronoh/nanovault/releases') }
+          click () { loadExternal('https://github.com/qlcchain/qlcwallet/releases') }
         },
-        {type: 'separator'},
-        {
-          label: `Check for Updates...`,
-          click (menuItem, browserWindow) {
-            checkForUpdates();
-          }
-        },
+        // {type: 'separator'},
+        // {
+        //   label: `Check for Updates...`,
+        //   click (menuItem, browserWindow) {
+        //     checkForUpdates();
+        //   }
+        // },
       ]
     }
   ];
