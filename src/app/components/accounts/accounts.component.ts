@@ -23,7 +23,7 @@ export class AccountsComponent implements OnInit {
     public modal: ModalService,
     public settings: AppSettingsService,
     private ledger: LedgerService) {
-    console.log(this.wallet);
+    // console.log(this.wallet);
     this.loadBalances();
   }
 
