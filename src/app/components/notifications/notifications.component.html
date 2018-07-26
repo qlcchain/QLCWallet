@@ -1,6 +1,10 @@
-<div class="notification-container">
-  <div *ngFor="let notification of notifications" [ngClass]="notification.cssClass" class="uk-animation-slide-bottom-small wallet-notification" uk-alert>
-    <a class="uk-alert-close close-notification" (click)="removeNotification(notification)" uk-close></a>
-    <p>{{ notification.message }}</p>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+        <div *ngFor="let notification of notifications">
+            <alert [type]="notification.type" [dismissible]="true" (onClosed)="onClosed(notification)">{{ notification.message }}</alert>
+          </div>
+    </div>
   </div>
 </div>

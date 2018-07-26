@@ -2,14 +2,14 @@ html, body {
 	box-sizing: border-box;
 	height: 100%;
 	margin: 0;
-  }
+}
 .content {
 	padding-top: 40px;
 	padding-bottom: 40px;
 }
 app-root {
 	background: #edeef4;
-    display: block;
+	display: block;
 }
 
 .main {
@@ -19,30 +19,51 @@ app-root {
 		padding-top: 100px;
 	}
 }
-
+.alert.alert-success {
+	background-color: $greenLight;
+	color: white;
+}
+.alert.alert-info {
+	background-color: $light;
+	color: white;
+}  
+.alert.alert-danger {
+	background-color: $redLight;
+	color: white;
+}
+.modal-footer {
+	button.btn {
+		margin-top: 0;
+	}
+}
+.modal-body {
+	p {
+		margin-bottom: 0;
+	}
+}
 code {
 	display: block;
 	width: 100%;
 }
 
 pre {
-  color: $text;
-  font-family: Courier, monospace;
-  font-size: 13px;
-  margin: 0;
-  overflow: hidden;
+	color: $text;
+	font-family: Courier, monospace;
+	font-size: 13px;
+	margin: 0;
+	overflow: hidden;
 }
 
 button {
-  padding: 10px;
-  background: red;
-  border: 1px solid rgba(#000, .1);
-  border-width: 1px 1px 3px;
-  border-radius: 3px;
-  font: inherit;
-  color: #fff;
-  cursor: pointer;
-  text-shadow: 0 1px 0 rgba(#000, .3), 0 1px 1px rgba(#000, .2);
+	padding: 10px;
+	background: red;
+	border: 1px solid rgba(#000, .1);
+	border-width: 1px 1px 3px;
+	border-radius: 3px;
+	font: inherit;
+	color: #fff;
+	cursor: pointer;
+	text-shadow: 0 1px 0 rgba(#000, .3), 0 1px 1px rgba(#000, .2);
 }
 
 body {
@@ -64,23 +85,23 @@ select {
 	appearance: none;
 }
 .custom-select {
-    display: inline-block;
-    width: 100%;
-    height: calc(2.25rem + 2px);
-    padding: 0.375rem 2.4rem 0.375rem 0.75rem;
-    line-height: 1.5;
-    color: #495057;
-    vertical-align: middle;
-    background: #fff url('~assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
-    background-size: 16px 16px;
-    border: 1px solid $textLight;
-    border-radius: 0;
-    appearance: none;
+	display: inline-block;
+	width: 100%;
+	height: calc(2.25rem + 2px);
+	padding: 0.375rem 2.4rem 0.375rem 0.75rem;
+	line-height: 1.5;
+	color: #495057;
+	vertical-align: middle;
+	background: #fff url('~assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
+	background-size: 16px 16px;
+	border: 1px solid $textLight;
+	border-radius: 0;
+	appearance: none;
 }
 .custom-select:focus {
-    border-color: $textLight;
-    outline: 0;
-    box-shadow: 0 0 0 2px rgba(108, 69, 190, 0.2);
+	border-color: $textLight;
+	outline: 0;
+	box-shadow: 0 0 0 2px rgba(108, 69, 190, 0.2);
 }
 
 .custom-select.contacts {
@@ -108,16 +129,16 @@ input.form-control:focus {
 }
 .tooltip-inner {
 	@include lato;
-    max-width: 200px;
-    padding: 3px 10px;
-    color: #fff;
-    font-size: 11px;
-    text-align: center;
-    background-color: $default;
-    border-radius: 0;
+	max-width: 200px;
+	padding: 3px 10px;
+	color: #fff;
+	font-size: 11px;
+	text-align: center;
+	background-color: $default;
+	border-radius: 0;
 }
 .bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
-    border-top-color: $default;
+	border-top-color: $default;
 }
 h1 {
 	@include latoLight;
@@ -133,22 +154,22 @@ p {
 
 button.btn {
 	@include latoBold;
-    border-radius: 0;
-    background-color: $default;
-    border: none;
-    font-size: 12px;
+	border-radius: 0;
+	background-color: $default;
+	border: none;
+	font-size: 12px;
 	line-height: 12px;
 	padding-top: 15px;
 	padding-bottom: 13px;
-    letter-spacing: 0.2px;
-    margin-top: 15px;
-    text-transform: uppercase;
-    text-align: center;
-    width: 100%;
-    text-shadow: none;
-
-    @media (max-width: 1200px) and (min-width: 992px) {
-
+	letter-spacing: 0.2px;
+	margin-top: 15px;
+	text-transform: uppercase;
+	text-align: center;
+	width: 100%;
+	text-shadow: none;
+	
+	@media (max-width: 1200px) and (min-width: 992px) {
+		
 	}
 	@media (max-width: 320px) {
 		font-size: 10px;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { WalletService } from '../../services/wallet.service';
 import { NotificationService } from '../../services/notification.service';
 import { AppSettingsService } from '../../services/app-settings.service';
@@ -10,6 +10,9 @@ import { ApiService } from '../../services/api.service';
 import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 import { LangService } from '../../services/lang.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import BigNumber from 'bignumber.js';
 
 @Component({
@@ -108,6 +111,7 @@ export class ConfigureAppComponent implements OnInit {
   ];
   selectedBlockOption = this.blockOptions[0].value;
   langService: LangService;
+  modalRef: BsModalRef;
   
   constructor(
     private walletService: WalletService,
@@ -120,7 +124,8 @@ export class ConfigureAppComponent implements OnInit {
     private workPool: WorkPoolService,
     private price: PriceService,
     private lang: LangService,
-    private trans: TranslateService
+    private trans: TranslateService,
+    private modalService: BsModalService
   ) {
     this.langService = lang;
     this.loadLang();
@@ -359,12 +364,17 @@ export class ConfigureAppComponent implements OnInit {
       this.walletService.reloadFiatBalances();
     }
   }
+
+  openModal(template: TemplateRef<any>) {
+    //this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.modalRef = this.modalService.show(template);
+  }
   
   async clearWorkCache() {
-    const UIkit = window['UIkit'];
+    //const UIkit = window['UIkit'];
     try {
-      const confirmMessage = this.msg24;
-      await UIkit.modal.confirm(confirmMessage);
+      //const confirmMessage = this.msg24;
+      //await UIkit.modal.confirm(confirmMessage);
       this.workPool.clearCache();
       this.notifications.sendSuccess(this.msg25);
     } catch (err) {

@@ -14,10 +14,13 @@
 		padding-left: 20px;
 		padding-right: 20px;
 	}
+	.editNameButtons button.btn {
+		margin-top: 0;
+	}
 	.account {
 		> div > .accountHeader {
 			background-color: $accountHeaderBg;
-			height: 58px;
+			min-height: 58px;
 			border-left: 4px solid $default;
 			border-bottom: 1px solid #edeef4;
 			padding-left: 16px;

@@ -4,64 +4,64 @@
       <h1>{{ 'APP_SETTINGS.app_settings_title' | translate }}</h1>
     </div>
   </div>
-    <div class="row defaultTable content">
-      <div class="col-12">
-        <div class="row align-items-center rowContent autoHP pb-2">
-          <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.language' | translate }}</div>
+  <div class="row defaultTable content">
+    <div class="col-12">
+      <div class="row align-items-center rowContent autoHP pb-2">
+        <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.language' | translate }}</div>
+        <div class="col-md-10 px-0 text-left text-truncate">
+          <div class="form-group">
+            <select class="custom-select" [(ngModel)]="selectedLang" >
+              <option *ngFor="let lang of languages" [value]="lang.value">{{ lang.name }}</option>
+            </select>
+          </div></div>
+        </div>
+        <div class="row align-items-center rowContent autoHP py-2">
+          <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.fiat_currency' | translate }}</div>
           <div class="col-md-10 px-0 text-left text-truncate">
             <div class="form-group">
-              <select class="custom-select" [(ngModel)]="selectedLang" >
-                  <option *ngFor="let lang of languages" [value]="lang.value">{{ lang.name }}</option>
+              <select class="custom-select" [(ngModel)]="selectedCurrency" id="form-horizontal-select">
+                <option *ngFor="let currency of currencies" [value]="currency.value">{{ currency.name }}</option>
               </select>
             </div></div>
           </div>
           <div class="row align-items-center rowContent autoHP py-2">
-            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.fiat_currency' | translate }}</div>
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_on_exit' | translate }}</div>
             <div class="col-md-10 px-0 text-left text-truncate">
               <div class="form-group">
-                <select class="custom-select" [(ngModel)]="selectedCurrency" id="form-horizontal-select">
-                    <option *ngFor="let currency of currencies" [value]="currency.value">{{ currency.name }}</option>
+                <select class="custom-select" [(ngModel)]="selectedLockOption">
+                  <option *ngFor="let option of lockOptions" [value]="option.value">{{ option.name }}</option>
                 </select>
-              </div></div>
-            </div>
-            <div class="row align-items-center rowContent autoHP py-2">
-              <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_on_exit' | translate }}</div>
-              <div class="col-md-10 px-0 text-left text-truncate">
-                <div class="form-group">
-                  <select class="custom-select" [(ngModel)]="selectedLockOption">
-                      <option *ngFor="let option of lockOptions" [value]="option.value">{{ option.name }}</option>
-                    </select>
-                </div>
-              </div>
-            </div>
-            <div class="row align-items-center rowContent autoHP py-2">
-              <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_after_inactivity' | translate }}</div>
-              <div class="col-md-10 px-0 text-left text-truncate">
-                <div class="form-group">
-                    <select class="custom-select" [(ngModel)]="selectedInactivityMinutes">
-                        <option *ngFor="let option of inactivityOptions" [value]="option.value">{{ option.name }}</option>
-                      </select>
-                </div>
-              </div>
-            </div>
-            <div class="row align-items-center rowContent autoHP py-2">
-              <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.wallet_storage' | translate }}</div>
-              <div class="col-md-10 px-0 text-left text-truncate">
-                <div class="form-group">
-                    <select class="custom-select" [(ngModel)]="selectedStorage">
-                        <option *ngFor="let storage of storageOptions" [value]="storage.value">{{ storage.name }}</option>
-                      </select>
-                </div>
-              </div>
-            </div>
-            <div class="row align-items-center rowAmount">
-              <div class="col-md-2 px-0 text-truncate dataName"></div>
-              <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 pr-md-0 text-left text-truncate">
-                <button (click)="updateAppSettings()" class="btn btn-primary">{{ 'APP_SETTINGS.app_settings_button' | translate }}</button>
               </div>
             </div>
           </div>
+          <div class="row align-items-center rowContent autoHP py-2">
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_after_inactivity' | translate }}</div>
+            <div class="col-md-10 px-0 text-left text-truncate">
+              <div class="form-group">
+                <select class="custom-select" [(ngModel)]="selectedInactivityMinutes">
+                  <option *ngFor="let option of inactivityOptions" [value]="option.value">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center rowContent autoHP py-2">
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.wallet_storage' | translate }}</div>
+            <div class="col-md-10 px-0 text-left text-truncate">
+              <div class="form-group">
+                <select class="custom-select" [(ngModel)]="selectedStorage">
+                  <option *ngFor="let storage of storageOptions" [value]="storage.value">{{ storage.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center rowAmount">
+            <div class="col-md-2 px-0 text-truncate dataName"></div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 pr-md-0 text-left text-truncate">
+              <button (click)="updateAppSettings()" class="btn btn-primary">{{ 'APP_SETTINGS.app_settings_button' | translate }}</button>
+            </div>
+          </div>
         </div>
+      </div>
       <div class="row">
         <div class="col-12 px-0 pt-5">
           <h1>{{ 'APP_SETTINGS.advanced_settings_title' | translate }}</h1>
@@ -73,16 +73,42 @@
             
             <div class="col-lg-2 px-lg-0 text-truncate dataName pl-0">{{ 'APP_SETTINGS.advanced_settings_text' | translate }}</div>
             <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 pr-lg-2 text-left text-truncate">
-              <button (click)="clearWorkCache()" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button1' | translate }}</button>
+              <button (click)="openModal(clearWorkCatche)" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button1' | translate }}</button>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
-              <button (click)="clearWalletData()" type="submit" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button2' | translate }}</button>
+              <button (click)="openModal(clearWalletData)" type="submit" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button2' | translate }}</button>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
-              <button (click)="clearAllData()"  class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button3' | translate }}</button>
+              <button (click)="openModal(clearAllData)"  class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button3' | translate }}</button>
             </div>
           </div>
         </div>
       </div>		
     </div>
- 
+    
+    <ng-template #clearWorkCatche>
+      <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg24' | translate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearWorkCache()">{{ 'OK' | translate }}</button>
+      </div>
+    </ng-template>
+    
+    <ng-template #clearWalletData>
+      <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg26' | translate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearWalletData()">{{ 'OK' | translate }}</button>
+      </div>
+    </ng-template>
+    
+    <ng-template #clearAllData>
+      <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg28' | translate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearAllData()">{{ 'OK' | translate }}</button>
+      </div>
+    </ng-template>

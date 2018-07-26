@@ -11,13 +11,28 @@
     </div>
     <div *ngFor="let account of accounts" class="row defaultTable account">
       <div class="col-12">
-        <div class="row align-items-center accountHeader">
-          <div class="col-lg-10 col-7 pl-0 text-truncate" tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}">
-              <a [routerLink]="'/account/' + account.id">
+        <div class="row align-items-center accountHeader autoH">
+          <div class="col-lg-10 col-sm-9 col-7 pl-0 text-truncate">
+              <a [routerLink]="'/account/' + account.id" *ngIf="!account.editName" tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}" container="body">
                 <span *ngIf="account.addressBookName" class="name" >{{ account.addressBookName }}</span> <span class="address" >{{ account.id }}</span>
               </a>
+              <div class="editNameButtons" *ngIf="account.editName">
+                <div class="row">
+                  <div class="col-md-8 col-12 py-3 py-md-0 pr-md-1">
+                    <input type="text" class="form-control" [(ngModel)]="account.addressBookName" >
+                  </div>
+                  <div class="col-md-2 col-12 px-md-1">
+                    <button class="btn btn-primary" type="button" (click)="editNameCancel(account)">{{ 'CANCEL' | translate }}</button>
+
+                  </div>
+                  <div class="col-md-2 col-12 py-3 py-md-0 pl-md-1">
+                    <button class="btn btn-danger" type="button" (click)="editNameSave(account)">{{ 'OK' | translate }}</button>
+
+                  </div>
+                </div>
+              </div>
           </div>
-          <div class="col-lg-2 col-5 pr-0 text-right options"><a  ngxClipboard [cbContent]="account.id" (cbOnSuccess)="copied()" class="icon copy" tooltip="{{ 'COPY_ADDRESS' | translate }}"></a><a href="#" class="icon edit" tooltip="{{ 'EDIT_NAME' | translate }}"></a><a href="#" class="icon send" tooltip="{{ 'SEND_TOKENS' | translate }}"></a></div>
+          <div class="col-lg-2 col-sm-3 col-5 pr-0 text-right options" *ngIf="!account.editName"><a  ngxClipboard [cbContent]="account.id" (cbOnSuccess)="copied()" class="icon copy" tooltip="{{ 'COPY_ADDRESS' | translate }}"></a><a class="icon edit" tooltip="{{ 'EDIT_NAME' | translate }}" (click)="editName(account)"></a><a [routerLink]="'/send/' + account.id" class="icon send" tooltip="{{ 'SEND_TOKENS' | translate }}"></a></div>
         </div>
         <div class="row align-items-center rowTitles">
           <div class="col-md-4 pl-0 col-6">{{ 'ACCOUNTS.token' | translate }}</div>

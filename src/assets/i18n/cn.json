@@ -300,6 +300,15 @@
     "export_address_book_text2":"扫描任何设备上的二维码以加载QLC Chain钱包。<br> <br>如果无法扫描，可以使用下面的URL导入你的钱包。",
     "export_address_book_copied":"地址簿已复制至剪贴板"
   },
+  "WALLET":{
+    "wallet_locked":"已锁定",
+    "wallet_unlocked":"未锁定",
+    "configure_wallet":"配置钱包",
+    "unlock_wallet":"解锁钱包",
+    "enter_wallet_password":"输入钱包密码",
+    "cancel":"取消",
+    "unlock":"解锁"
+  },
   "WALLET_WARNINGS":{
     "msg1":"钱包未锁定",
     "msg2":"无效密码，请重试。",
@@ -495,5 +504,6 @@
   "TOKEN":"Token",
   "BALANCE":"余额",
   "CANCEL":"取消",
+  "OK":"Ok",
   "LOADING":"加载中"
 }

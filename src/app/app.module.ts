@@ -51,6 +51,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { AlertModule } from 'ngx-bootstrap/alert';
 import { NavComponent } from './components/nav/nav.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -100,7 +101,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    AlertModule.forRoot()
   ],
   providers: [
     LangService,

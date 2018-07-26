@@ -437,9 +437,9 @@
       "msg23":"App settings successfully updated!",
       "msg24":"<p style='text-align: center;'>You are about to delete all locally cached Proof of Work values<br><br><b>Are you sure?</b></p>",
       "msg25":"Successfully cleared the work cache!",
-      "msg26":"<p style='text-align: center;'>You are about to delete all of your wallet data stored in NanoVault!<br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
+      "msg26":"<p style='text-align: center;'>You are about to delete all of your wallet data!<br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
       "msg27":"Successfully deleted all wallet data!",
-      "msg28":"<p style='text-align: center;'>You are about to delete ALL of your data stored in NanoVault.<br>This includes all of your wallet data, your address book, and your application settings!<br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
+      "msg28":"<p style='text-align: center;'>You are about to delete ALL of your data.<br>This includes all of your wallet data, your address book, and your application settings!<br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
       "msg29":"Successfully deleted ALL locally stored data!"
     },
     "ADDRESS_BOOK_WARNINGS": {
@@ -536,5 +536,6 @@
     "TOKEN":"Token",
     "BALANCE":"Balance",
     "CANCEL":"Cancel",
+    "OK":"Ok",
     "LOADING":"Loading"
 }

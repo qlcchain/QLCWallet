@@ -43,6 +43,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
   walletAccount = null;
   
   showEditAddressBook = false;
+  addressBookTempName = '';
   addressBookModel = '';
   showEditRepresentative = false;
   representativeModel = '';
@@ -279,7 +280,7 @@ async saveRepresentative() {
 }
 
 async saveAddressBook() {
-  const addressBookName = this.addressBookModel.trim();
+  const addressBookName = this.addressBookEntry.trim();
   if (!addressBookName) {
     // Check for deleting an entry in the address book
     if (this.addressBookEntry) {
@@ -338,6 +339,16 @@ validateRepresentative() {
 
 copied() {
   this.notifications.sendSuccess(this.msg7);
+}
+
+editName() {
+  this.showEditAddressBook = true;
+  this.addressBookTempName = this.addressBookEntry;
+}
+editNameCancel() {
+  this.showEditAddressBook = false;
+  this.addressBookEntry = this.addressBookTempName;
+  this.addressBookTempName = '';
 }
 
 }

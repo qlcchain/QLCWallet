@@ -13,12 +13,29 @@
             </div>
             <div class="row rowDefault rowAccountDetails">
               <div class="col-md-7 px-0">
-                <h1 *ngIf="addressBookEntry">{{ addressBookEntry }}</h1>
-                <h1 *ngIf="!addressBookEntry">{{ accountID }}</h1>
-                <h3 *ngIf="addressBookEntry">{{ accountID }}</h3>
+                <div *ngIf="!showEditAddressBook">
+                  <h1 *ngIf="addressBookEntry">{{ addressBookEntry }}</h1>
+                  <h1 *ngIf="!addressBookEntry">{{ accountID }}</h1>
+                  <h3 *ngIf="addressBookEntry">{{ accountID }}</h3>
+                </div>
+                <div *ngIf="showEditAddressBook">
+                    <div class="row">
+                      <div class="col-12">
+                        <input type="text" class="form-control" [(ngModel)]="addressBookEntry" >
+                      </div>
+                      <div class="col-6 pr-1">
+                        <button class="btn btn-primary" type="button" (click)="editNameCancel()">{{ 'CANCEL' | translate }}</button>
+    
+                      </div>
+                      <div class="col-6 pl-1">
+                        <button class="btn btn-danger" type="button" (click)="saveAddressBook()">{{ 'OK' | translate }}</button>
+    
+                      </div>
+                    </div>
+                </div>
                 <div class="row">
                   <div class="col-12 px-0 d-block d-md-none py-4 text-center">
-                    <a href="#" class="icon-text-link"><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a>
+                    <a (click)="editName()" class="icon-text-link"><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a>
                     <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_ADDRESS' | translate }}</a>
                   </div>
                 </div>
@@ -31,7 +48,7 @@
             <div class="row rowDefault rowAccountDetails">
               <div class="col-md-7 px-0 d-none d-md-block">
                 <div class="row">
-                  <a href="#" class="icon-text-link"><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a>
+                  <a (click)="editName()" class="icon-text-link"><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a>
                   <a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()"  class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_ADDRESS' | translate }}</a>
                 </div>
               </div>

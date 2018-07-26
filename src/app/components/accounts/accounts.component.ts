@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WalletService } from '../../services/wallet.service';
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
+import { AddressBookService } from '../../services/address-book.service';
 import { ModalService } from '../../services/modal.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import { LedgerService, LedgerStatus } from '../../services/ledger.service';
@@ -29,11 +30,14 @@ export class AccountsComponent implements OnInit {
   msg10:string = '';
   msg11:string = '';
   msg12:string = '';
+  msgEdit1:string = '';
+  msgEdit2:string = '';
   
   constructor(
     private walletService: WalletService,
     private api: ApiService,
     private notificationService: NotificationService,
+    private addressBook: AddressBookService,
     public modal: ModalService,
     public settings: AppSettingsService,
     private ledger: LedgerService,
@@ -99,6 +103,14 @@ export class AccountsComponent implements OnInit {
       console.log(res);
       this.msg12 = res;
     });
+    this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {
+      console.log(res);
+      this.msgEdit1 = res;
+    });
+    this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {
+      console.log(res);
+      this.msgEdit2 = res;
+    });
   }
   
   async loadBalances() {
@@ -156,4 +168,32 @@ export class AccountsComponent implements OnInit {
     this.notificationService.removeNotification('ledger-account');
   }
   
+  editName(account) {
+    account.editName = true;
+    account.tempBookName = account.addressBookName;
+  }
+  editNameCancel(account) {
+    account.editName = false;
+    account.addressBookName = account.tempBookName;
+    account.tempBookName = '';
+  }
+  async editNameSave(account) {
+    const addressBookName = account.addressBookName.trim();
+    if (!addressBookName) {
+      this.addressBook.deleteAddress(account.id);
+      this.notificationService.sendSuccess(this.msgEdit1);
+      account.editName = false;
+      return;
+    }
+    
+    try {
+      await this.addressBook.saveAddress(account.id, addressBookName);
+    } catch (err) {
+      this.notificationService.sendError(err.message);
+      return;
+    }
+    
+    this.notificationService.sendSuccess(this.msgEdit2);
+    account.editName = false;
+  }
 }

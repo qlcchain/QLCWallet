@@ -29,6 +29,7 @@ const routes: Routes = [
   { path: 'import-wallet', component: ImportWalletComponent },
   { path: 'manage-wallet', component: ManageWalletComponent },
   { path: 'send', component: SendComponent },
+  { path: 'send/:account', component: SendComponent },
   { path: 'receive', component: ReceiveComponent },
   { path: 'representatives', component: RepresentativesComponent },
   { path: 'manage-representatives', component: ManageRepresentativesComponent },

@@ -15,3 +15,8 @@
   left: 15%;
   z-index: 1050;
 }
+@import "~scss/mixins";
+.alert.alert-success {
+  background-color: $greenLight;
+  color: $green;
+}
