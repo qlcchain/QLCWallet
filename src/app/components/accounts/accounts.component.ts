@@ -32,7 +32,7 @@ export class AccountsComponent implements OnInit {
 
   async loadBalances() {
     for (let i = 0; i < this.accounts.length; i++) {
-      console.log(this.accounts[i]);
+      // console.log(this.accounts[i]);
       this.accounts[i].account_info = await this.api.accountInfo(this.accounts[i].id);
     }
     // walletAccount.account_info = await this.api.accountInfo(accountID);

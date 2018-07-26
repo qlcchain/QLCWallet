@@ -88,6 +88,6 @@ export class ApiService {
     const account_infos = await this.accountInfo(account);
     const token_accounts = account_infos.account_infos;
 
-    return token_accounts ? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0] : null;
+    return Array.isArray(token_accounts) ? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0] : null;
   }
 }
