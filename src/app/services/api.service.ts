@@ -6,9 +6,7 @@ import { promise } from 'protractor';
 @Injectable()
 export class ApiService {
 
-  // rpcUrl = `https://nanovault.io/api/node-api`;
-  // FIXME: change to https?
-  rpcUrl = `http://localhost:8888/api/node-api`;
+  rpcUrl = `https://api.qlcchain.online`;
 
   constructor(private http: HttpClient, private node: NodeService) { }
 
@@ -30,7 +28,7 @@ export class ApiService {
   async accountsBalances(accounts: string[]): Promise<{ balances: any }> {
     return await this.request('accounts_balances', { accounts });
   }
-  async accountsFrontiers(accounts: string[]): Promise<{ frontiers: any }> {
+  async accountsFrontiers(accounts: string[]): Promise<{ frontiers: any , error?: string}> {
     return await this.request('accounts_frontiers', { accounts });
   }
   async accountsPending(accounts: string[], count: number = 50): Promise<{ blocks: any }> {
@@ -67,7 +65,7 @@ export class ApiService {
   async pending(account, count): Promise<any> {
     return await this.request('pending', { account, count, source: true });
   }
-  async tokens(): Promise<{ tokens: any }> {
+  async tokens(): Promise<{ tokens: any, error?: string }> {
     return await this.request('tokens', {});
   }
 
@@ -90,6 +88,6 @@ export class ApiService {
     const account_infos = await this.accountInfo(account);
     const token_accounts = account_infos.account_infos;
 
-    return token_accounts ? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0] : null;
+    return Array.isArray(token_accounts) ? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0] : null;
   }
 }

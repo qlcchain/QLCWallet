@@ -16,7 +16,7 @@ export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
 export interface WalletAccount {
   id: string;
-  frontier: string | null;
+  frontiers: any | null;
   secret: any;
   keyPair: any;
   index: number;
@@ -65,7 +65,7 @@ export class WalletService {
     accounts: [],
     accountsIndex: 0,
     locked: false,
-    password: '',
+    password: ''
   };
 
   processingPending = false;
@@ -82,8 +82,9 @@ export class WalletService {
     private websocket: WebsocketService,
     private qlcBlock: QLCBlockService,
     private ledgerService: LedgerService,
-    private notifications: NotificationService) {
-    this.websocket.newTransactions$.subscribe(async (transaction) => {
+    private notifications: NotificationService
+  ) {
+    this.websocket.newTransactions$.subscribe(async transaction => {
       if (!transaction) {
         return; // Not really a new transaction
       }
@@ -97,7 +98,10 @@ export class WalletService {
           // If the wallet is locked, show a notification
           if (this.wallet.locked) {
             const lockMessage = 'New incoming transaction - unlock the wallet to receive it!';
-            this.notifications.sendWarning(lockMessage, { length: 0, identifier: 'pending-locked' });
+            this.notifications.sendWarning(lockMessage, {
+              length: 0,
+              identifier: 'pending-locked'
+            });
           }
           this.addPendingBlock(walletAccount.id, transaction.hash, transaction.amount, transaction.token);
           await this.processPendingBlocks();
@@ -174,7 +178,7 @@ export class WalletService {
         // With the wallet locked, we load a simpler version of the accounts which does not have the keypairs, and uses the ID as input
         walletJson.accounts.forEach(account => this.loadWalletAccount(account.index, account.id));
       } else {
-        await Promise.all(walletJson.accounts.map(async (account) => await this.addWalletAccount(account.index, false)));
+        await Promise.all(walletJson.accounts.map(async account => await this.addWalletAccount(account.index, false)));
       }
     } else {
       // Loading from accounts index
@@ -223,7 +227,7 @@ export class WalletService {
 
   generateExportData() {
     const exportData: any = {
-      accountsIndex: this.wallet.accountsIndex,
+      accountsIndex: this.wallet.accountsIndex
     };
     if (this.wallet.locked) {
       exportData.seed = this.wallet.seed;
@@ -356,9 +360,9 @@ export class WalletService {
       });
 
       if (usedIndices.length > 0) {
-        for (let i = 0; i < usedIndices.length - 1; i++) {
+        for (let i = 0; i < usedIndices.length; i++) {
           // add account and reload balance when add complete
-          this.addWalletAccount(usedIndices[i], (i === usedIndices.length - 1));
+          this.addWalletAccount(usedIndices[i], i === usedIndices.length - 1);
         }
       } else {
         this.addWalletAccount();
@@ -397,7 +401,7 @@ export class WalletService {
 
     const newAccount: WalletAccount = {
       id: accountID,
-      frontier: null,
+      frontiers: null,
       secret: null,
       keyPair: null,
       balance: new BigNumber(0),
@@ -422,7 +426,7 @@ export class WalletService {
 
     const newAccount: WalletAccount = {
       id: accountName,
-      frontier: null,
+      frontiers: null,
       secret: accountBytes,
       keyPair: accountKeyPair,
       balance: new BigNumber(0),
@@ -435,13 +439,6 @@ export class WalletService {
       addressBookName,
       account_info: {}
     };
-
-    // FIXME: remove
-    //     console.log(`createSeedAccount: seed: ${this.util.uint8.toHex(accountBytes)},
-    // index: ${index},
-    // private: ${this.util.uint8.toHex(accountKeyPair.secretKey)},
-    // public: ${this.util.uint8.toHex(accountKeyPair.publicKey)},
-    // account: ${accountName}`);
 
     return newAccount;
   }
@@ -468,17 +465,22 @@ export class WalletService {
 
   isConfigured() {
     switch (this.wallet.type) {
-      case 'seed': return !!this.wallet.seed;
-      case 'ledger': return true; // ?
-      case 'privateKey': return false;
+      case 'seed':
+        return !!this.wallet.seed;
+      case 'ledger':
+        return true; // ?
+      case 'privateKey':
+        return false;
     }
   }
 
   isLocked() {
     switch (this.wallet.type) {
       case 'privateKey':
-      case 'seed': return this.wallet.locked;
-      case 'ledger': return false;
+      case 'seed':
+        return this.wallet.locked;
+      case 'ledger':
+        return false;
     }
   }
 
@@ -490,12 +492,24 @@ export class WalletService {
     const fiatPrice = this.price.price.lastPrice;
 
     this.wallet.accounts.forEach(account => {
-      account.balanceFiat = this.util.qlc.rawToMqlc(account.balance).times(fiatPrice).toNumber();
-      account.pendingFiat = this.util.qlc.rawToMqlc(account.pending).times(fiatPrice).toNumber();
+      account.balanceFiat = this.util.qlc
+        .rawToMqlc(account.balance)
+        .times(fiatPrice)
+        .toNumber();
+      account.pendingFiat = this.util.qlc
+        .rawToMqlc(account.pending)
+        .times(fiatPrice)
+        .toNumber();
     });
 
-    this.wallet.balanceFiat = this.util.qlc.rawToMqlc(this.wallet.balance).times(fiatPrice).toNumber();
-    this.wallet.pendingFiat = this.util.qlc.rawToMqlc(this.wallet.pending).times(fiatPrice).toNumber();
+    this.wallet.balanceFiat = this.util.qlc
+      .rawToMqlc(this.wallet.balance)
+      .times(fiatPrice)
+      .toNumber();
+    this.wallet.pendingFiat = this.util.qlc
+      .rawToMqlc(this.wallet.pending)
+      .times(fiatPrice)
+      .toNumber();
   }
 
   async reloadBalances(reloadPending = true) {
@@ -534,10 +548,16 @@ export class WalletService {
       walletAccount.balanceRaw = new BigNumber(walletAccount.balance).mod(this.qlc);
       walletAccount.pendingRaw = new BigNumber(walletAccount.pending).mod(this.qlc);
 
-      walletAccount.balanceFiat = this.util.qlc.rawToMqlc(walletAccount.balance).times(fiatPrice).toNumber();
-      walletAccount.pendingFiat = this.util.qlc.rawToMqlc(walletAccount.pending).times(fiatPrice).toNumber();
+      walletAccount.balanceFiat = this.util.qlc
+        .rawToMqlc(walletAccount.balance)
+        .times(fiatPrice)
+        .toNumber();
+      walletAccount.pendingFiat = this.util.qlc
+        .rawToMqlc(walletAccount.pending)
+        .times(fiatPrice)
+        .toNumber();
 
-      walletAccount.frontier = frontiers.frontiers[accountID] || null;
+      walletAccount.frontiers = frontiers.frontiers[accountID] || null;
 
       // walletAccount.account_info = await this.api.accountInfo(accountID);
 
@@ -552,14 +572,13 @@ export class WalletService {
 
       walletBalance = walletBalance.plus(walletAccount.balance);
       walletPending = walletPending.plus(walletAccount.pending);
-
     }
 
     // Make sure any frontiers are in the work pool
     // If they have no frontier, we want to use their pub key?
     const hashes = [];
     this.wallet.accounts.map(account => {
-      const token_fontiers = account.frontier;
+      const token_fontiers = account.frontiers;
       Object.keys(token_fontiers).map(token_account => {
         hashes.push(token_fontiers[token_account]);
       });
@@ -572,8 +591,14 @@ export class WalletService {
     this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.qlc);
     this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.qlc);
 
-    this.wallet.balanceFiat = this.util.qlc.rawToMqlc(walletBalance).times(fiatPrice).toNumber();
-    this.wallet.pendingFiat = this.util.qlc.rawToMqlc(walletPending).times(fiatPrice).toNumber();
+    this.wallet.balanceFiat = this.util.qlc
+      .rawToMqlc(walletBalance)
+      .times(fiatPrice)
+      .toNumber();
+    this.wallet.pendingFiat = this.util.qlc
+      .rawToMqlc(walletPending)
+      .times(fiatPrice)
+      .toNumber();
 
     // If there is a pending balance, search for the actual pending transactions
     if (reloadPending && walletPending.gt(0)) {
@@ -581,15 +606,13 @@ export class WalletService {
     }
   }
 
-
-
   async loadWalletAccount(accountIndex, accountID) {
     const index = accountIndex;
     const addressBookName = this.addressBook.getAccountName(accountID);
 
     const newAccount: WalletAccount = {
       id: accountID,
-      frontier: null,
+      frontiers: null,
       secret: null,
       keyPair: null,
       balance: new BigNumber(0),
@@ -605,7 +628,7 @@ export class WalletService {
 
     this.wallet.accounts.push(newAccount);
     this.websocket.subscribeAccounts([accountID]);
-    console.log('loadWalletAccount');
+    // console.log('loadWalletAccount');
     return newAccount;
   }
 
@@ -622,11 +645,15 @@ export class WalletService {
       }
 
       // Find the next available index
-      nextIndex = index + 1;
-      while (this.wallet.accounts.find(a => a.index === nextIndex)) {
-        nextIndex++;
+      try {
+        nextIndex = index + 1;
+        while (this.wallet.accounts.find(a => a.index === nextIndex)) {
+          nextIndex++;
+        }
+        this.wallet.accountsIndex = nextIndex;
+      } catch (error) {
+        console.log(error.messages);
       }
-      this.wallet.accountsIndex = nextIndex;
     }
 
     let newAccount: WalletAccount | null;
@@ -642,7 +669,6 @@ export class WalletService {
         this.notifications.sendWarning(`Unable to load account from ledger.  Make sure it is connected`);
         throw err;
       }
-
     }
 
     this.wallet.accounts.push(newAccount);
@@ -693,7 +719,12 @@ export class WalletService {
     if (existingHash) {
       return; // Already added
     }
-    this.pendingBlocks.push({ account: accountID, hash: blockHash, amount: amount, token: tokenHash });
+    this.pendingBlocks.push({
+      account: accountID,
+      hash: blockHash,
+      amount: amount,
+      token: tokenHash
+    });
   }
 
   async loadPendingBlocksForWallet() {
@@ -784,7 +815,7 @@ export class WalletService {
     const data: any = {
       type: this.wallet.type,
       accounts: this.wallet.accounts.map(a => ({ id: a.id, index: a.index })),
-      accountsIndex: this.wallet.accountsIndex,
+      accountsIndex: this.wallet.accountsIndex
     };
 
     if (this.wallet.type === 'ledger') {
@@ -798,5 +829,4 @@ export class WalletService {
 
     return data;
   }
-
 }

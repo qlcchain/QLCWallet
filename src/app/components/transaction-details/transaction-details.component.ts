@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, ChildActivationEnd, Router} from "@angular/router";
-import {ApiService} from "../../services/api.service";
-import {AppSettingsService} from "../../services/app-settings.service";
-import BigNumber from "bignumber.js";
-import {AddressBookService} from "../../services/address-book.service";
+import { ActivatedRoute, ActivatedRouteSnapshot, ChildActivationEnd, Router } from '@angular/router';
+import { ApiService } from '../../services/api.service';
+import { AppSettingsService } from '../../services/app-settings.service';
+import BigNumber from 'bignumber.js';
+import { AddressBookService } from '../../services/address-book.service';
 
 @Component({
   selector: 'app-transaction-details',
@@ -11,7 +11,7 @@ import {AddressBookService} from "../../services/address-book.service";
   styleUrls: ['./transaction-details.component.scss']
 })
 export class TransactionDetailsComponent implements OnInit {
-  nano = 1000000000000000000000000;
+  qlc = 100000000;
 
   routerSub = null;
   transaction: any = {};
@@ -31,10 +31,10 @@ export class TransactionDetailsComponent implements OnInit {
   amountRaw = new BigNumber(0);
 
   constructor(private route: ActivatedRoute,
-              private router: Router,
-              private addressBook: AddressBookService,
-              private api: ApiService,
-              public settings: AppSettingsService
+    private router: Router,
+    private addressBook: AddressBookService,
+    private api: ApiService,
+    public settings: AppSettingsService
   ) { }
 
   async ngOnInit() {
@@ -68,13 +68,19 @@ export class TransactionDetailsComponent implements OnInit {
     const hashContents = JSON.parse(hashData.contents);
     hashData.contents = hashContents;
 
-    this.transactionJSON = JSON.stringify(hashData.contents, null ,4);
-    this.token = hashData.contents.Token_name;
+    this.transactionJSON = JSON.stringify(hashData.contents, null, 4);
+    const tokens = await this.api.tokens();
+    if (!tokens || tokens.error || !tokens.tokens) {
+      console.warn('failed to query ');
+    } else {
+      this.token = tokens.tokens[hashData.contents.token].symbol;
+    }
+    this.token = this.token || hashData.contents.Token_name;
     this.blockType = hashData.contents.type;
     if (this.blockType === 'state') {
-      const isOpen = hashData.contents.previous === "0000000000000000000000000000000000000000000000000000000000000000";
+      const isOpen = hashData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000';
       if (isOpen) {
-        this.blockType = 'open'
+        this.blockType = 'open';
       } else {
         const prevRes = await this.api.blocksInfo([hashData.contents.previous]);
         const prevData = prevRes.blocks[hashData.contents.previous];
@@ -100,7 +106,7 @@ export class TransactionDetailsComponent implements OnInit {
       this.isStateBlock = false;
     }
     if (hashData.amount) {
-      this.amountRaw = new BigNumber(hashData.amount).mod(this.nano);
+      this.amountRaw = new BigNumber(hashData.amount).mod(this.qlc);
     }
 
     this.transaction = hashData;

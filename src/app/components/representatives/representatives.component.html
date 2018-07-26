@@ -55,7 +55,7 @@
         <div class="col-md-2 px-0 pb-3 pb-md-0 text-truncate dataName">{{ 'REPRESENTATIVES.accounts_to_change' | translate }}</div>
         <div class="col-md-10 px-0 text-left text-truncate">
           <div class="form-group">
-            <select class="custom-select" [(ngModel)]="changeAccountID" (change)="newAccountID()">
+            <select class="custom-select" [(ngModel)]="changeAccountID" (change)="newAccountID(changeAccountID)">
               <option [value]="null">{{ 'REPRESENTATIVES.select_accounts_to_change' | translate }}</option>
               <option [value]="'all'">{{ 'REPRESENTATIVES.all_accounts' | translate }}</option>
               <option *ngFor="let account of wallet.wallet.accounts" [value]="account.id">{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id | squeeze }} ({{ account.balance | qlc: settings.settings.displayDenomination }})</option>
