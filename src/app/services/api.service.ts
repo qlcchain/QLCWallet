@@ -28,7 +28,7 @@ export class ApiService {
   async accountsBalances(accounts: string[]): Promise<{ balances: any }> {
     return await this.request('accounts_balances', { accounts });
   }
-  async accountsFrontiers(accounts: string[]): Promise<{ frontiers: any }> {
+  async accountsFrontiers(accounts: string[]): Promise<{ frontiers: any , error?: string}> {
     return await this.request('accounts_frontiers', { accounts });
   }
   async accountsPending(accounts: string[], count: number = 50): Promise<{ blocks: any }> {
@@ -65,7 +65,7 @@ export class ApiService {
   async pending(account, count): Promise<any> {
     return await this.request('pending', { account, count, source: true });
   }
-  async tokens(): Promise<{ tokens: any }> {
+  async tokens(): Promise<{ tokens: any, error?: string }> {
     return await this.request('tokens', {});
   }
 
