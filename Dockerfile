@@ -10,18 +10,9 @@ WORKDIR /usr/src/app
 # add `/usr/src/app/node_modules/.bin` to $PATH
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-# install and cache app dependencies
-COPY package.json /usr/src/app/package.json
-RUN npm i npm@latest -g && npm install -g @angular/cli && npm install 
-
-# add app
 COPY . /usr/src/app
-
-# run tests
-# RUN ng test --watch=false
-
-# generate build
-RUN npm run wallet:build 
+# COPY package.json /usr/src/app/package.json
+RUN npm i npm@latest -g && npm install -g @angular/cli && npm install && npm run wallet:build 
 
 ##################
 ### production ###
