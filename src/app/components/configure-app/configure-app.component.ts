@@ -371,22 +371,32 @@ export class ConfigureAppComponent implements OnInit {
   }
   
   async clearWorkCache() {
-    //const UIkit = window['UIkit'];
     try {
-      //const confirmMessage = this.msg24;
-      //await UIkit.modal.confirm(confirmMessage);
       this.workPool.clearCache();
       this.notifications.sendSuccess(this.msg25);
+      this.modalRef.hide();
+    } catch (err) {
+      
+    }
+  }
+
+  async clearAllWalletData() {
+    try {
+      this.walletService.resetWallet();
+      this.walletService.removeWalletData();
+      
+      this.notifications.sendSuccess(this.msg27);
+      this.modalRef.hide();
     } catch (err) {
       
     }
   }
   
   async clearWalletData() {
-    const UIkit = window['UIkit'];
+    //const UIkit = window['UIkit'];
     try {
-      const confirmMessage = this.msg26;
-      await UIkit.modal.confirm(confirmMessage);
+      //const confirmMessage = this.msg26;
+      //await UIkit.modal.confirm(confirmMessage);
       this.walletService.resetWallet();
       this.walletService.removeWalletData();
       
@@ -395,12 +405,30 @@ export class ConfigureAppComponent implements OnInit {
       
     }
   }
+
+  async clearAll() {
+    try {
+      this.walletService.resetWallet();
+      this.walletService.removeWalletData();
+      
+      this.workPool.deleteCache();
+      this.addressBook.clearAddressBook();
+      this.appSettings.clearAppSettings();
+      
+      this.loadFromSettings();
+      
+      this.notifications.sendSuccess(this.msg29);
+      this.modalRef.hide();
+    } catch (err) {
+      
+    }
+  }
   
   async clearAllData() {
-    const UIkit = window['UIkit'];
+    //const UIkit = window['UIkit'];
     try {
-      const confirmMessage = this.msg28;
-      await UIkit.modal.confirm(confirmMessage);
+      //const confirmMessage = this.msg28;
+      //await UIkit.modal.confirm(confirmMessage);
       this.walletService.resetWallet();
       this.walletService.removeWalletData();
       
