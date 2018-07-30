@@ -362,7 +362,7 @@
       "msg7":"Address books with 25 or more entries need to use the file export method.",
       "msg8":"Address book export downloaded!",
       "msg9":"Wallet export downloaded!",
-      "msg10":"Bad import data, make sure you selected the right Address Book export",
+      "msg10":"Bad import data, make sure you selected a QLCWallet Address Book export",
       "msg11":"Unable to parse import data, make sure you selected the right file!"
     },
     "MANAGE_REPS_WARNINGS": {
