@@ -100,7 +100,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
-        <button class="btn btn-danger" type="button" (click)="clearWalletData()">{{ 'OK' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearAllWalletData()">{{ 'OK' | translate }}</button>
       </div>
     </ng-template>
     
@@ -109,6 +109,6 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
-        <button class="btn btn-danger" type="button" (click)="clearAllData()">{{ 'OK' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearAll()">{{ 'OK' | translate }}</button>
       </div>
     </ng-template>
