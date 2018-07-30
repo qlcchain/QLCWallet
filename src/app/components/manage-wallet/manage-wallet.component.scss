@@ -3,7 +3,7 @@
 		
 		@media (min-width: 992px) {
 			min-height: 190px;
-				
+			
 		}
 	}
 	.content.nomin > div {
@@ -32,5 +32,9 @@
 		-webkit-appearance: none;
 		opacity: 0;
 		cursor: pointer;
+	}
+	
+	.rowContent:hover {
+		background: #fff;
 	}
 }
