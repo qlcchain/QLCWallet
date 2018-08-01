@@ -9,9 +9,9 @@ export class NodeService {
     status: null, // null - loading, false - offline, true - online
   };
 
-  msg1:string = '';
+  msg1 = '';
 
-  constructor(private notifications: NotificationService,private trans: TranslateService) {
+  constructor(private notifications: NotificationService, private trans: TranslateService) {
     this.loadLang();
     this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
       this.loadLang();
@@ -20,7 +20,7 @@ export class NodeService {
 
    loadLang() {
     this.trans.get('SERVICE_WARNINGS_NODE.msg1').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg1 = res;
     });
   }

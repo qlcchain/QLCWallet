@@ -21,27 +21,27 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
   qlc = 100000000;
-  
-  msg1:string = '';
-  msg2:string = '';
-  msg3:string = '';
-  msg4:string = '';
-  msg5:string = '';
-  msg6:string = '';
-  msg7:string = '';
-  
+
+  msg1: string = '';
+  msg2: string = '';
+  msg3: string = '';
+  msg4: string = '';
+  msg5: string = '';
+  msg6: string = '';
+  msg7: string = '';
+
   accountHistory: any[] = [];
   pendingBlocks = [];
   pageSize = 25;
   maxPageSize = 200;
-  
+
   repLabel: any = '';
   addressBookEntry: any = null;
   account: any = {};
   accountID = '';
-  
+
   walletAccount = null;
-  
+
   showEditAddressBook = false;
   addressBookTempName = '';
   addressBookModel = '';
@@ -51,12 +51,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
   showRepresentatives = false;
   representativeListMatch = '';
   isNaN = isNaN;
-  
+
   qrCodeImage = null;
-  
+
   routerSub = null;
   priceSub = null;
-  
+
   constructor(
     private router: ActivatedRoute,
     private route: Router,
@@ -73,7 +73,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
   ) {
     this.loadLang();
   }
-  
+
   async ngOnInit() {
     this.routerSub = this.route.events.subscribe(event => {
       if (event instanceof ChildActivationEnd) {
@@ -84,45 +84,45 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
       this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
       this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
     });
-    
+
     await this.loadAccountDetails();
-    console.log(this.accountHistory);
+    // console.log(this.accountHistory);
     this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
       this.loadLang();
     });
   }
-  
+
   loadLang() {
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg1').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg1 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg2').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg2 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg3').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg3 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg4').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg4 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg5 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg6 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg7').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg7 = res;
     });
   }
-  
+
   async loadAccountDetails() {
     this.pendingBlocks = [];
     this.accountID = this.router.snapshot.params.account;
@@ -130,10 +130,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     this.addressBookModel = this.addressBookEntry || '';
     this.walletAccount = this.wallet.getWalletAccount(this.accountID);
     this.account = await this.api.accountInfo(this.accountID);
-    
+
     const knownRepresentative = this.repService.getRepresentative(this.account.representative);
     this.repLabel = knownRepresentative ? knownRepresentative.name : null;
-    
+
     // If there is a pending balance, or the account is not opened yet, load pending transactions
     if ((!this.account.error && this.account.pending > 0) || this.account.error) {
       const pending = await this.api.pending(this.accountID, 25);
@@ -152,203 +152,203 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         }
       }
     }
-    
+
     // If the account doesnt exist, set the pending balance manually
     if (this.account.error) {
       const pendingRaw = this.pendingBlocks.reduce((prev: BigNumber, current: any) =>
-      prev.plus(new BigNumber(current.amount)), new BigNumber(0)
-    );
-    this.account.pending = pendingRaw;
-  }
-  
-  // Set fiat values?
-  this.account.balanceRaw = new BigNumber(this.account.balance || 0).mod(this.qlc);
-  this.account.pendingRaw = new BigNumber(this.account.pending || 0).mod(this.qlc);
-  this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
-  this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
-  await this.getAccountHistory(this.accountID);
-  
-  
-  const qrCode = await QRCode.toDataURL(`${this.accountID}`);
-  this.qrCodeImage = qrCode;
-}
-
-ngOnDestroy() {
-  if (this.routerSub) {
-    this.routerSub.unsubscribe();
-  }
-  if (this.priceSub) {
-    this.priceSub.unsubscribe();
-  }
-}
-
-async getAccountHistory(account, resetPage = true) {
-  if (resetPage) {
-    this.pageSize = 25;
-  }
-  const history = await this.api.accountHistory(account, this.pageSize, true);
-  const additionalBlocksInfo = [];
-  
-  if (history && history.history && Array.isArray(history.history)) {
-    this.accountHistory = history.history.map(h => {
-      if (h.type === 'state') {
-        // For Open and receive blocks, we need to look up block info to get originating account
-        if (h.subtype === 'open' || h.subtype === 'receive') {
-          additionalBlocksInfo.push({ hash: h.hash, link: h.link });
-          h.addressBookName = this.addressBook.getAccountName(h.account) || null;
-        } else {
-          h.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(h.link));
-          h.addressBookName = this.addressBook.getAccountName(h.link_as_account) || null;
-        }
-      } else {
-        h.addressBookName = this.addressBook.getAccountName(h.account) || null;
-      }
-      return h;
-    });
-    
-    // Remove change blocks now that we are using the raw output
-    this.accountHistory = this.accountHistory.filter(h => h.type !== 'change' && h.subtype !== 'change');
-    
-    if (additionalBlocksInfo.length) {
-      const blocksInfo = await this.api.blocksInfo(additionalBlocksInfo.map(b => b.link));
-      for (const block in blocksInfo.blocks) {
-        if (!blocksInfo.blocks.hasOwnProperty(block)) {
-          continue;
-        }
-        const matchingBlock = additionalBlocksInfo.find(a => a.link === block);
-        if (!matchingBlock) {
-          continue;
-        }
-        const accountInHistory = this.accountHistory.find(h => h.hash === matchingBlock.hash);
-        if (!accountInHistory) {
-          continue;
-        }
-        
-        const blockData = blocksInfo.blocks[block];
-        
-        accountInHistory.link_as_account = blockData.block_account;
-        accountInHistory.addressBookName = this.addressBook.getAccountName(blockData.block_account) || null;
-      }
+        prev.plus(new BigNumber(current.amount)), new BigNumber(0)
+      );
+      this.account.pending = pendingRaw;
     }
-    
-  } else {
-    this.accountHistory = [];
-  }
-}
 
-async loadMore() {
-  if (this.pageSize <= this.maxPageSize) {
-    this.pageSize += 25;
-    await this.getAccountHistory(this.accountID, false);
-  }
-}
+    // Set fiat values?
+    this.account.balanceRaw = new BigNumber(this.account.balance || 0).mod(this.qlc);
+    this.account.pendingRaw = new BigNumber(this.account.pending || 0).mod(this.qlc);
+    this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
+    this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
+    await this.getAccountHistory(this.accountID);
 
-async saveRepresentative() {
-  if (this.wallet.walletIsLocked()) {
-    return this.notifications.sendWarning(this.msg1);
+
+    const qrCode = await QRCode.toDataURL(`${this.accountID}`);
+    this.qrCodeImage = qrCode;
   }
-  if (!this.walletAccount) {
-    return;
+
+  ngOnDestroy() {
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
+    }
+    if (this.priceSub) {
+      this.priceSub.unsubscribe();
+    }
   }
-  const repAccount = this.representativeModel;
-  
-  const valid = await this.api.validateAccountNumber(repAccount);
-  if (!valid || valid.valid !== '1') {
-    return this.notifications.sendWarning(this.msg2);
+
+  async getAccountHistory(account, resetPage = true) {
+    if (resetPage) {
+      this.pageSize = 25;
+    }
+    const history = await this.api.accountHistory(account, this.pageSize, true);
+    const additionalBlocksInfo = [];
+
+    if (history && history.history && Array.isArray(history.history)) {
+      this.accountHistory = history.history.map(h => {
+        if (h.type === 'state') {
+          // For Open and receive blocks, we need to look up block info to get originating account
+          if (h.subtype === 'open' || h.subtype === 'receive') {
+            additionalBlocksInfo.push({ hash: h.hash, link: h.link });
+            h.addressBookName = this.addressBook.getAccountName(h.account) || null;
+          } else {
+            h.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(h.link));
+            h.addressBookName = this.addressBook.getAccountName(h.link_as_account) || null;
+          }
+        } else {
+          h.addressBookName = this.addressBook.getAccountName(h.account) || null;
+        }
+        return h;
+      });
+
+      // Remove change blocks now that we are using the raw output
+      this.accountHistory = this.accountHistory.filter(h => h.type !== 'change' && h.subtype !== 'change');
+
+      if (additionalBlocksInfo.length) {
+        const blocksInfo = await this.api.blocksInfo(additionalBlocksInfo.map(b => b.link));
+        for (const block in blocksInfo.blocks) {
+          if (!blocksInfo.blocks.hasOwnProperty(block)) {
+            continue;
+          }
+          const matchingBlock = additionalBlocksInfo.find(a => a.link === block);
+          if (!matchingBlock) {
+            continue;
+          }
+          const accountInHistory = this.accountHistory.find(h => h.hash === matchingBlock.hash);
+          if (!accountInHistory) {
+            continue;
+          }
+
+          const blockData = blocksInfo.blocks[block];
+
+          accountInHistory.link_as_account = blockData.block_account;
+          accountInHistory.addressBookName = this.addressBook.getAccountName(blockData.block_account) || null;
+        }
+      }
+
+    } else {
+      this.accountHistory = [];
+    }
   }
-  try {
-    const changed = await this.qlcBlock.generateChange(this.walletAccount, repAccount, this.wallet.isLedgerWallet());
-    if (!changed) {
-      this.notifications.sendError(this.msg3);
+
+  async loadMore() {
+    if (this.pageSize <= this.maxPageSize) {
+      this.pageSize += 25;
+      await this.getAccountHistory(this.accountID, false);
+    }
+  }
+
+  async saveRepresentative() {
+    if (this.wallet.walletIsLocked()) {
+      return this.notifications.sendWarning(this.msg1);
+    }
+    if (!this.walletAccount) {
       return;
     }
-  } catch (err) {
-    this.notifications.sendError(err.message);
-    return;
-  }
-  
-  // Reload some states, we are successful
-  this.representativeModel = '';
-  this.showEditRepresentative = false;
-  
-  const accountInfo = await this.api.accountInfo(this.accountID);
-  this.account = accountInfo;
-  const newRep = this.repService.getRepresentative(repAccount);
-  this.repLabel = newRep ? newRep.name : '';
-  
-  this.notifications.sendSuccess(this.msg4);
-}
+    const repAccount = this.representativeModel;
 
-async saveAddressBook() {
-  const addressBookName = this.addressBookEntry.trim();
-  if (!addressBookName) {
-    // Check for deleting an entry in the address book
-    if (this.addressBookEntry) {
-      this.addressBook.deleteAddress(this.accountID);
-      this.notifications.sendSuccess(this.msg5);
-      this.addressBookEntry = null;
+    const valid = await this.api.validateAccountNumber(repAccount);
+    if (!valid || valid.valid !== '1') {
+      return this.notifications.sendWarning(this.msg2);
     }
-    
+    try {
+      const changed = await this.qlcBlock.generateChange(this.walletAccount, repAccount, this.wallet.isLedgerWallet());
+      if (!changed) {
+        this.notifications.sendError(this.msg3);
+        return;
+      }
+    } catch (err) {
+      this.notifications.sendError(err.message);
+      return;
+    }
+
+    // Reload some states, we are successful
+    this.representativeModel = '';
+    this.showEditRepresentative = false;
+
+    const accountInfo = await this.api.accountInfo(this.accountID);
+    this.account = accountInfo;
+    const newRep = this.repService.getRepresentative(repAccount);
+    this.repLabel = newRep ? newRep.name : '';
+
+    this.notifications.sendSuccess(this.msg4);
+  }
+
+  async saveAddressBook() {
+    const addressBookName = this.addressBookEntry.trim();
+    if (!addressBookName) {
+      // Check for deleting an entry in the address book
+      if (this.addressBookEntry) {
+        this.addressBook.deleteAddress(this.accountID);
+        this.notifications.sendSuccess(this.msg5);
+        this.addressBookEntry = null;
+      }
+
+      this.showEditAddressBook = false;
+      return;
+    }
+
+    try {
+      await this.addressBook.saveAddress(this.accountID, addressBookName);
+    } catch (err) {
+      this.notifications.sendError(err.message);
+      return;
+    }
+
+    this.notifications.sendSuccess(this.msg6);
+
+    this.addressBookEntry = addressBookName;
     this.showEditAddressBook = false;
-    return;
   }
-  
-  try {
-    await this.addressBook.saveAddress(this.accountID, addressBookName);
-  } catch (err) {
-    this.notifications.sendError(err.message);
-    return;
+
+  searchRepresentatives() {
+    this.showRepresentatives = true;
+    const search = this.representativeModel || '';
+    const representatives = this.repService.getSortedRepresentatives();
+
+    const matches = representatives
+      .filter(a => a.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)
+      .slice(0, 5);
+
+    this.representativeResults$.next(matches);
   }
-  
-  this.notifications.sendSuccess(this.msg6);
-  
-  this.addressBookEntry = addressBookName;
-  this.showEditAddressBook = false;
-}
 
-searchRepresentatives() {
-  this.showRepresentatives = true;
-  const search = this.representativeModel || '';
-  const representatives = this.repService.getSortedRepresentatives();
-  
-  const matches = representatives
-  .filter(a => a.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)
-  .slice(0, 5);
-  
-  this.representativeResults$.next(matches);
-}
-
-selectRepresentative(rep) {
-  this.showRepresentatives = false;
-  this.representativeModel = rep;
-  this.searchRepresentatives();
-  this.validateRepresentative();
-}
-
-validateRepresentative() {
-  setTimeout(() => this.showRepresentatives = false, 400);
-  this.representativeModel = this.representativeModel.replace(/ /g, '');
-  const rep = this.repService.getRepresentative(this.representativeModel);
-  
-  if (rep) {
-    this.representativeListMatch = rep.name;
-  } else {
-    this.representativeListMatch = '';
+  selectRepresentative(rep) {
+    this.showRepresentatives = false;
+    this.representativeModel = rep;
+    this.searchRepresentatives();
+    this.validateRepresentative();
   }
-}
 
-copied() {
-  this.notifications.sendSuccess(this.msg7);
-}
+  validateRepresentative() {
+    setTimeout(() => this.showRepresentatives = false, 400);
+    this.representativeModel = this.representativeModel.replace(/ /g, '');
+    const rep = this.repService.getRepresentative(this.representativeModel);
 
-editName() {
-  this.showEditAddressBook = true;
-  this.addressBookTempName = this.addressBookEntry;
-}
-editNameCancel() {
-  this.showEditAddressBook = false;
-  this.addressBookEntry = this.addressBookTempName;
-  this.addressBookTempName = '';
-}
+    if (rep) {
+      this.representativeListMatch = rep.name;
+    } else {
+      this.representativeListMatch = '';
+    }
+  }
+
+  copied() {
+    this.notifications.sendSuccess(this.msg7);
+  }
+
+  editName() {
+    this.showEditAddressBook = true;
+    this.addressBookTempName = this.addressBookEntry;
+  }
+  editNameCancel() {
+    this.showEditAddressBook = false;
+    this.addressBookEntry = this.addressBookTempName;
+    this.addressBookTempName = '';
+  }
 
 }

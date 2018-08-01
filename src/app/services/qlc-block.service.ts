@@ -17,13 +17,13 @@ const STATE_BLOCK_PREAMBLE = '00000000000000000000000000000000000000000000000000
 export class QLCBlockService {
   representativeAccount = 'qlc_3oftfjxu9x9pcjh1je3xfpikd441w1wo313qjc6ie1es5aobwed5x4pjojic'; // QLC Representative
 
-  msg1:string = '';
-  msg2:string = '';
-  msg3:string = '';
-  msg4:string = '';
-  msg5:string = '';
-  msg6:string = '';
-  msg7:string = '';
+  msg1 = '';
+  msg2 = '';
+  msg3 = '';
+  msg4 = '';
+  msg5 = '';
+  msg6 = '';
+  msg7 = '';
 
   constructor(
     private api: ApiService,
@@ -42,31 +42,31 @@ export class QLCBlockService {
 
    loadLang() {
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg1').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg1 = res;
     });
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg2').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg2 = res;
     });
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg3').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg3 = res;
     });
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg4').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg4 = res;
     });
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg5').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg5 = res;
     });
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg6').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg6 = res;
     });
     this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg7').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg7 = res;
     });
   }
@@ -75,7 +75,7 @@ export class QLCBlockService {
     const tokenTypeHash = '125998E086F7011384F89554676B69FCD86769642080CE7EED4A8AA83EF58F36';
     const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
     if (!toAcct) {
-      throw new Error(this.msg1+` ${toAcct.token} `+this.msg2);
+      throw new Error(this.msg1 + ` ${toAcct.token} ` + this.msg2);
     }
 
     let blockData;
@@ -138,7 +138,7 @@ export class QLCBlockService {
   async generateSend(walletAccount, toAccountID, tokenTypeHash, rawAmount, ledger = false) {
     const fromAccount = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
     if (!fromAccount) {
-      throw new Error(this.msg4+` ${walletAccount.id}`);
+      throw new Error(this.msg4 + ` ${walletAccount.id}`);
     }
 
     const remaining = new BigNumber(fromAccount.balance).minus(rawAmount);
@@ -188,7 +188,7 @@ export class QLCBlockService {
       blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
     }
 
-    console.log(JSON.stringify(blockData));
+    // console.log(JSON.stringify(blockData));
 
     const processResponse = await this.api.process(blockData);
     if (!processResponse || !processResponse.hash) {

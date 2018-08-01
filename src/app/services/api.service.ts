@@ -12,15 +12,13 @@ export class ApiService {
 
   private async request(action, data): Promise<any> {
     data.action = action;
-    console.log('requesting: ' + action);
+    // console.log('requesting: ' + action);
     return await this.http.post(this.rpcUrl, data).toPromise()
       .then(res => {
-        console.log(res);
         this.node.setOnline();
         return res;
       })
       .catch(err => {
-        console.log(err);
         if (err.status === 500 || err.status === 0) {
           this.node.setOffline(`${data.action}, ${err.message}: ${err.statck}`); // Hard error, node is offline
         }

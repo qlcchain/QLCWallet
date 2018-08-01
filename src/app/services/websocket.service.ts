@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import {AppSettingsService} from './app-settings.service';
+import { AppSettingsService } from './app-settings.service';
 
 @Injectable()
 export class WebsocketService {
@@ -24,7 +24,9 @@ export class WebsocketService {
   constructor(private appSettings: AppSettingsService) { }
 
   connect() {
-    if (this.socket.connected && this.socket.ws) return;
+    if (this.socket.connected && this.socket.ws) {
+      return;
+    }
     delete this.socket.ws; // Maybe this will erase old connections
     // const ws = new WebSocket('wss://ws.nanovault.io');
     const ws = new WebSocket('wss://api.qlcchain.online');
@@ -32,7 +34,7 @@ export class WebsocketService {
 
     ws.onopen = event => {
       this.socket.connected = true;
-      this.queuedCommands.forEach(event => ws.send(JSON.stringify(event)));
+      this.queuedCommands.forEach(e => ws.send(JSON.stringify(e)));
 
       // Resubscribe to accounts?
       if (this.subscribedAccounts.length) {
@@ -64,7 +66,7 @@ export class WebsocketService {
       } catch (err) {
         console.log(`Error parsing message`, err);
       }
-    }
+    };
   }
 
   attemptReconnect() {

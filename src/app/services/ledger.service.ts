@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-//import Nano from 'hw-app-nano';
+// import Nano from 'hw-app-nano';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import { Subject } from 'rxjs/Subject';
 import { ApiService } from './api.service';
@@ -84,7 +84,7 @@ export class LedgerService {
       // Load nano object
       if (!this.ledger.nano) {
         try {
-          //this.ledger.nano = new Nano(this.ledger.transport);
+          // this.ledger.nano = new Nano(this.ledger.transport);
           this.ledger.nano = null;
         } catch (err) {
           if (err.statusText === 'UNKNOWN_ERROR') {

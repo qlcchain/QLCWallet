@@ -17,22 +17,22 @@ export class AccountsComponent implements OnInit {
   accounts = this.walletService.wallet.accounts;
   wallet = this.walletService.wallet;
   isLedgerWallet = this.walletService.isLedgerWallet();
-  
-  msg1:string = '';
-  msg2:string = '';
-  msg3:string = '';
-  msg4:string = '';
-  msg5:string = '';
-  msg6:string = '';
-  msg7:string = '';
-  msg8:string = '';
-  msg9:string = '';
-  msg10:string = '';
-  msg11:string = '';
-  msg12:string = '';
-  msgEdit1:string = '';
-  msgEdit2:string = '';
-  
+
+  msg1 = '';
+  msg2 = '';
+  msg3 = '';
+  msg4 = '';
+  msg5 = '';
+  msg6 = '';
+  msg7 = '';
+  msg8 = '';
+  msg9 = '';
+  msg10 = '';
+  msg11 = '';
+  msg12 = '';
+  msgEdit1 = '';
+  msgEdit2 = '';
+
   constructor(
     private walletService: WalletService,
     private api: ApiService,
@@ -47,72 +47,72 @@ export class AccountsComponent implements OnInit {
     this.loadBalances();
     this.loadLang();
   }
-  
+
   async ngOnInit() {
     this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
       this.loadLang();
     });
   }
-  
+
   loadLang() {
     this.trans.get('ACCOUNTS_WARNINGS.msg1').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg1 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg2').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg2 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg3').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg3 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg4').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg4 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg5').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg5 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg6').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg6 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg7').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg7 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg8').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg8 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg9').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg9 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg10').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg10 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg11').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg11 = res;
     });
     this.trans.get('ACCOUNTS_WARNINGS.msg12').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg12 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msgEdit1 = res;
     });
     this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msgEdit2 = res;
     });
   }
-  
+
   async loadBalances() {
     for (let i = 0; i < this.accounts.length; i++) {
       // console.log(this.accounts[i]);
@@ -120,7 +120,7 @@ export class AccountsComponent implements OnInit {
     }
     // walletAccount.account_info = await this.api.accountInfo(accountID);
   }
-  
+
   async createAccount() {
     if (this.walletService.isLocked()) {
       return this.notificationService.sendError(this.msg1);
@@ -133,27 +133,27 @@ export class AccountsComponent implements OnInit {
     }
     try {
       const newAccount = await this.walletService.addWalletAccount();
-      this.notificationService.sendSuccess(this.msg4+` ${newAccount.id}`);
+      this.notificationService.sendSuccess(this.msg4 + ` ${newAccount.id}`);
     } catch (err) {
     }
   }
-  
+
   copied() {
     this.notificationService.sendSuccess(this.msg5);
   }
-  
+
   async deleteAccount(account) {
     if (this.walletService.walletIsLocked()) {
       return this.notificationService.sendWarning(this.msg6);
     }
     try {
       await this.walletService.removeWalletAccount(account.id);
-      this.notificationService.sendSuccess(this.msg7+` ${account.id}`);
+      this.notificationService.sendSuccess(this.msg7 + ` ${account.id}`);
     } catch (err) {
-      this.notificationService.sendError(this.msg8+` ${err.message}`);
+      this.notificationService.sendError(this.msg8 + ` ${err.message}`);
     }
   }
-  
+
   async showLedgerAddress(account) {
     if (this.ledger.ledger.status !== LedgerStatus.READY) {
       return this.notificationService.sendWarning(this.msg9);
@@ -167,7 +167,7 @@ export class AccountsComponent implements OnInit {
     }
     this.notificationService.removeNotification('ledger-account');
   }
-  
+
   editName(account) {
     account.editName = true;
     account.tempBookName = account.addressBookName;
@@ -185,14 +185,14 @@ export class AccountsComponent implements OnInit {
       account.editName = false;
       return;
     }
-    
+
     try {
       await this.addressBook.saveAddress(account.id, addressBookName);
     } catch (err) {
       this.notificationService.sendError(err.message);
       return;
     }
-    
+
     this.notificationService.sendSuccess(this.msgEdit2);
     account.editName = false;
   }

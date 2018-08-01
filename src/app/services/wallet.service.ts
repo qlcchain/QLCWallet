@@ -340,7 +340,7 @@ export class WalletService {
       Object.keys(batchResponse.frontiers).map(accountID => {
         if (batchAccounts.hasOwnProperty(accountID)) {
           batchAccounts[accountID].used = true;
-          console.log(`${accountID} at ${batchAccounts[accountID].index} >>> true`);
+          // console.log(`${accountID} at ${batchAccounts[accountID].index} >>> true`);
         }
       });
 
