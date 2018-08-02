@@ -64,18 +64,23 @@ export class AppComponent implements OnInit {
 
     // If the wallet is locked and there is a pending balance, show a warning to unlock the wallet
     if (this.wallet.locked && this.wallet.pending.gt(0)) {
-      this.notifications.sendWarning(`New incoming transaction - unlock the wallet to receive it!`, { length: 0, identifier: 'pending-locked' });
+      this.notifications.sendWarning(`New incoming transaction - unlock the wallet to receive it!`,
+        { length: 0, identifier: 'pending-locked' });
     }
 
     // When the page closes, determine if we should lock the wallet
     window.addEventListener('beforeunload', (e) => {
-      if (this.wallet.locked) return; // Already locked, nothing to worry about
+      if (this.wallet.locked) {
+        return; // Already locked, nothing to worry about
+      }
       if (this.settings.settings.lockOnClose === 1) {
         this.walletService.lockWallet();
       }
     });
     window.addEventListener('unload', (e) => {
-      if (this.wallet.locked) return; // Already locked, nothing to worry about
+      if (this.wallet.locked) {
+        return; // Already locked, nothing to worry about
+      }
       if (this.settings.settings.lockOnClose === 1) {
         this.walletService.lockWallet();
       }
@@ -94,8 +99,12 @@ export class AppComponent implements OnInit {
     // Check how long the wallet has been inactive, and lock it if it's been too long
     setInterval(() => {
       this.inactiveSeconds += 1;
-      if (!this.settings.settings.lockInactivityMinutes) return; // Do not lock on inactivity
-      if (this.wallet.locked || !this.wallet.password) return;
+      if (!this.settings.settings.lockInactivityMinutes) {
+        return; // Do not lock on inactivity
+      }
+      if (this.wallet.locked || !this.wallet.password) {
+        return;
+      }
 
       // Determine if we have been inactive for longer than our lock setting
       if (this.inactiveSeconds >= this.settings.settings.lockInactivityMinutes * 60) {
@@ -114,7 +123,9 @@ export class AppComponent implements OnInit {
 
   performSearch() {
     const searchData = this.searchData.trim();
-    if (!searchData.length) return;
+    if (!searchData.length) {
+      return;
+    }
 
     if (searchData.startsWith('xrb_')) {
       this.router.navigate(['account', searchData]);

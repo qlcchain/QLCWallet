@@ -4,7 +4,7 @@ import { ApiService } from './api.service';
 import { NotificationService } from './notification.service';
 import { queue } from 'rxjs/scheduler/queue';
 import { PoWSource } from './app-settings.service';
-
+import { DeviceDetectorService } from 'ngx-device-detector';
 const mod = window['Module'];
 
 @Injectable()
@@ -17,19 +17,23 @@ export class PowService {
   parallelQueue = false;
   processingQueueItem = false;
 
-  constructor(private appSettings: AppSettingsService, private api: ApiService, private notifications: NotificationService) { }
+  constructor(private appSettings: AppSettingsService, private api: ApiService,
+    private notifications: NotificationService, private deviceService: DeviceDetectorService) { }
 
   /**
    * Determine the best PoW Method available for this browser
    */
   determineBestPoWMethod(): PoWSource {
-    if (this.hasWebGLSupport()) {
-      return 'clientWebGL';
-    }
+    console.log(this.deviceService.getDeviceInfo());
+    if (this.deviceService.isDesktop()) {
+      if (this.hasWebGLSupport()) {
+        return 'clientWebGL';
+      }
 
-    // // For now, server is better than a CPU default (For Mobile)
-    if (this.hasWorkerSupport()) {
-      return 'clientCPU';
+      // // For now, server is better than a CPU default (For Mobile)
+      if (this.hasWorkerSupport()) {
+        return 'clientCPU';
+      }
     }
 
     return 'server';

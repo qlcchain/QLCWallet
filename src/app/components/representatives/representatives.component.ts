@@ -304,11 +304,11 @@ export class RepresentativesComponent implements OnInit {
       .slice(0, 5);
 
     this.representativeResults$.next(matches);
-    console.log(representatives);
+    // console.log(representatives);
   }
 
   selectRep() {
-    console.log(this.representativeSelect);
+    // console.log(this.representativeSelect);
     this.selectRepresentative(this.representativeSelect);
   }
 

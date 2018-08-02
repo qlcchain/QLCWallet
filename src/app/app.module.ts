@@ -53,6 +53,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { NavComponent } from './components/nav/nav.component';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -102,7 +103,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     ModalModule.forRoot(),
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    DeviceDetectorModule.forRoot()
   ],
   providers: [
     LangService,
