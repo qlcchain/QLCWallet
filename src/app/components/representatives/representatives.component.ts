@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { UtilService } from '../../services/util.service';
 import { RepresentativeService } from '../../services/representative.service';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';

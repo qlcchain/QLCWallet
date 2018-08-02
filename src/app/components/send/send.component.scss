@@ -60,7 +60,7 @@
 		border: 0;
 		border-top: 1px solid $textLight;
 		border-bottom: 1px solid $textLight;
-		background: #fff url('~assets/img/separator_input.png') no-repeat left 0 center;
+		background: #fff url('/assets/img/separator_input.png') no-repeat left 0 center;
 		background-size: 1px 34px;
 		padding-top: 10px;
 		padding-bottom: 10px;
@@ -167,11 +167,11 @@
 		color: $superLight;
 	}
 	.transfer {
-	    background: #ffffff url('~assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
+	    background: #ffffff url('/assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
 	    background-size: 24px 24px;
 	    border-top: 0;
 	    @media (max-width: 992px) {
-			background: #ffffff url('~assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
+			background: #ffffff url('/assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
 	    	background-size: 24px 24px;
 		}
 	}

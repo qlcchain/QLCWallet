@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AddressBookService } from '../../services/address-book.service';
 import { WalletService } from '../../services/wallet.service';
@@ -7,7 +9,7 @@ import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { RepresentativeService } from '../../services/representative.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import 'rxjs/add/operator/map';
+
 
 @Component({
   selector: 'app-manage-representatives',
@@ -28,12 +30,12 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
   msg8 = '';
 
   // Set the online status of each representative
-  representatives$ = this.repService.representatives$.map(reps => {
+  representatives$ = this.repService.representatives$.pipe(map(reps => {
     return reps.map(rep => {
       rep.online = this.onlineReps.indexOf(rep.id) !== -1;
       return rep;
     });
-  });
+  }));
 
   newRepAccount = '';
   newRepName = '';
