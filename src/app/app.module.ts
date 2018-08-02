@@ -37,7 +37,7 @@ import { TransactionDetailsComponent } from './components/transaction-details/tr
 import { PriceService } from './services/price.service';
 import { FiatPipe } from './pipes/fiat.pipe';
 import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
-import { NanoAccountIdComponent } from './components/helpers/nano-account-id/nano-account-id.component';
+import { QlcAccountIdComponent } from './components/helpers/qlc-account-id/qlc-account-id.component';
 import { PowService } from './services/pow.service';
 import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
 import { CurrencySymbolPipe } from './pipes/currency-symbol.pipe';
@@ -78,12 +78,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     TransactionDetailsComponent,
     FiatPipe,
     ImportWalletComponent,
-    NanoAccountIdComponent,
+    QlcAccountIdComponent,
     ImportAddressBookComponent,
     CurrencySymbolPipe,
     RepresentativesComponent,
     ManageRepresentativesComponent,
-    NavComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
@@ -122,8 +122,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     PowService,
     RepresentativeService,
     NodeService,
-    LedgerService,
+    LedgerService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
