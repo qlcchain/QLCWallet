@@ -212,7 +212,7 @@ function calculate(hashHex, callback, progressCallback) {
 
       // Threshold test, first 4 bytes not significant,
       //  only calculate digest of the second 4 bytes
-      if((BLAKE2B_IV32_1 ^ v[1] ^ v[17]) > 0xFFFFFFC0u) {
+      if((BLAKE2B_IV32_1 ^ v[1] ^ v[17]) > 0xFFFFFE00u) {
         // Success found, return pixel data so work value can be constructed
         fragColor = vec4(
           float(x_index + 1u)/255., // +1 to distinguish from 0 (unsuccessful) pixels
