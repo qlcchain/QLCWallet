@@ -1,5 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, ChildActivationEnd, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  ChildActivationEnd,
+  Router
+} from '@angular/router';
 import { AddressBookService } from '../../services/address-book.service';
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
@@ -11,7 +16,7 @@ import { UtilService } from '../../services/util.service';
 import * as QRCode from 'qrcode';
 import BigNumber from 'bignumber.js';
 import { RepresentativeService } from '../../services/representative.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 @Component({
@@ -22,13 +27,13 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 export class AccountDetailsComponent implements OnInit, OnDestroy {
   qlc = 100000000;
 
-  msg1: string = '';
-  msg2: string = '';
-  msg3: string = '';
-  msg4: string = '';
-  msg5: string = '';
-  msg6: string = '';
-  msg7: string = '';
+  msg1 = '';
+  msg2 = '';
+  msg3 = '';
+  msg4 = '';
+  msg5 = '';
+  msg6 = '';
+  msg7 = '';
 
   accountHistory: any[] = [];
   pendingBlocks = [];
@@ -81,8 +86,14 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
       }
     });
     this.priceSub = this.price.lastPrice$.subscribe(event => {
-      this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
-      this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
+      this.account.balanceFiat = this.util.qlc
+        .rawToMqlc(this.account.balance || 0)
+        .times(this.price.price.lastPrice)
+        .toNumber();
+      this.account.pendingFiat = this.util.qlc
+        .rawToMqlc(this.account.pending || 0)
+        .times(this.price.price.lastPrice)
+        .toNumber();
     });
 
     await this.loadAccountDetails();
@@ -131,11 +142,16 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     this.walletAccount = this.wallet.getWalletAccount(this.accountID);
     this.account = await this.api.accountInfo(this.accountID);
 
-    const knownRepresentative = this.repService.getRepresentative(this.account.representative);
+    const knownRepresentative = this.repService.getRepresentative(
+      this.account.representative
+    );
     this.repLabel = knownRepresentative ? knownRepresentative.name : null;
 
     // If there is a pending balance, or the account is not opened yet, load pending transactions
-    if ((!this.account.error && this.account.pending > 0) || this.account.error) {
+    if (
+      (!this.account.error && this.account.pending > 0) ||
+      this.account.error
+    ) {
       const pending = await this.api.pending(this.accountID, 25);
       if (pending && pending.blocks) {
         for (const block in pending.blocks) {
@@ -146,8 +162,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             account: pending.blocks[block].source,
             amount: pending.blocks[block].amount,
             timestamp: pending.blocks[block].timestamp,
-            addressBookName: this.addressBook.getAccountName(pending.blocks[block].source) || null,
-            hash: block,
+            addressBookName:
+              this.addressBook.getAccountName(pending.blocks[block].source) ||
+              null,
+            hash: block
           });
         }
       }
@@ -155,19 +173,30 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     // If the account doesnt exist, set the pending balance manually
     if (this.account.error) {
-      const pendingRaw = this.pendingBlocks.reduce((prev: BigNumber, current: any) =>
-        prev.plus(new BigNumber(current.amount)), new BigNumber(0)
+      const pendingRaw = this.pendingBlocks.reduce(
+        (prev: BigNumber, current: any) =>
+          prev.plus(new BigNumber(current.amount)),
+        new BigNumber(0)
       );
       this.account.pending = pendingRaw;
     }
 
     // Set fiat values?
-    this.account.balanceRaw = new BigNumber(this.account.balance || 0).mod(this.qlc);
-    this.account.pendingRaw = new BigNumber(this.account.pending || 0).mod(this.qlc);
-    this.account.balanceFiat = this.util.qlc.rawToMqlc(this.account.balance || 0).times(this.price.price.lastPrice).toNumber();
-    this.account.pendingFiat = this.util.qlc.rawToMqlc(this.account.pending || 0).times(this.price.price.lastPrice).toNumber();
+    this.account.balanceRaw = new BigNumber(this.account.balance || 0).mod(
+      this.qlc
+    );
+    this.account.pendingRaw = new BigNumber(this.account.pending || 0).mod(
+      this.qlc
+    );
+    this.account.balanceFiat = this.util.qlc
+      .rawToMqlc(this.account.balance || 0)
+      .times(this.price.price.lastPrice)
+      .toNumber();
+    this.account.pendingFiat = this.util.qlc
+      .rawToMqlc(this.account.pending || 0)
+      .times(this.price.price.lastPrice)
+      .toNumber();
     await this.getAccountHistory(this.accountID);
-
 
     const qrCode = await QRCode.toDataURL(`${this.accountID}`);
     this.qrCodeImage = qrCode;
@@ -195,31 +224,44 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
           // For Open and receive blocks, we need to look up block info to get originating account
           if (h.subtype === 'open' || h.subtype === 'receive') {
             additionalBlocksInfo.push({ hash: h.hash, link: h.link });
-            h.addressBookName = this.addressBook.getAccountName(h.account) || null;
+            h.addressBookName =
+              this.addressBook.getAccountName(h.account) || null;
           } else {
-            h.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(h.link));
-            h.addressBookName = this.addressBook.getAccountName(h.link_as_account) || null;
+            h.link_as_account = this.util.account.getPublicAccountID(
+              this.util.hex.toUint8(h.link)
+            );
+            h.addressBookName =
+              this.addressBook.getAccountName(h.link_as_account) || null;
           }
         } else {
-          h.addressBookName = this.addressBook.getAccountName(h.account) || null;
+          h.addressBookName =
+            this.addressBook.getAccountName(h.account) || null;
         }
         return h;
       });
 
       // Remove change blocks now that we are using the raw output
-      this.accountHistory = this.accountHistory.filter(h => h.type !== 'change' && h.subtype !== 'change');
+      this.accountHistory = this.accountHistory.filter(
+        h => h.type !== 'change' && h.subtype !== 'change'
+      );
 
       if (additionalBlocksInfo.length) {
-        const blocksInfo = await this.api.blocksInfo(additionalBlocksInfo.map(b => b.link));
+        const blocksInfo = await this.api.blocksInfo(
+          additionalBlocksInfo.map(b => b.link)
+        );
         for (const block in blocksInfo.blocks) {
           if (!blocksInfo.blocks.hasOwnProperty(block)) {
             continue;
           }
-          const matchingBlock = additionalBlocksInfo.find(a => a.link === block);
+          const matchingBlock = additionalBlocksInfo.find(
+            a => a.link === block
+          );
           if (!matchingBlock) {
             continue;
           }
-          const accountInHistory = this.accountHistory.find(h => h.hash === matchingBlock.hash);
+          const accountInHistory = this.accountHistory.find(
+            h => h.hash === matchingBlock.hash
+          );
           if (!accountInHistory) {
             continue;
           }
@@ -227,10 +269,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
           const blockData = blocksInfo.blocks[block];
 
           accountInHistory.link_as_account = blockData.block_account;
-          accountInHistory.addressBookName = this.addressBook.getAccountName(blockData.block_account) || null;
+          accountInHistory.addressBookName =
+            this.addressBook.getAccountName(blockData.block_account) || null;
         }
       }
-
     } else {
       this.accountHistory = [];
     }
@@ -257,7 +299,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
       return this.notifications.sendWarning(this.msg2);
     }
     try {
-      const changed = await this.qlcBlock.generateChange(this.walletAccount, repAccount, this.wallet.isLedgerWallet());
+      const changed = await this.qlcBlock.generateChange(
+        this.walletAccount,
+        repAccount,
+        this.wallet.isLedgerWallet()
+      );
       if (!changed) {
         this.notifications.sendError(this.msg3);
         return;
@@ -326,7 +372,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
   }
 
   validateRepresentative() {
-    setTimeout(() => this.showRepresentatives = false, 400);
+    setTimeout(() => (this.showRepresentatives = false), 400);
     this.representativeModel = this.representativeModel.replace(/ /g, '');
     const rep = this.repService.getRepresentative(this.representativeModel);
 
@@ -350,5 +396,4 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     this.addressBookEntry = this.addressBookTempName;
     this.addressBookTempName = '';
   }
-
 }

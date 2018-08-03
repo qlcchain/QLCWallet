@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import BigNumber from 'bignumber.js';
+import { ActivatedRoute } from '@angular/router';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { BigNumber } from 'bignumber.js';
+import { BehaviorSubject } from 'rxjs';
 import { AddressBookService } from '../../services/address-book.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { WalletService } from '../../services/wallet.service';
-import { NotificationService } from '../../services/notification.service';
 import { ApiService } from '../../services/api.service';
-import { UtilService } from '../../services/util.service';
-
-import * as blake from 'blakejs';
-import { WorkPoolService } from '../../services/work-pool.service';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 import { PriceService } from '../../services/price.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { ValueTransformer } from '@angular/compiler/src/util';
+import { UtilService } from '../../services/util.service';
+import { WalletService } from '../../services/wallet.service';
+import { WorkPoolService } from '../../services/work-pool.service';
+
 
 const nacl = window['nacl'];
 
@@ -36,19 +34,19 @@ export class SendComponent implements OnInit {
   showAddressBook = false;
   addressBookMatch = '';
 
-  msg1: string = '';
-  msg2: string = '';
-  msg3: string = '';
-  msg4: string = '';
-  msg5: string = '';
-  msg6: string = '';
-  msg7: string = '';
-  msg8: string = '';
-  msg9: string = '';
-  msg10: string = '';
-  msg11: string = '';
-  msg12: string = '';
-  msg13: string = '';
+  msg1 = '';
+  msg2 = '';
+  msg3 = '';
+  msg4 = '';
+  msg5 = '';
+  msg6 = '';
+  msg7 = '';
+  msg8 = '';
+  msg9 = '';
+  msg10 = '';
+  msg11 = '';
+  msg12 = '';
+  msg13 = '';
 
   amounts = [
     { name: 'QLC (1 Mqlc)', shortName: 'QLC', value: 'mqlc' },
@@ -85,8 +83,6 @@ export class SendComponent implements OnInit {
     private util: UtilService,
     private trans: TranslateService
   ) {
-    //this.accountTokens = this.accounts[0].account_info.account_infos;
-    //this.selectedToken = this.accountTokens[0];
     if (this.accounts !== undefined && this.accounts.length > 0) {
       this.searchAddressBook();
 
@@ -152,10 +148,6 @@ export class SendComponent implements OnInit {
       this.accounts[i].account_info = await this.api.accountInfo(this.accounts[i].id);
     }
 
-    // this.accountTokens = ((this.accounts != undefined && this.accounts.length > 0) ? this.accounts[0] : []);
-    // this.selectedToken = ((this.accountTokens != undefined && this.accountTokens.length > 0) ? this.accountTokens[0] : []);
-    // this.selectedTokenSymbol = ((this.selectedToken != undefined && this.selectedToken.symbol != undefined) ? this.selectedToken.symbol : '');
-    // walletAccount.account_info = await this.api.accountInfo(accountID);
     this.selectAccount();
   }
 
@@ -205,7 +197,7 @@ export class SendComponent implements OnInit {
 
     // Determine fiat value of the amount
     const fiatAmount = this.util.qlc.rawToMqlc(rawAmount)
-      .times(this.price.price.lastPrice).times(precision).floor().div(precision).toNumber();
+      .times(this.price.price.lastPrice).times(precision).div(precision).toNumber();
     this.amountFiat = fiatAmount;
   }
 
@@ -213,7 +205,7 @@ export class SendComponent implements OnInit {
   syncNanoPrice() {
     const fiatAmount = this.amountFiat || 0;
     const rawAmount = this.util.qlc.mqlcToRaw(new BigNumber(fiatAmount).div(this.price.price.lastPrice));
-    const nanoVal = this.util.qlc.rawToQlc(rawAmount).floor();
+    const nanoVal = this.util.qlc.rawToQlc(rawAmount);
     const nanoAmount = this.getAmountValueFromBase(this.util.qlc.qlcToRaw(nanoVal));
 
     this.amount = nanoAmount.toNumber();
@@ -294,14 +286,14 @@ export class SendComponent implements OnInit {
 
     const qlcAmount = this.rawAmount.div(this.qlc);
 
-    if (this.amount < 0 || rawAmount.lessThan(0)) {
+    if (this.amount < 0 || rawAmount.isLessThan(0)) {
       return this.notificationService.sendWarning(this.msg6);
     }
-    if (qlcAmount.lessThan(1)) {
+    if (qlcAmount.isLessThan(1)) {
       const warnMessage = this.msg7;
       return this.notificationService.sendWarning(warnMessage);
     }
-    if (from.balanceBN.minus(rawAmount).lessThan(0)) {
+    if (from.balanceBN.minus(rawAmount).isLessThan(0)) {
       return this.notificationService.sendError(this.msg8 + `${this.selectedToken.token}`);
     }
 
@@ -367,7 +359,7 @@ export class SendComponent implements OnInit {
 
     const amountRaw = this.selectedToken.balance;
 
-    const tokenVal = this.util.qlc.rawToQlc(amountRaw).floor();
+    const tokenVal = this.util.qlc.rawToQlc(amountRaw);
     const maxAmount = this.getAmountValueFromBase(this.util.qlc.qlcToRaw(tokenVal));
     this.amount = maxAmount.toNumber();
     this.syncFiatPrice();
@@ -390,7 +382,8 @@ export class SendComponent implements OnInit {
   selectAccount() {
 
     const selectedAccount = this.accounts.find(a => a.id === this.fromAccountID);
-    this.accountTokens = ((selectedAccount !== undefined && selectedAccount.account_info.account_infos !== undefined && selectedAccount.account_info.account_infos.length > 0) ? selectedAccount.account_info.account_infos : []);
+    this.accountTokens = ((selectedAccount !== undefined && selectedAccount.account_info.account_infos !== undefined
+      && selectedAccount.account_info.account_infos.length > 0) ? selectedAccount.account_info.account_infos : []);
     this.selectedToken = ((this.accountTokens !== undefined && this.accountTokens.length > 0) ? this.accountTokens[0] : []);
     this.selectedTokenSymbol = ((this.selectedToken !== undefined
       && this.selectedToken.symbol !== undefined) ? this.selectedToken.symbol : '');

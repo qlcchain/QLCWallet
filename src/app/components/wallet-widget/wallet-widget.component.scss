@@ -14,13 +14,13 @@ i {
 }
 
 .wallet i {
-  background: url('~assets/img/qlc-icon-wallet.svg');
+  background: url('/assets/img/qlc-icon-wallet.svg');
 }
 .wallet.locked i {
-  background: url('~assets/img/qlc-icon-wallet-red.svg');
+  background: url('/assets/img/qlc-icon-wallet-red.svg');
 }
 .wallet.unlocked i {
-  background: url('~assets/img/qlc-icon-wallet-green.svg');
+  background: url('/assets/img/qlc-icon-wallet-green.svg');
 }
 a.nav-link:focus ,
 a.nav-link:hover,

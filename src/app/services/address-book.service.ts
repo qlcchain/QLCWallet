@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject
-} from 'rxjs/BehaviorSubject';
+} from 'rxjs';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 @Injectable()
 export class AddressBookService {

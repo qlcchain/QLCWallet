@@ -92,7 +92,7 @@ select {
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
-	background: #fff url('~assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
+	background: #fff url('/assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
 	background-size: 16px 16px;
 	border: 1px solid $textLight;
 	border-radius: 0;
@@ -105,7 +105,7 @@ select {
 }
 
 .custom-select.contacts {
-	background: #fff url('~assets/img/qlc-icon-addressbook-grey.svg') no-repeat right 0.75rem center;
+	background: #fff url('/assets/img/qlc-icon-addressbook-grey.svg') no-repeat right 0.75rem center;
 	background-size: 16px 16px;
 }
 .form-group { 
