@@ -75,7 +75,7 @@ export class TransactionDetailsComponent implements OnInit {
     } else {
       this.token = tokens.tokens[hashData.contents.token].symbol;
     }
-    this.token = this.token || hashData.contents.Token_name;
+    this.token = this.token || hashData.contents.token_name;
     this.blockType = hashData.contents.type;
     if (this.blockType === 'state') {
       const isOpen = hashData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000';
