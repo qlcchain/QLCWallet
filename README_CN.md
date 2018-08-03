@@ -1,6 +1,6 @@
-<div align="right">Language:
-<a title="Chinese" href="README_CN.md">:cn:</a>
-<a title="Englisth" href="README.md">:us:</a></div>
+<div align="right">语言:
+<a title="中文" href="README_CN.md">:cn:</a>
+<a title="英文" href="README.md">:us:</a></div>
 
 # QLCChain Wallet
 
@@ -22,6 +22,7 @@ npm install
 ```
 
 ## Build Wallet (For Production)
+
 Build a production version of the wallet for web:
 
 ```bash
