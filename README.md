@@ -6,7 +6,7 @@
 
 [![Build Status](https://travis-ci.com/qlcchain/qlcwallet.svg?branch=master)](https://travis-ci.com/qlcchain/qlcwallet)
 
-QLCChain Wallet is a fully client-side signing wallet for sending and receiving [Multidimensional Block Lattice Test coins](https://qlcchain.org) [in your browser](https://wallet.qlcchain.online).
+QLCChain Wallet is a fully client-side signing wallet for sending and receiving [Multidimensional Block Lattice Test coins](https://qlcchain.org) [in your browser](https://qlcchain.org).
 
 ## Development Prerequisites
 - Node Package Manager: [Install npm](https://www.npmjs.com/get-npm)
