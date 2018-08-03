@@ -99,19 +99,19 @@ nav {
 				}
 			}
 			.account i {
-				background: url('~assets/img/qlc-icon-accounts.svg');
+				background: url('/assets/img/qlc-icon-accounts.svg');
 			}
 			.send i {
-				background: url('~assets/img/qlc-icon-send.svg');
+				background: url('/assets/img/qlc-icon-send.svg');
 			}
 			.addressbook i {
-				background: url('~assets/img/qlc-icon-addressbook.svg');
+				background: url('/assets/img/qlc-icon-addressbook.svg');
 			}
 			.settings i {
-				background: url('~assets/img/qlc-icon-settings.svg');
+				background: url('/assets/img/qlc-icon-settings.svg');
 			}
 			.receive i {
-				background-image: url('~assets/img/qlc-icon-receive.svg');
+				background-image: url('/assets/img/qlc-icon-receive.svg');
 			}
 			.settings .more {
 				height: 20px;
@@ -119,7 +119,7 @@ nav {
 				display: inline-block;
 				margin-left: 10px;
 				vertical-align: middle;
-				background: url('~assets/img/qlc-icon-arrow-down.svg');
+				background: url('/assets/img/qlc-icon-arrow-down.svg');
 				@media(max-width: 992px) {
 					float: right;
 				}
@@ -131,13 +131,13 @@ nav {
 				
 			}
 			.wallet i {
-				background: url('~assets/img/qlc-icon-wallet.svg');
+				background: url('/assets/img/qlc-icon-wallet.svg');
 			}
 			.wallet.locked i {
-				background: url('~assets/img/qlc-icon-wallet-red.svg');
+				background: url('/assets/img/qlc-icon-wallet-red.svg');
 			}
 			.wallet.unlocked i {
-				background: url('~assets/img/qlc-icon-wallet-green.svg');
+				background: url('/assets/img/qlc-icon-wallet-green.svg');
 			}
 			&.nav-item-hide {
 				@media (max-width: 1200px) and (min-width: 992px) {

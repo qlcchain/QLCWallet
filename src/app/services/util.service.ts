@@ -6,36 +6,34 @@ const nacl = window['nacl'];
 
 @Injectable()
 export class UtilService {
-
-  constructor() {
-  }
+  constructor() {}
 
   hex = {
     toUint4: hexToUint4,
     fromUint8: uint8ToHex,
-    toUint8: hexToUint8,
+    toUint8: hexToUint8
   };
   uint4 = {
     toUint5: uint4ToUint5,
-    toUint8: uint4ToUint8,
+    toUint8: uint4ToUint8
   };
   uint5 = {
-    toString: uint5ToString,
+    toString: uint5ToString
   };
   uint8 = {
     toUint4: uint8ToUint4,
     fromHex: hexToUint8,
-    toHex: uint8ToHex,
+    toHex: uint8ToHex
   };
   dec = {
-    toHex: decToHex,
+    toHex: decToHex
   };
   account = {
     generateAccountSecretKeyBytes: generateAccountSecretKeyBytes,
     generateAccountKeyPair: generateAccountKeyPair,
     getPublicAccountID: getPublicAccountID,
     generateSeedBytes: generateSeedBytes,
-    getAccountPublicKey: getAccountPublicKey,
+    getAccountPublicKey: getAccountPublicKey
   };
   qlc = {
     mqlcToRaw: mqlcToRaw,
@@ -43,15 +41,16 @@ export class UtilService {
     qlcToRaw: qlcToRaw,
     rawToMqlc: rawToMqlc,
     rawToKqlc: rawToKqlc,
-    rawToQlc: rawToQlc,
+    rawToQlc: rawToQlc
   };
-
 }
 
 /** Hex Functions **/
 function hexToUint4(hexValue) {
   const uint4 = new Uint8Array(hexValue.length);
-  for (let i = 0; i < hexValue.length; i++) { uint4[i] = parseInt(hexValue.substr(i, 1), 16); }
+  for (let i = 0; i < hexValue.length; i++) {
+    uint4[i] = parseInt(hexValue.substr(i, 1), 16);
+  }
 
   return uint4;
 }
@@ -65,7 +64,6 @@ function hexToUint8(hexValue) {
   return uint8;
 }
 
-
 /** Uint4 Functions **/
 function uint4ToUint8(uintValue) {
   const length = uintValue.length / 2;
@@ -78,15 +76,15 @@ function uint4ToUint8(uintValue) {
 }
 
 function uint4ToUint5(uintValue) {
-  const length = uintValue.length / 5 * 4;
+  const length = (uintValue.length / 5) * 4;
   const uint5 = new Uint8Array(length);
   for (let i = 1; i <= length; i++) {
     const n = i - 1;
     const m = i % 4;
-    const z = n + ((i - m) / 4);
+    const z = n + (i - m) / 4;
     const right = uintValue[z] << m;
     let left;
-    if (((length - i) % 4) === 0) {
+    if ((length - i) % 4 === 0) {
       left = uintValue[z - 1] << 4;
     } else {
       left = uintValue[z + 1] >> (4 - m);
@@ -104,7 +102,6 @@ function uint4ToHex(uint4) {
   return hex;
 }
 
-
 /** Uint5 Functions **/
 function uint5ToString(uint5) {
   const letter_list = '13456789abcdefghijkmnopqrstuwxyz'.split('');
@@ -117,19 +114,18 @@ function uint5ToString(uint5) {
 }
 
 function uint5ToUint4(uint5) {
-  const length = uint5.length / 4 * 5;
+  const length = (uint5.length / 4) * 5;
   const uint4 = new Uint8Array(length);
   for (let i = 1; i <= length; i++) {
     const n = i - 1;
     const m = i % 5;
-    const z = n - ((i - m) / 5);
+    const z = n - (i - m) / 5;
     const right = uint5[z - 1] << (5 - m);
     const left = uint5[z] >> m;
     uint4[n] = (left + right) % 16;
   }
   return uint4;
 }
-
 
 /** Uint8 Functions **/
 function uint8ToHex(uintValue) {
@@ -144,19 +140,18 @@ function uint8ToHex(uintValue) {
     aux = '';
   }
 
-  return (hex);
+  return hex;
 }
 
 function uint8ToUint4(uintValue) {
   const uint4 = new Uint8Array(uintValue.length * 2);
   for (let i = 0; i < uintValue.length; i++) {
-    uint4[i * 2] = uintValue[i] / 16 | 0;
+    uint4[i * 2] = (uintValue[i] / 16) | 0;
     uint4[i * 2 + 1] = uintValue[i] % 16;
   }
 
   return uint4;
 }
-
 
 /** Dec Functions **/
 function decToHex(decValue, bytes = null) {
@@ -193,7 +188,6 @@ function decToHex(decValue, bytes = null) {
   return hex;
 }
 
-
 /** String Functions **/
 function stringToUint5(string) {
   const letter_list = '13456789abcdefghijkmnopqrstuwxyz'.split('');
@@ -205,7 +199,6 @@ function stringToUint5(string) {
   }
   return uint5;
 }
-
 
 /** Account Functions **/
 function generateAccountSecretKeyBytes(seedBytes, accountIndex) {
@@ -223,17 +216,22 @@ function generateAccountKeyPair(accountSecretKeyBytes) {
 }
 
 function getPublicAccountID(accountPublicKeyBytes) {
-  const accountHex = util.uint8.toHex(accountPublicKeyBytes);
-  const keyBytes = util.uint4.toUint8(util.hex.toUint4(accountHex)); // For some reason here we go from u, to hex, to 4, to 8??
-  const checksum = util.uint5.toString(util.uint4.toUint5(util.uint8.toUint4(blake.blake2b(keyBytes, null, 5).reverse())));
-  const account = util.uint5.toString(util.uint4.toUint5(util.hex.toUint4(`0${accountHex}`)));
+  const accountHex = uint8ToHex(accountPublicKeyBytes);
+  const keyBytes = uint4ToUint8(hexToUint4(accountHex)); // For some reason here we go from u, to hex, to 4, to 8??
+  const checksum = uint5ToString(
+    uint4ToUint5(uint8ToUint4(blake.blake2b(keyBytes, null, 5).reverse()))
+  );
+  const account = uint5ToString(uint4ToUint5(hexToUint4(`0${accountHex}`)));
 
   return `qlc_${account}${checksum}`;
 }
 
 function getAccountPublicKey(account) {
   const errAccountMessage = 'Invalid QLC Account';
-  if ((!account.startsWith('qlc_1') && !account.startsWith('qlc_3')) || account.length !== 64) {
+  if (
+    (!account.startsWith('qlc_1') && !account.startsWith('qlc_3')) ||
+    account.length !== 64
+  ) {
     throw new Error(errAccountMessage);
   }
   const account_crop = account.substring(4, 64);
@@ -242,8 +240,12 @@ function getAccountPublicKey(account) {
     throw new Error(errAccountMessage);
   }
 
-  const key_uint4 = array_crop(uint5ToUint4(stringToUint5(account_crop.substring(0, 52))));
-  const hash_uint4 = uint5ToUint4(stringToUint5(account_crop.substring(52, 60)));
+  const key_uint4 = array_crop(
+    uint5ToUint4(stringToUint5(account_crop.substring(0, 52)))
+  );
+  const hash_uint4 = uint5ToUint4(
+    stringToUint5(account_crop.substring(52, 60))
+  );
   const key_array = uint4ToUint8(key_uint4);
   const blake_hash = blake.blake2b(key_array, null, 5).reverse();
 
@@ -282,7 +284,6 @@ function rawToQlc(value) {
   return new BigNumber(value).div(qlc);
 }
 
-
 function array_crop(array) {
   const length = array.length - 1;
   const cropped_array = new Uint8Array(length);
@@ -309,29 +310,29 @@ const util = {
   hex: {
     toUint4: hexToUint4,
     fromUint8: uint8ToHex,
-    toUint8: hexToUint8,
+    toUint8: hexToUint8
   },
   uint4: {
     toUint5: uint4ToUint5,
-    toUint8: uint4ToUint8,
+    toUint8: uint4ToUint8
   },
   uint5: {
-    toString: uint5ToString,
+    toString: uint5ToString
   },
   uint8: {
     toUint4: uint8ToUint4,
     fromHex: hexToUint8,
-    toHex: uint8ToHex,
+    toHex: uint8ToHex
   },
   dec: {
-    toHex: decToHex,
+    toHex: decToHex
   },
   account: {
     generateAccountSecretKeyBytes: generateAccountSecretKeyBytes,
     generateAccountKeyPair: generateAccountKeyPair,
     getPublicAccountID: getPublicAccountID,
     generateSeedBytes: generateSeedBytes,
-    getAccountPublicKey: getAccountPublicKey,
+    getAccountPublicKey: getAccountPublicKey
   },
   qlc: {
     mqlcToRaw: mqlcToRaw,
@@ -339,6 +340,6 @@ const util = {
     qlcToRaw: qlcToRaw,
     rawToMqlc: rawToMqlc,
     rawToKqlc: rawToKqlc,
-    rawToQlc: rawToQlc,
+    rawToQlc: rawToQlc
   }
 };

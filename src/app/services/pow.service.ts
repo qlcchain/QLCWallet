@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AppSettingsService } from './app-settings.service';
-import { ApiService } from './api.service';
-import { NotificationService } from './notification.service';
-import { queue } from 'rxjs/scheduler/queue';
-import { PoWSource } from './app-settings.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { ApiService } from './api.service';
+import { AppSettingsService, PoWSource } from './app-settings.service';
+import { NotificationService } from './notification.service';
 const mod = window['Module'];
 
 @Injectable()
