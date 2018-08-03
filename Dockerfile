@@ -12,7 +12,9 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 COPY . /usr/src/app
 # COPY package.json /usr/src/app/package.json
-RUN npm i npm@latest -g && npm install -g @angular/cli && npm install && npm run wallet:build 
+RUN npm i -g npm && npm i -g @angular/cli \
+        && npm i @angular/cli \
+        && npm i --unsafe-perm -V && ng lint && npm run wallet:build
 
 ##################
 ### production ###
