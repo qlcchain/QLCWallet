@@ -6,4 +6,9 @@
 export const environment = {
   production: false,
   desktop: false,
+  googleAnalytics: {
+    domain: 'auto',
+    trackingId: 'UA-123663128-2'
+  },
+  apiUrl: 'https://api.qlcchain.online'
 };

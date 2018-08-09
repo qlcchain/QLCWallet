@@ -13,6 +13,7 @@ import { NodeService } from './services/node.service';
 import { LangService } from './services/lang.service';
 
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private workPool: WorkPoolService,
     public price: PriceService,
-    private lang: LangService) {
+    private lang: LangService,
+    analyticsGoogleAnalytics: NgxAnalyticsGoogleAnalytics) {
     this.langService = lang;
   }
 
