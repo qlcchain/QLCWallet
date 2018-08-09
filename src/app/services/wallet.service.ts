@@ -23,6 +23,7 @@ export interface WalletAccount {
   index: number;
   balance: BigNumber;
   pending: BigNumber;
+  pendingCount: number;
   balanceRaw: BigNumber;
   pendingRaw: BigNumber;
   balanceFiat: number;
@@ -37,6 +38,7 @@ export interface FullWallet {
   // tokens: any;
   balance: BigNumber;
   pending: BigNumber;
+  pendingCount: number;
   balanceRaw: BigNumber;
   pendingRaw: BigNumber;
   balanceFiat: number;
@@ -59,6 +61,7 @@ export class WalletService {
     // tokens: {},
     balance: new BigNumber(0),
     pending: new BigNumber(0),
+    pendingCount: 0,
     balanceRaw: new BigNumber(0),
     pendingRaw: new BigNumber(0),
     balanceFiat: 0,
@@ -407,6 +410,7 @@ export class WalletService {
       keyPair: null,
       balance: new BigNumber(0),
       pending: new BigNumber(0),
+      pendingCount: 0,
       balanceRaw: new BigNumber(0),
       pendingRaw: new BigNumber(0),
       balanceFiat: 0,
@@ -432,6 +436,7 @@ export class WalletService {
       keyPair: accountKeyPair,
       balance: new BigNumber(0),
       pending: new BigNumber(0),
+      pendingCount: 0,
       balanceRaw: new BigNumber(0),
       pendingRaw: new BigNumber(0),
       balanceFiat: 0,
@@ -517,6 +522,7 @@ export class WalletService {
     const fiatPrice = this.price.price.lastPrice;
     this.wallet.balance = new BigNumber(0);
     this.wallet.pending = new BigNumber(0);
+    this.wallet.pendingCount = 0;
     this.wallet.balanceRaw = new BigNumber(0);
     this.wallet.pendingRaw = new BigNumber(0);
     this.wallet.balanceFiat = 0;
@@ -524,6 +530,18 @@ export class WalletService {
     const accountIDs = this.wallet.accounts.map(a => a.id);
     const accounts = await this.api.accountsBalances(accountIDs);
     const frontiers = await this.api.accountsFrontiers(accountIDs);
+    const pending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
+      for (const account in pending.blocks) {
+        if (!pending.blocks.hasOwnProperty(account)) {
+          continue;
+        }
+        for (const block in pending.blocks[account]) {
+          if (!pending.blocks[account].hasOwnProperty(block)) {
+            continue;
+          }
+          this.wallet.pendingCount++;
+        }
+      }
     // this.wallet.tokens = await this.api.tokens();
     // const allFrontiers = [];
     // for (const account in frontiers.frontiers) {
@@ -618,6 +636,7 @@ export class WalletService {
       keyPair: null,
       balance: new BigNumber(0),
       pending: new BigNumber(0),
+      pendingCount: 0,
       balanceRaw: new BigNumber(0),
       pendingRaw: new BigNumber(0),
       balanceFiat: 0,
