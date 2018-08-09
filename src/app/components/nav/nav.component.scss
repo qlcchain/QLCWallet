@@ -22,6 +22,21 @@ nav {
 	a {
 		cursor: pointer;
 	}
+	.badge-qlc {
+		position: absolute;
+		top: -12px;
+		right: -18px;
+		border-radius: 20px;
+		padding: 0.25em 0.7em;
+		background-color: $light;
+		color: white
+	}
+	.badge-qlc.active {
+		background-color: $default;
+	}
+	p {
+		position: relative;
+	}
 	.navbar-brand {
 		margin: 0 20px 0 20px;
 		padding: 0;
