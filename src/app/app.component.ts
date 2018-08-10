@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
     private workPool: WorkPoolService,
     public price: PriceService,
     private lang: LangService,
-    analyticsGoogleAnalytics: NgxAnalyticsGoogleAnalytics) {
+    private analyticsGoogleAnalytics: NgxAnalyticsGoogleAnalytics) {
     this.langService = lang;
   }
 
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
     window.addEventListener('protocol-load', (e: CustomEvent) => {
       const protocolText = e.detail;
       const stripped = protocolText.split('').splice(4).join(''); // Remove xrb:
-      if (stripped.startsWith('xrb_')) {
+      if (stripped.startsWith('qlc_')) {
         this.router.navigate(['account', stripped]);
       }
       // Soon: Load seed, automatic send page?
@@ -129,7 +129,7 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    if (searchData.startsWith('xrb_')) {
+    if (searchData.startsWith('qlc_')) {
       this.router.navigate(['account', searchData]);
     } else if (searchData.length === 64) {
       this.router.navigate(['transaction', searchData]);

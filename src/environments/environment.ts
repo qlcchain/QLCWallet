@@ -8,7 +8,7 @@ export const environment = {
   desktop: false,
   googleAnalytics: {
     domain: 'auto',
-    trackingId: 'UA-123663128-2'
+    trackingId: ''
   },
-  apiUrl: 'https://api.qlcchain.online'
+  apiUrl: ''
 };
