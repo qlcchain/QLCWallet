@@ -4,7 +4,7 @@
 
 # QLCChain Wallet
 
-[![Build Status](https://travis-ci.com/qlcchain/qlcwallet.svg?branch=master)](https://travis-ci.com/qlcchain/qlcwallet)
+[![Build Status](https://travis-ci.com/qlcchain/QLCWallet.svg?branch=master)](https://travis-ci.com/qlcchain/QLCWallet)
 
 QLCChain Wallet is a fully client-side signing wallet for sending and receiving [Multidimensional Block Lattice Test coins](https://qlcchain.org) [in your browser](https://qlcchain.org).
 
