@@ -55,6 +55,10 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { NavComponent } from './components/nav/nav.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 
+import { NgxAnalyticsModule } from 'ngx-analytics';
+import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
+
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
@@ -104,7 +108,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CollapseModule.forRoot(),
     ModalModule.forRoot(),
     AlertModule.forRoot(),
-    DeviceDetectorModule.forRoot()
+    DeviceDetectorModule.forRoot(),
+    NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics])
   ],
   providers: [
     LangService,

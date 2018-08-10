@@ -3,7 +3,7 @@ export const environment = {
   desktop: false,
   googleAnalytics: {
     domain: 'auto',
-    trackingId: 'UA-123663128-2'
+    trackingId: 'UA-123663128-1' // replace with your Tracking Id
   },
-  apiUrl: 'https://api.qlcchain.online'
+  apiUrl: 'https://server.qlcchain.online'
 };
