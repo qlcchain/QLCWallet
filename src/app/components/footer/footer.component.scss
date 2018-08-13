@@ -1,0 +1,14 @@
+@import "~scss/mixins";
+div.content {
+	@include latoBold;
+	font-size: $fontSizeMed;
+	text-transform: uppercase;
+    color: $textLight;
+    a {
+        color: $textLight;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    padding-bottom: 60px;
+}
