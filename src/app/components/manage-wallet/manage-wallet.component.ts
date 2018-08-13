@@ -57,47 +57,47 @@ export class ManageWalletComponent implements OnInit {
 
   loadLang() {
     this.trans.get('MANAGE_WALLET_WARNINGS.msg1').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg1 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg2').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg2 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg3').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg3 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg4').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg4 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg5').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg5 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg6').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg6 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg7').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg7 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg8').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg8 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg9').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg9 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg10').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg10 = res;
     });
     this.trans.get('MANAGE_WALLET_WARNINGS.msg11').subscribe((res: string) => {
-      console.log(res);
+      // console.log(res);
       this.msg11 = res;
     });
   }

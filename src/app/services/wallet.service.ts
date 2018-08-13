@@ -340,7 +340,6 @@ export class WalletService {
       Object.keys(batchResponse.frontiers).map(accountID => {
         if (batchAccounts.hasOwnProperty(accountID)) {
           batchAccounts[accountID].used = true;
-          // console.log(`${accountID} at ${batchAccounts[accountID].index} >>> true`);
         }
       });
 
@@ -358,18 +357,18 @@ export class WalletService {
           }
         }
       });
-
-      if (usedIndices.length > 0) {
-        for (let i = 0; i < usedIndices.length; i++) {
-          // add account and reload balance when add complete
-          this.addWalletAccount(usedIndices[i], i === usedIndices.length - 1);
-        }
-      } else {
-        this.addWalletAccount();
-      }
-
-      return this.wallet.seed;
     }
+
+    if (usedIndices.length > 0) {
+      for (let i = 0; i < usedIndices.length; i++) {
+        // add account and reload balance when add complete
+        this.addWalletAccount(usedIndices[i], i === usedIndices.length - 1);
+      }
+    } else {
+      this.addWalletAccount();
+    }
+
+    return this.wallet.seed;
   }
 
   createNewWallet() {
@@ -672,6 +671,7 @@ export class WalletService {
     }
 
     this.wallet.accounts.push(newAccount);
+    this.wallet.accountsIndex = this.wallet.accounts.length;
 
     if (reloadBalances) {
       await this.reloadBalances();
