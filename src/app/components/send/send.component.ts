@@ -248,7 +248,7 @@ export class SendComponent implements OnInit {
         this.toAccountStatus = 0;
       }
     }
-    if (accountInfo && accountInfo.frontier) {
+    if (accountInfo && accountInfo.account_infos) {
       this.toAccountStatus = 2;
     }
   }
