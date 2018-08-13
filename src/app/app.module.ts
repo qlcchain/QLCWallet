@@ -59,6 +59,7 @@ import { NgxAnalyticsModule } from 'ngx-analytics';
 import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
+import { FooterComponent } from './components/footer/footer.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -88,7 +89,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CurrencySymbolPipe,
     RepresentativesComponent,
     ManageRepresentativesComponent,
-    NavComponent
+    NavComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
