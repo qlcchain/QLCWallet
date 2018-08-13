@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-representatives',
@@ -52,7 +53,8 @@ export class RepresentativesComponent implements OnInit {
     private util: UtilService,
     private representativeService: RepresentativeService,
     public settings: AppSettingsService,
-    private trans: TranslateService
+    private trans: TranslateService,
+    private logger: NGXLogger
   ) {
     this.searchRepresentatives();
     this.loadLang();
@@ -180,9 +182,9 @@ export class RepresentativesComponent implements OnInit {
             if (root_token_info !== undefined) {
               res.representative = root_token_info.representative;
               res.balance = root_token_info.balance;
-              console.log(`${account.id} resp: ${res.representative} balance: ${res.balance}`);
+              this.logger.debug(`${account.id} resp: ${res.representative} balance: ${res.balance}`);
             } else {
-              console.log(`${account.id} does not hold any Root_Token`);
+              this.logger.debug(`${account.id} does not hold any Root_Token`);
             }
             return res;
           })
@@ -304,11 +306,9 @@ export class RepresentativesComponent implements OnInit {
       .slice(0, 5);
 
     this.representativeResults$.next(matches);
-    // console.log(representatives);
   }
 
   selectRep() {
-    // console.log(this.representativeSelect);
     this.selectRepresentative(this.representativeSelect);
   }
 

@@ -188,8 +188,6 @@ export class QLCBlockService {
       blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
     }
 
-    // console.log(JSON.stringify(blockData));
-
     const processResponse = await this.api.process(blockData);
     if (!processResponse || !processResponse.hash) {
       throw new Error(processResponse.error || this.msg5);

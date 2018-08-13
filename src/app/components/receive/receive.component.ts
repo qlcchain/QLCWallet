@@ -10,6 +10,7 @@ import { WorkPoolService } from '../../services/work-pool.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 const nacl = window['nacl'];
 
 @Component({
@@ -38,7 +39,8 @@ export class ReceiveComponent implements OnInit {
     public settings: AppSettingsService,
     private qlcBlock: QLCBlockService,
     private util: UtilService,
-    private trans: TranslateService
+    private trans: TranslateService,
+    private logger: NGXLogger
   ) {
     this.loadLang();
   }
@@ -111,7 +113,7 @@ export class ReceiveComponent implements OnInit {
             const token_frontiers = frontiers.frontiers[account];
             Object.keys(token_frontiers).map(token_account => {
               const latest_block_hash = token_frontiers[token_account];
-              console.log(`[loadPendingForAll]: cache work ${latest_block_hash} of token_account ${token_account} in ${account}`);
+              this.logger.debug(`[loadPendingForAll]: cache work ${latest_block_hash} of token_account ${token_account} in ${account}`);
               this.workPool.addWorkToCache(latest_block_hash);
             });
           }
@@ -151,7 +153,6 @@ export class ReceiveComponent implements OnInit {
 
   async receivePending(pendingBlock) {
     const sourceBlock = pendingBlock.block;
-    // console.log(pendingBlock);
     const walletAccount = this.walletService.wallet.accounts.find(a => a.id === pendingBlock.account);
     if (!walletAccount) {
       throw new Error(this.msg1);
@@ -165,8 +166,6 @@ export class ReceiveComponent implements OnInit {
     const newBlock = await this.qlcBlock.generateReceive(walletAccount, sourceBlock, this.walletService.isLedgerWallet());
 
     if (newBlock) {
-      // console.log(sourceBlock);
-      // console.log(newBlock);
       this.notificationService.sendSuccess(this.msg3 + ` ` + pendingBlock.tokenName);
     } else {
       if (!this.walletService.isLedgerWallet()) {

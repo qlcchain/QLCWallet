@@ -57,7 +57,8 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { NgxAnalyticsModule } from 'ngx-analytics';
 import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
-
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -109,7 +110,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     ModalModule.forRoot(),
     AlertModule.forRoot(),
     DeviceDetectorModule.forRoot(),
-    NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics])
+    NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics]),
+    LoggerModule.forRoot({
+      serverLoggingUrl: `${environment.apiUrl}/logs`,
+      // serverLoggingUrl: `http://localhost:8888/logs`,
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR
+    })
   ],
   providers: [
     LangService,
