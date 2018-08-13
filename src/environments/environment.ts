@@ -10,5 +10,6 @@ export const environment = {
     domain: 'auto',
     trackingId: ''
   },
-  apiUrl: ''
+  apiUrl: '',
+  wsUrl: ''
 };

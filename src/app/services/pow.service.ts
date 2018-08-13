@@ -3,11 +3,11 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { ApiService } from './api.service';
 import { AppSettingsService, PoWSource } from './app-settings.service';
 import { NotificationService } from './notification.service';
+import { NGXLogger } from 'ngx-logger';
 const mod = window['Module'];
 
 @Injectable()
 export class PowService {
-
   webGLAvailable = false;
   webGLTested = false;
 
@@ -15,14 +15,19 @@ export class PowService {
   parallelQueue = false;
   processingQueueItem = false;
 
-  constructor(private appSettings: AppSettingsService, private api: ApiService,
-    private notifications: NotificationService, private deviceService: DeviceDetectorService) { }
+  constructor(
+    private appSettings: AppSettingsService,
+    private api: ApiService,
+    private notifications: NotificationService,
+    private deviceService: DeviceDetectorService,
+    private logger: NGXLogger
+  ) {}
 
   /**
    * Determine the best PoW Method available for this browser
    */
   determineBestPoWMethod(): PoWSource {
-    console.log(this.deviceService.getDeviceInfo());
+    this.logger.debug(this.deviceService.getDeviceInfo());
     if (this.deviceService.isDesktop()) {
       if (this.hasWebGLSupport()) {
         return 'clientWebGL';
@@ -63,7 +68,7 @@ export class PowService {
     const queueItem = {
       hash,
       work: null,
-      promise: this.getDeferredPromise(),
+      promise: this.getDeferredPromise()
     };
 
     this.PoWPool.push(queueItem);
@@ -178,9 +183,8 @@ export class PowService {
     let work;
     do {
       work = PoW(hash);
-    }
-    while (work === '0000000000000000');
-    console.log(`Synchronous CPU: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds`);
+    } while (work === '0000000000000000');
+    this.logger.debug(`Synchronous CPU: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds`);
 
     response.resolve(work);
     return response.promise;
@@ -196,10 +200,16 @@ export class PowService {
     const NUM_THREADS = navigator.hardwareConcurrency < 4 ? navigator.hardwareConcurrency : 4;
     const workers = window['pow_initiate'](NUM_THREADS, '/assets/lib/pow/');
 
-    window['pow_callback'](workers, hash, () => { }, (work) => {
-      console.log(`CPU Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${NUM_THREADS} Workers]`);
-      response.resolve(work);
-    });
+    window['pow_callback'](
+      workers,
+      hash,
+      () => {},
+      work => {
+        // tslint:disable-next-line:max-line-length
+        this.logger.debug(`CPU Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${NUM_THREADS} Workers]`);
+        response.resolve(work);
+      }
+    );
 
     return response.promise;
   }
@@ -212,11 +222,14 @@ export class PowService {
 
     const start = Date.now();
     try {
-      window['NanoWebglPow'](hash, (work, n) => {
-        console.log(`WebGL Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${n} iterations]`);
-        response.resolve(work);
-      },
-        n => { }
+      window['NanoWebglPow'](
+        hash,
+        (work, n) => {
+          // tslint:disable-next-line:max-line-length
+          this.logger.debug(`WebGL Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${n} iterations]`);
+          response.resolve(work);
+        },
+        n => {}
       );
     } catch (error) {
       if (error.message === 'webgl2_required') {
@@ -229,13 +242,12 @@ export class PowService {
     return response.promise;
   }
 
-
   // Helper for returning a deferred promise that we can resolve when work is ready
   private getDeferredPromise() {
     const defer = {
       promise: null,
       resolve: null,
-      reject: null,
+      reject: null
     };
 
     defer.promise = new Promise((resolve, reject) => {
@@ -245,5 +257,4 @@ export class PowService {
 
     return defer;
   }
-
 }

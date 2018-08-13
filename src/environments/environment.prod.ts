@@ -5,5 +5,6 @@ export const environment = {
     domain: 'auto',
     trackingId: 'UA-123663128-2'
   },
-  apiUrl: 'https://api.qlcchain.online'
+  apiUrl: 'https://api.qlcchain.online',
+  wsUrl: 'wss://api.qlcchain.online'
 };

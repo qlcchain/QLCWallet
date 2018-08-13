@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
+import { NGXLogger } from 'ngx-logger';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class WebsocketService {
-
   queuedCommands = [];
 
   keepaliveTimeout = 60 * 1000;
@@ -14,22 +15,22 @@ export class WebsocketService {
 
   socket = {
     connected: false,
-    ws: null,
+    ws: null
   };
 
   subscribedAccounts = [];
 
   newTransactions$ = new BehaviorSubject(null);
 
-  constructor(private appSettings: AppSettingsService) { }
+  constructor(private appSettings: AppSettingsService, private logger: NGXLogger) {}
 
   connect() {
     if (this.socket.connected && this.socket.ws) {
       return;
     }
-    delete this.socket.ws; // Maybe this will erase old connections
-    // const ws = new WebSocket('wss://ws.nanovault.io');
-    const ws = new WebSocket('wss://api.qlcchain.online');
+    delete this.socket.ws;
+    this.logger.debug(environment.wsUrl);
+    const ws = new WebSocket(environment.wsUrl);
     this.socket.ws = ws;
 
     ws.onopen = event => {
@@ -47,11 +48,11 @@ export class WebsocketService {
     };
     ws.onerror = event => {
       // this.socket.connected = false;
-      console.log(`Socket error`, event);
+      this.logger.error(`Socket error`, event);
     };
     ws.onclose = event => {
       this.socket.connected = false;
-      console.log(`Socket close`, event);
+      this.logger.debug(`Socket close`, event);
 
       // Start attempting to recconect
       setTimeout(() => this.attemptReconnect(), this.reconnectTimeout);
@@ -64,7 +65,7 @@ export class WebsocketService {
           this.newTransactions$.next(newEvent.data);
         }
       } catch (err) {
-        console.log(`Error parsing message`, err);
+        this.logger.error(`Error parsing message`, err);
       }
     };
   }
@@ -86,8 +87,6 @@ export class WebsocketService {
       this.keepalive();
     }, this.keepaliveTimeout);
   }
-
-
 
   subscribeAccounts(accountIDs: string[]) {
     const event = { event: 'subscribe', data: accountIDs };
@@ -119,5 +118,4 @@ export class WebsocketService {
       this.socket.ws.send(JSON.stringify(event));
     }
   }
-
 }

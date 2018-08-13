@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { NodeService } from './node.service';
-import { promise } from 'protractor';
+import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { NodeService } from './node.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ApiService {
   rpcUrl = environment.apiUrl;
-  constructor(private http: HttpClient, private node: NodeService) {
-    console.log(this.rpcUrl);
+  constructor(private http: HttpClient, private node: NodeService, private logger: NGXLogger) {
+    this.logger.debug(this.rpcUrl);
   }
 
   private async request(action, data): Promise<any> {
@@ -32,15 +32,10 @@ export class ApiService {
   async accountsBalances(accounts: string[]): Promise<{ balances: any }> {
     return await this.request('accounts_balances', { accounts });
   }
-  async accountsFrontiers(
-    accounts: string[]
-  ): Promise<{ frontiers: any; error?: string }> {
+  async accountsFrontiers(accounts: string[]): Promise<{ frontiers: any; error?: string }> {
     return await this.request('accounts_frontiers', { accounts });
   }
-  async accountsPending(
-    accounts: string[],
-    count: number = 50
-  ): Promise<{ blocks: any }> {
+  async accountsPending(accounts: string[], count: number = 50): Promise<{ blocks: any }> {
     return await this.request('accounts_pending', {
       accounts,
       count,
@@ -70,11 +65,7 @@ export class ApiService {
   async process(block): Promise<{ hash: string; error?: string }> {
     return await this.request('process', { block: JSON.stringify(block) });
   }
-  async accountHistory(
-    account,
-    count = 25,
-    raw = false
-  ): Promise<{ history: any }> {
+  async accountHistory(account, count = 25, raw = false): Promise<{ history: any }> {
     return await this.request('account_history_topn', { account, count, raw });
   }
   async accountInfo(account): Promise<any> {
@@ -114,10 +105,6 @@ export class ApiService {
     const account_infos = await this.accountInfo(account);
     const token_accounts = account_infos.account_infos;
 
-    return Array.isArray(token_accounts)
-      ? token_accounts.filter(
-          token_account => token_account.token_hash === tokenHash
-        )[0]
-      : null;
+    return Array.isArray(token_accounts) ? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0] : null;
   }
 }

@@ -11,6 +11,7 @@ import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 import { PriceService } from './price.service';
 import { LedgerService } from './ledger.service';
+import { NGXLogger } from 'ngx-logger';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -82,7 +83,8 @@ export class WalletService {
     private websocket: WebsocketService,
     private qlcBlock: QLCBlockService,
     private ledgerService: LedgerService,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    private logger: NGXLogger
   ) {
     this.websocket.newTransactions$.subscribe(async transaction => {
       if (!transaction) {
@@ -627,7 +629,6 @@ export class WalletService {
 
     this.wallet.accounts.push(newAccount);
     this.websocket.subscribeAccounts([accountID]);
-    // console.log('loadWalletAccount');
     return newAccount;
   }
 
@@ -651,7 +652,7 @@ export class WalletService {
         }
         this.wallet.accountsIndex = nextIndex;
       } catch (error) {
-        console.log(error.messages);
+        this.logger.error(error.messages);
       }
     }
 
