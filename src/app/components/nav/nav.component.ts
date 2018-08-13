@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { WalletService } from '../../services/wallet.service';
 
 @Component({
   selector: 'app-nav',
@@ -7,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
   isCollapsed = true;
+  wallet = this.walletService.wallet;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(
+    private walletService: WalletService
+  ) { 
   }
+
+  async ngOnInit() {
+  }
+
+
 
 }

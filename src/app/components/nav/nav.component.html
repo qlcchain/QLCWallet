@@ -23,7 +23,11 @@
         <a  routerLink="/send" routerLinkActive="active" class="nav-link send"><div><i></i><p>{{ 'NAV.send' | translate }}</p></div></a>
       </li>
       <li class="nav-item">
-        <a  routerLink="/receive" routerLinkActive="active" class="nav-link receive"><div><i></i><p>{{ 'NAV.receive' | translate }}</p></div></a>
+        <a  routerLink="/receive" routerLinkActive="active" class="nav-link receive">
+          <div><i></i><p>{{ 'NAV.receive' | translate }}
+            <span *ngIf="wallet.pendingCount > 0" class="badge badge-qlc" routerLink="/receive" routerLinkActive="active">{{wallet.pendingCount}}</span></p></div>
+          
+        </a>
       </li>
       <li class="nav-item">
         <a routerLink="/address-book" routerLinkActive="active" class="nav-link addressbook"><div><i></i><p>{{ 'NAV.addressbook' | translate }}</p></div></a>
