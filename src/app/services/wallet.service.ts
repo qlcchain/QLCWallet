@@ -11,6 +11,7 @@ import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 import { PriceService } from './price.service';
 import { LedgerService } from './ledger.service';
+import { NGXLogger } from 'ngx-logger';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -85,7 +86,8 @@ export class WalletService {
     private websocket: WebsocketService,
     private qlcBlock: QLCBlockService,
     private ledgerService: LedgerService,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    private logger: NGXLogger
   ) {
     this.websocket.newTransactions$.subscribe(async transaction => {
       if (!transaction) {
@@ -343,7 +345,6 @@ export class WalletService {
       Object.keys(batchResponse.frontiers).map(accountID => {
         if (batchAccounts.hasOwnProperty(accountID)) {
           batchAccounts[accountID].used = true;
-          // console.log(`${accountID} at ${batchAccounts[accountID].index} >>> true`);
         }
       });
 
@@ -361,18 +362,18 @@ export class WalletService {
           }
         }
       });
-
-      if (usedIndices.length > 0) {
-        for (let i = 0; i < usedIndices.length; i++) {
-          // add account and reload balance when add complete
-          this.addWalletAccount(usedIndices[i], i === usedIndices.length - 1);
-        }
-      } else {
-        this.addWalletAccount();
-      }
-
-      return this.wallet.seed;
     }
+
+    if (usedIndices.length > 0) {
+      for (let i = 0; i < usedIndices.length; i++) {
+        // add account and reload balance when add complete
+        this.addWalletAccount(usedIndices[i], i === usedIndices.length - 1);
+      }
+    } else {
+      this.addWalletAccount();
+    }
+
+    return this.wallet.seed;
   }
 
   createNewWallet() {
@@ -647,7 +648,6 @@ export class WalletService {
 
     this.wallet.accounts.push(newAccount);
     this.websocket.subscribeAccounts([accountID]);
-    // console.log('loadWalletAccount');
     return newAccount;
   }
 
@@ -671,7 +671,7 @@ export class WalletService {
         }
         this.wallet.accountsIndex = nextIndex;
       } catch (error) {
-        console.log(error.messages);
+        this.logger.error(error.messages);
       }
     }
 
@@ -691,6 +691,7 @@ export class WalletService {
     }
 
     this.wallet.accounts.push(newAccount);
+    this.wallet.accountsIndex = this.wallet.accounts.length;
 
     if (reloadBalances) {
       await this.reloadBalances();

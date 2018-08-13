@@ -6,4 +6,10 @@
 export const environment = {
   production: false,
   desktop: false,
+  googleAnalytics: {
+    domain: 'auto',
+    trackingId: ''
+  },
+  apiUrl: '',
+  wsUrl: ''
 };

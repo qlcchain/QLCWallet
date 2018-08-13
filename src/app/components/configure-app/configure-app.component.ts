@@ -367,7 +367,7 @@ export class ConfigureAppComponent implements OnInit {
       displayDenomination: this.selectedDenomination,
       lang: newLang
     };
-    console.log(newSettings);
+    // console.log(newSettings);
     this.appSettings.setAppSettings(newSettings);
     this.notifications.sendSuccess(this.msg23);
 

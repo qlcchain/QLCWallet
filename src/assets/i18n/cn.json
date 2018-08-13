@@ -20,7 +20,7 @@
   },
   "ACCOUNTS": {
     "title":"账户",
-    "title_button":"添加",
+    "title_button":"添加新账户",
     "token":"Token",
     "quantity":"数量",
     "price":"价格",

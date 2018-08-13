@@ -248,7 +248,7 @@ export class SendComponent implements OnInit {
         this.toAccountStatus = 0;
       }
     }
-    if (accountInfo && accountInfo.frontier) {
+    if (accountInfo && accountInfo.account_infos) {
       this.toAccountStatus = 2;
     }
   }
@@ -271,10 +271,6 @@ export class SendComponent implements OnInit {
       return this.notificationService.sendWarning(this.msg5);
     }
 
-    // if (!to) {
-    //   console.log('to account does not exit ');
-    //   to = {};
-    // }
     from.balanceBN = new BigNumber(from.balance || 0);
     // to.balanceBN = new BigNumber(to.balance || 0);
     this.fromAccount = from;

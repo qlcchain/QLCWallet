@@ -13,6 +13,7 @@ import { NodeService } from './services/node.service';
 import { LangService } from './services/lang.service';
 
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private workPool: WorkPoolService,
     public price: PriceService,
-    private lang: LangService) {
+    private lang: LangService,
+    private analyticsGoogleAnalytics: NgxAnalyticsGoogleAnalytics) {
     this.langService = lang;
   }
 
@@ -90,7 +92,7 @@ export class AppComponent implements OnInit {
     window.addEventListener('protocol-load', (e: CustomEvent) => {
       const protocolText = e.detail;
       const stripped = protocolText.split('').splice(4).join(''); // Remove xrb:
-      if (stripped.startsWith('xrb_')) {
+      if (stripped.startsWith('qlc_')) {
         this.router.navigate(['account', stripped]);
       }
       // Soon: Load seed, automatic send page?
@@ -127,7 +129,7 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    if (searchData.startsWith('xrb_')) {
+    if (searchData.startsWith('qlc_')) {
       this.router.navigate(['account', searchData]);
     } else if (searchData.length === 64) {
       this.router.navigate(['transaction', searchData]);

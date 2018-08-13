@@ -4,6 +4,7 @@ import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import { Subject } from 'rxjs';
 import { ApiService } from './api.service';
 import { NotificationService } from './notification.service';
+import { NGXLogger } from 'ngx-logger';
 
 export const STATUS_CODES = {
   /**
@@ -29,9 +30,8 @@ export const STATUS_CODES = {
 export const LedgerStatus = {
   NOT_CONNECTED: 'not-connected',
   LOCKED: 'locked',
-  READY: 'ready',
+  READY: 'ready'
 };
-
 
 export interface LedgerData {
   status: string;
@@ -52,12 +52,12 @@ export class LedgerService {
   ledger: LedgerData = {
     status: LedgerStatus.NOT_CONNECTED,
     nano: null,
-    transport: null,
+    transport: null
   };
 
   ledgerStatus$ = new Subject();
 
-  constructor(private api: ApiService, private notifications: NotificationService) { }
+  constructor(private api: ApiService, private notifications: NotificationService, private logger: NGXLogger) {}
 
   resetLedger() {
     // console.log(`Resetting ledger device`);
@@ -157,13 +157,12 @@ export class LedgerService {
 
       resolve(true);
     }).catch(err => {
-      console.log(`error when loading ledger `, err);
+      this.logger.error(`error when loading ledger `, err);
       if (!hideNotifications) {
         const warnMessage = `Error loading Ledger device: ${err.message}`;
         this.notifications.sendWarning(warnMessage);
       }
     });
-
   }
 
   async updateCache(accountIndex, blockHash) {
@@ -180,9 +179,11 @@ export class LedgerService {
     const cacheData = {
       representative: blockData.contents.representative,
       balance: blockData.contents.balance,
-      previousBlock: blockData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000'
-        ? null : blockData.contents.previous,
-      sourceBlock: blockData.contents.link,
+      previousBlock:
+        blockData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000'
+          ? null
+          : blockData.contents.previous,
+      sourceBlock: blockData.contents.link
     };
 
     const cacheResponse = await this.ledger.nano.cacheBlock(this.ledgerPath(accountIndex), cacheData, blockData.contents.signature);
@@ -235,5 +236,4 @@ export class LedgerService {
 
     this.ledgerStatus$.next(this.ledger.status);
   }
-
 }
