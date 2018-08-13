@@ -22,7 +22,10 @@
   }
   .success {
     border: 1px solid $greenLight;
-  }
+	}
+	.toaccount.success {
+		border-right: none;
+	}
   .dangerLeft {
     border-bottom: 1px solid $redLight;
     border-top: 1px solid $redLight;
