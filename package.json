@@ -1,135 +1,143 @@
 {
-  "name": "qlcwallet",
-  "version": "1.0.0",
-  "license": "MIT",
-  "description": "Wallet for interacting with QLC Chain",
-  "author": "QLC Chain Team",
-  "main": "main.js",
-  "scripts": {
-    "postinstall": "node patch.js",
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "desktop": "electron main.js",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist-full": "electron-builder -wml --x64",
-    "publish": "build -wml --x64 -p always",
-    "wallet:dev": "ng serve --open",
-    "wallet:dev-ssl": "ng serve --open --ssl 1 --ssl-key \"assets/dev-cert/key.pem\" --ssl-cert \"assets/dev-cert/cert.pem\"",
-    "wallet:build": "ng build --configuration=production",
-    "wallet:build-desktop": "ng build --configuration=desktop --base-href ",
-    "desktop:dev": "electron main.js",
-    "desktop:local": "electron-builder",
-    "desktop:full": "electron-builder -wml --x64",
-    "desktop:publish": "build -wml --x64 -p always"
-  },
-  "private": true,
-  "dependencies": {
-    "@angular-devkit/core": "0.7.2",
-    "@angular/animations": "^6.1.2",
-    "@angular/common": "^6.1.2",
-    "@angular/compiler": "^6.1.2",
-    "@angular/core": "^6.1.2",
-    "@angular/forms": "^6.1.2",
-    "@angular/http": "^6.1.2",
-    "@angular/platform-browser": "^6.1.2",
-    "@angular/platform-browser-dynamic": "^6.1.2",
-    "@angular/router": "^6.1.2",
-    "@ledgerhq/hw-transport-u2f": "^4.21.0",
-    "@ngx-translate/core": "^10.0.2",
-    "@ngx-translate/http-loader": "^3.0.1",
-    "@types/crypto-js": "^3.1.43",
-    "ajv": "^6.5.2",
-    "bignumber.js": "^7.2.1",
-    "bip39": "^2.5.0",
-    "blakejs": "^1.1.0",
-    "bootstrap": "^4.1.3",
-    "classlist.js": "^1.1.20150312",
-    "core-js": "^2.4.1",
-    "crypto-js": "^3.1.9-1",
-    "electron-updater": "^3.1.1",
-    "hw-app-nano": "^1.0.0",
-    "ngx-analytics": "^4.6.3-patch1",
-    "ngx-bootstrap": "^3.0.1",
-    "ngx-clipboard": "^11.1.3",
-    "ngx-device-detector": "^1.3.0",
-    "ngx-logger": "^3.0.5",
-    "qrcode": "^1.2.2",
-    "rxjs": "^6.2.2",
-    "rxjs-compat": "^6.2.2",
-    "tweetnacl": "^1.0.0",
-    "zone.js": "^0.8.14"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^0.7.2",
-    "@angular/cli": "^6.1.2",
-    "@angular/compiler-cli": "^6.1.2",
-    "@angular/language-service": "^6.1.2",
-    "@types/bip39": "^2.4.0",
-    "@types/jasmine": "^2.8.8",
-    "@types/jasminewd2": "~2.0.2",
-    "@types/node": "^10.5.7",
-    "@types/qrcode": "^1.2.0",
-    "codelyzer": "^4.4.3",
-    "electron": "^2.0.7",
-    "electron-builder": "^20.27.1",
-    "jasmine-core": "^3.2.0",
-    "jasmine-spec-reporter": "^4.2.1",
-    "karma": "^2.0.5",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-cli": "~1.0.1",
-    "karma-coverage-istanbul-reporter": "^2.0.1",
-    "karma-jasmine": "~1.1.0",
-    "karma-jasmine-html-reporter": "^1.2.0",
-    "protractor": "^5.4.0",
-    "rxjs-tslint-rules": "^4.7.2",
-    "ts-node": "^7.0.0",
-    "tslint": "^5.11.0",
-    "typescript": "^2.9.2",
-    "uikit": "^3.0.0-rc.11"
-  },
-  "build": {
-    "appId": "org.qlcchain.qlcwallet",
-    "buildVersion": "1.0.0",
-    "productName": "QlcWallet",
-    "copyright": "Copyright © 2018 QLC Chain Team",
-    "directories": {
-      "output": "dist-desktop",
-      "app": "./"
-    },
-    "mac": {
-      "category": "public.app-category.finance",
-      "extendInfo": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLName": "qlc",
-            "CFBundleURLSchemes": [
-              "qlc"
-            ]
-          }
-        ]
-      }
-    },
-    "linux": {
-      "target": "AppImage"
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "qlcchain",
-        "repo": "qlcwallet"
-      }
-    ],
-    "protocols": {
-      "name": "qlc",
-      "schemes": [
-        "qlc"
-      ],
-      "role": "Viewer"
-    }
-  }
+	"name": "qlcwallet",
+	"version": "1.0.0",
+	"license": "MIT",
+	"description": "Wallet for interacting with QLC Chain",
+	"author": "QLC Chain Team",
+	"main": "main.js",
+	"scripts": {
+		"postinstall": "node patch.js",
+		"format:fix": "pretty-quick --staged",
+		"precommit": "run-s format:fix lint",
+		"format:check": "prettier --config ./.prettierrc --list-different \"src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}\"",
+		"format:all": "prettier --config ./.prettierrc --write \"src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}\"",
+		"ng": "ng",
+		"start": "ng serve",
+		"build": "ng build",
+		"test": "ng test",
+		"lint": "ng lint",
+		"e2e": "ng e2e",
+		"desktop": "electron main.js",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder",
+		"dist-full": "electron-builder -wml --x64",
+		"publish": "build -wml --x64 -p always",
+		"wallet:dev": "ng serve --open",
+		"wallet:dev-ssl": "ng serve --open --ssl 1 --ssl-key \"assets/dev-cert/key.pem\" --ssl-cert \"assets/dev-cert/cert.pem\"",
+		"wallet:build": "ng build --configuration=production",
+		"wallet:build-desktop": "ng build --configuration=desktop --base-href ",
+		"desktop:dev": "electron main.js",
+		"desktop:local": "electron-builder",
+		"desktop:full": "electron-builder -wml --x64",
+		"desktop:publish": "build -wml --x64 -p always"
+	},
+	"private": true,
+	"dependencies": {
+		"@angular-devkit/core": "0.7.2",
+		"@angular/animations": "^6.1.2",
+		"@angular/common": "^6.1.2",
+		"@angular/compiler": "^6.1.2",
+		"@angular/core": "^6.1.2",
+		"@angular/forms": "^6.1.2",
+		"@angular/http": "^6.1.2",
+		"@angular/platform-browser": "^6.1.2",
+		"@angular/platform-browser-dynamic": "^6.1.2",
+		"@angular/router": "^6.1.2",
+		"@ledgerhq/hw-transport-u2f": "^4.21.0",
+		"@ngx-translate/core": "^10.0.2",
+		"@ngx-translate/http-loader": "^3.0.1",
+		"@types/crypto-js": "^3.1.43",
+		"ajv": "^6.5.2",
+		"bignumber.js": "^7.2.1",
+		"bip39": "^2.5.0",
+		"blakejs": "^1.1.0",
+		"bootstrap": "^4.1.3",
+		"classlist.js": "^1.1.20150312",
+		"core-js": "^2.4.1",
+		"crypto-js": "^3.1.9-1",
+		"electron-updater": "^3.1.1",
+		"hw-app-nano": "^1.0.0",
+		"ngx-analytics": "^4.6.3-patch1",
+		"ngx-bootstrap": "^3.0.1",
+		"ngx-clipboard": "^11.1.3",
+		"ngx-device-detector": "^1.3.0",
+		"ngx-logger": "^3.0.5",
+		"qrcode": "^1.2.2",
+		"rxjs": "^6.2.2",
+		"rxjs-compat": "^6.2.2",
+		"tweetnacl": "^1.0.0",
+		"zone.js": "^0.8.14"
+	},
+	"devDependencies": {
+		"@angular-devkit/build-angular": "^0.7.2",
+		"@angular/cli": "^6.1.2",
+		"@angular/compiler-cli": "^6.1.2",
+		"@angular/language-service": "^6.1.2",
+		"@types/bip39": "^2.4.0",
+		"@types/jasmine": "^2.8.8",
+		"@types/jasminewd2": "~2.0.2",
+		"@types/node": "^10.5.7",
+		"@types/qrcode": "^1.2.0",
+		"codelyzer": "^4.4.3",
+		"electron": "^2.0.7",
+		"electron-builder": "^20.27.1",
+		"husky": "^0.14.3",
+		"jasmine-core": "^3.2.0",
+		"jasmine-spec-reporter": "^4.2.1",
+		"karma": "^2.0.5",
+		"karma-chrome-launcher": "^2.2.0",
+		"karma-cli": "~1.0.1",
+		"karma-coverage-istanbul-reporter": "^2.0.1",
+		"karma-jasmine": "~1.1.0",
+		"karma-jasmine-html-reporter": "^1.2.0",
+		"npm-run-all": "^4.1.3",
+		"prettier": "^1.14.2",
+		"pretty-quick": "^1.6.0",
+		"protractor": "^5.4.0",
+		"rxjs-tslint-rules": "^4.7.2",
+		"ts-node": "^7.0.0",
+		"tslint": "^5.11.0",
+		"typescript": "^2.9.2",
+		"uikit": "^3.0.0-rc.11"
+	},
+	"build": {
+		"appId": "org.qlcchain.qlcwallet",
+		"buildVersion": "1.0.0",
+		"productName": "QlcWallet",
+		"copyright": "Copyright © 2018 QLC Chain Team",
+		"directories": {
+			"output": "dist-desktop",
+			"app": "./"
+		},
+		"mac": {
+			"category": "public.app-category.finance",
+			"extendInfo": {
+				"CFBundleURLTypes": [
+					{
+						"CFBundleURLName": "qlc",
+						"CFBundleURLSchemes": [
+							"qlc"
+						]
+					}
+				]
+			}
+		},
+		"linux": {
+			"target": "AppImage"
+		},
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "qlcchain",
+				"repo": "qlcwallet"
+			}
+		],
+		"protocols": {
+			"name": "qlc",
+			"schemes": [
+				"qlc"
+			],
+			"role": "Viewer"
+		}
+	}
 }
