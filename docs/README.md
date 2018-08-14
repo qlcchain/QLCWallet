@@ -1,5 +1,5 @@
 <div align="right">Language:
-<a title="Chinese" href="README_CN.md">:cn:</a>
+<a title="Chinese" href="/zh-cn/README.md">:cn:</a>
 <a title="Englisth" href="README.md">:us:</a></div>
 
 # QLCChain Wallet
