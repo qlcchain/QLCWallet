@@ -137,7 +137,7 @@
         <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"><span *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</span><span *ngIf="!history.timestamp">{{ 'ACCOUNT_DETAILS.n_a' | translate }}</span></div>
         <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate" tooltip="{{ 'ACCOUNT_DETAILS.view_account_details' | translate }}">
           <a [routerLink]="'/account/' + (history.link_as_account || history.account)">
-            <span class="name" *ngIf="history.addressBookName">{{ history.addressBookName }}</span> 
+            <span class="name pr-2" *ngIf="history.addressBookName">{{ history.addressBookName }}</span> 
             <span class="address">{{ history.link_as_account || history.account }}</span>
           </a>
         </div>

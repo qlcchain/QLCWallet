@@ -41,7 +41,7 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">{{ selectedToken.symbol }}</div>
                   </div>
-                  <input type="text" class="form-control inlineForm" [(ngModel)]="amount" placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}" onfocus="this.placeholder = ''" >
+                  <input type="text" class="form-control inlineForm" [(ngModel)]="amount" placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}" onfocus="this.placeholder = ''" style="height: 41px;">
                   <div class="input-group-append">
                     <a (click)="setMaxAmount()" >
                       <div class="input-group-text maxLink">{{ 'SEND_TOKENS_TAB.max' | translate }}</div>
