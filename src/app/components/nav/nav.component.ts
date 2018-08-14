@@ -10,14 +10,7 @@ export class NavComponent implements OnInit {
   isCollapsed = true;
   wallet = this.walletService.wallet;
 
-  constructor(
-    private walletService: WalletService
-  ) { 
-  }
+  constructor(private walletService: WalletService) {}
 
-  async ngOnInit() {
-  }
-
-
-
+  async ngOnInit() {}
 }

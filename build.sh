@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tag='prod'
+tag='production'
 
 print_usage() {
 	echo 'build.sh [-h] [-n {prod|beta|desktop}]'
@@ -23,14 +23,15 @@ while getopts 'hn:' OPT; do
 done
 
 case "${tag}" in
-	prod)
+	prod|production)
 		release_tag=''
+    tag='production'
 		;;
 	beta|desktop)
 		release_tag="-${tag}"
 		;;
 	*)
-		echo "Invalid network: ${tag}" >&2
+		echo "Invalid tag: ${tag}" >&2
 		exit 1
 		;;
 esac
