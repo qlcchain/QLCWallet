@@ -1,6 +1,6 @@
 FROM tiangolo/node-frontend:10 as builder
 
-ARG TAG=prod
+ARG TAG=production
 
 WORKDIR /usr/src/app
 
@@ -11,7 +11,7 @@ COPY . /usr/src/app
 # COPY package.json /usr/src/app/package.json
 RUN npm i -g npm && npm i -g @angular/cli \
         && npm i @angular/cli \
-        && npm i --unsafe-perm -V && ng lint && ng build --configuration=${TAG}
+        && npm i --unsafe-perm -V && ng build --configuration=${TAG}
 
 ##################
 ### production ###
