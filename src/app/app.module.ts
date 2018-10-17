@@ -60,84 +60,86 @@ import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+	return new TranslateHttpLoader(http);
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    WelcomeComponent,
-    ConfigureWalletComponent,
-    NotificationsComponent,
-    QlcPipe,
-    SqueezePipe,
-    AccountsComponent,
-    SendComponent,
-    AddressBookComponent,
-    ReceiveComponent,
-    WalletWidgetComponent,
-    ManageWalletComponent,
-    ConfigureAppComponent,
-    AccountDetailsComponent,
-    TransactionDetailsComponent,
-    FiatPipe,
-    ImportWalletComponent,
-    QlcAccountIdComponent,
-    ImportAddressBookComponent,
-    CurrencySymbolPipe,
-    RepresentativesComponent,
-    ManageRepresentativesComponent,
-    NavComponent,
-    FooterComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    ClipboardModule,
-    TooltipModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    CollapseModule.forRoot(),
-    ModalModule.forRoot(),
-    AlertModule.forRoot(),
-    DeviceDetectorModule.forRoot(),
-    NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics]),
-    LoggerModule.forRoot({
-      serverLoggingUrl: `${environment.apiUrl}/logs`,
-      // serverLoggingUrl: `http://localhost:8888/logs`,
-      level: NgxLoggerLevel.DEBUG,
-      serverLogLevel: NgxLoggerLevel.ERROR
-    })
-  ],
-  providers: [
-    LangService,
-    UtilService,
-    WalletService,
-    NotificationService,
-    ApiService,
-    AddressBookService,
-    ModalService,
-    WorkPoolService,
-    AppSettingsService,
-    WebsocketService,
-    QLCBlockService,
-    PriceService,
-    PowService,
-    RepresentativeService,
-    NodeService,
-    LedgerService
-  ],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		WelcomeComponent,
+		ConfigureWalletComponent,
+		NotificationsComponent,
+		QlcPipe,
+		SqueezePipe,
+		AccountsComponent,
+		SendComponent,
+		AddressBookComponent,
+		ReceiveComponent,
+		WalletWidgetComponent,
+		ManageWalletComponent,
+		ConfigureAppComponent,
+		AccountDetailsComponent,
+		TransactionDetailsComponent,
+		FiatPipe,
+		ImportWalletComponent,
+		QlcAccountIdComponent,
+		ImportAddressBookComponent,
+		CurrencySymbolPipe,
+		RepresentativesComponent,
+		ManageRepresentativesComponent,
+		NavComponent,
+		FooterComponent,
+		AutofocusDirective
+	],
+	imports: [
+		BrowserModule,
+		HttpClientModule,
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			}
+		}),
+		AppRoutingModule,
+		ReactiveFormsModule,
+		FormsModule,
+		ClipboardModule,
+		TooltipModule.forRoot(),
+		BsDropdownModule.forRoot(),
+		CollapseModule.forRoot(),
+		ModalModule.forRoot(),
+		AlertModule.forRoot(),
+		DeviceDetectorModule.forRoot(),
+		NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics]),
+		LoggerModule.forRoot({
+			serverLoggingUrl: `${environment.apiUrl}/logs`,
+			// serverLoggingUrl: `http://localhost:8888/logs`,
+			level: NgxLoggerLevel.DEBUG,
+			serverLogLevel: NgxLoggerLevel.ERROR
+		})
+	],
+	providers: [
+		LangService,
+		UtilService,
+		WalletService,
+		NotificationService,
+		ApiService,
+		AddressBookService,
+		ModalService,
+		WorkPoolService,
+		AppSettingsService,
+		WebsocketService,
+		QLCBlockService,
+		PriceService,
+		PowService,
+		RepresentativeService,
+		NodeService,
+		LedgerService
+	],
+	bootstrap: [AppComponent]
 })
 export class AppModule {}
