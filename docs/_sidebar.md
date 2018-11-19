@@ -1,6 +1,2 @@
-* Getting started
-
-  * [Quick start](quickstart.md)
-
-* [Readme](README.md)
-* [Changelog](changelog.md)
+- [Getting started](get-started.md)
+- [Readme](README.md)
