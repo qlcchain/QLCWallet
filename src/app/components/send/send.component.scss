@@ -1,4 +1,4 @@
-@import "~scss/mixins";
+@import '~scss/mixins';
 .sendTokens {
 	padding-top: 40px;
 	padding-bottom: 40px;
@@ -14,31 +14,31 @@
 		color: $textLight;
 	}
 	.toaccount {
-    position: absolute;
-    top: 16px;
-    width: 90%;
-    height: 38px;
-    border-right: none;
-  }
-  .success {
-    border: 1px solid $greenLight;
+		position: absolute;
+		top: 16px;
+		width: 90%;
+		height: 38px;
+		border-right: none;
+	}
+	.success {
+		border: 1px solid $greenLight;
 	}
 	.toaccount.success {
 		border-right: none;
 	}
-  .dangerLeft {
-    border-bottom: 1px solid $redLight;
-    border-top: 1px solid $redLight;
-    border-left: 1px solid $redLight;
-  }
-  .dangerRight {
-    border-bottom: 1px solid $redLight;
-    border-top: 1px solid $redLight;
-    border-right: 1px solid $redLight;
-  }
+	.dangerLeft {
+		border-bottom: 1px solid $redLight;
+		border-top: 1px solid $redLight;
+		border-left: 1px solid $redLight;
+	}
+	.dangerRight {
+		border-bottom: 1px solid $redLight;
+		border-top: 1px solid $redLight;
+		border-right: 1px solid $redLight;
+	}
 
 	button.btn-outline-secondary {
-		margin-top: auto; 
+		margin-top: auto;
 		background-color: transparent;
 		border: 1px solid $textLight;
 		border-left: none;
@@ -49,7 +49,13 @@
 	button.btn-outline-secondary:hover {
 		text-decoration: underline;
 	}
-	button.btn-outline-secondary:focus,.btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle,.btn-outline-secondary:not(:disabled):not(.disabled):active:focus, .btn-outline-secondary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-secondary.dropdown-toggle:focus {
+	button.btn-outline-secondary:focus,
+	.btn-outline-secondary:not(:disabled):not(.disabled):active,
+	.btn-outline-secondary:not(:disabled):not(.disabled).active,
+	.show > .btn-outline-secondary.dropdown-toggle,
+	.btn-outline-secondary:not(:disabled):not(.disabled):active:focus,
+	.btn-outline-secondary:not(:disabled):not(.disabled).active:focus,
+	.show > .btn-outline-secondary.dropdown-toggle:focus {
 		box-shadow: none;
 		outline: 0;
 		background-color: transparent;
@@ -59,18 +65,19 @@
 	button.btn-outline-secondary:active {
 		text-decoration: underline;
 	}
-	.inlineForm,.inlineForm2 {
+	.inlineForm,
+	.inlineForm2 {
 		border: 0;
 		border-top: 1px solid $textLight;
 		border-bottom: 1px solid $textLight;
-		background: #fff url('/assets/img/separator_input.png') no-repeat left 0 center;
+		background: #fff url('../../../assets/img/separator_input.png') no-repeat left 0 center;
 		background-size: 1px 34px;
 		padding-top: 10px;
 		padding-bottom: 10px;
 	}
 	.inlineForm2 {
 		border-radius: 0;
-		border-right: 1px solid $textLight;	
+		border-right: 1px solid $textLight;
 	}
 	.input-group-text {
 		@include latoBold;
@@ -102,36 +109,34 @@
 		padding-top: 10px;
 		height: auto;
 	}
-
 }
 
 .confirm-title {
-  font-weight: bolder;
-  display: block;
-  font-size: 24px;
+	font-weight: bolder;
+	display: block;
+	font-size: 24px;
 }
 
 .confirm-currency {
-  font-weight: bolder;
-  display: block;
-  font-size: 20px;
+	font-weight: bolder;
+	display: block;
+	font-size: 20px;
 }
 
 .confirm-subtitle {
-  display: block;
-  font-size: 10px;
+	display: block;
+	font-size: 10px;
 }
-
 
 @media (max-width: 12450px) {
-  .br-spacer {
-    display: block;
-  }
+	.br-spacer {
+		display: block;
+	}
 }
 @media (max-width: 959px) {
-  .br-spacer {
-    display: none;
-  }
+	.br-spacer {
+		display: none;
+	}
 }
 .confirmTransaction {
 	@include latoBold;
@@ -146,16 +151,16 @@
 	.sum {
 		color: $default;
 		font-size: $fontSizeTitle;
-		background: #edeef4; 
-		height:1px; 
-		margin-top:20px;
-		margin-bottom:20px;
+		background: #edeef4;
+		height: 1px;
+		margin-top: 20px;
+		margin-bottom: 20px;
 	}
 	.sum span {
-		background: #fff; 
-		padding:15px; 
-		position:relative; 
-		top:-15px;
+		background: #fff;
+		padding: 15px;
+		position: relative;
+		top: -15px;
 	}
 	.name {
 		font-size: $fontSizeTitle;
@@ -170,12 +175,12 @@
 		color: $superLight;
 	}
 	.transfer {
-	    background: #ffffff url('/assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
-	    background-size: 24px 24px;
-	    border-top: 0;
-	    @media (max-width: 992px) {
-			background: #ffffff url('/assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
-	    	background-size: 24px 24px;
+		background: #ffffff url('../../../assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
+		background-size: 24px 24px;
+		border-top: 0;
+		@media (max-width: 992px) {
+			background: #ffffff url('../../../assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
+			background-size: 24px 24px;
 		}
 	}
 	.fiatrate {

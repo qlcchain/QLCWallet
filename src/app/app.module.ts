@@ -63,7 +63,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
-	return new TranslateHttpLoader(http);
+	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
