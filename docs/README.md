@@ -1,6 +1,6 @@
 <div align="right">Language:
-<a title="Chinese" href="/zh-cn/README.md">:cn:</a>
-<a title="Englisth" href="README.md">:us:</a></div>
+<a title="Chinese" href="#/zh-cn/README.md">:cn:</a>
+<a title="Englisth" href="#README.md">:us:</a></div>
 
 # QLCChain Wallet
 
@@ -9,12 +9,14 @@
 QLCChain Wallet is a fully client-side signing wallet for sending and receiving [Multidimensional Block Lattice Test coins](https://qlcchain.org) [in your browser](https://qlcchain.org).
 
 ## Development Prerequisites
+
 - Node Package Manager: [Install npm](https://www.npmjs.com/get-npm)
 - Angular CLI: `npm i -g @angular/cli`
 
 ## Development Guide
 
 ### Clone repository and install dependencies
+
 ```bash
 git clone https://github.com/qlcchain/qlcwallet
 cd qlcwallet
@@ -22,6 +24,7 @@ npm install
 ```
 
 ## Build Wallet (For Production)
+
 Build a production version of the wallet for web:
 
 ```bash
@@ -37,11 +40,14 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ## Bugs/Feedback
-If you run into any issues, please use the [GitHub Issue Tracker](https://github.com/qlcchain/qlcwallet/issues) 
+
+If you run into any issues, please use the [GitHub Issue Tracker](https://github.com/qlcchain/qlcwallet/issues)
 We are continually improving and adding new features based on the feedback you provide, so please let your opinions be known!
 
 ## Acknowledgements
+
 Special thanks to the following!
+
 - [NanoVault](https://github.com/cronoh/nanovault) - Inspired by [Nanovault](https://nanovault.io/) and port some code from it.
 - [numtel/nano-webgl-pow](https://github.com/numtel/nano-webgl-pow) - WebGL PoW Implementation
 - [jaimehgb/RaiBlocksWebAssemblyPoW](https://github.com/jaimehgb/RaiBlocksWebAssemblyPoW) - CPU PoW Implementation

@@ -1,6 +1,6 @@
 <div align="right">Language:
-<a title="Chinese" href="/zh-cn/get-started.md">🇨🇳</a>
-<a title="Englisth" href="get-started.md">🇺🇸</a></div>
+<a title="Chinese" href="#/zh-cn/get-started.md">:cn:</a>
+<a title="Englisth" href="#get-started.md">:us:</a></div>
 
 # QLCChain Wallet Get Started
 
@@ -10,9 +10,9 @@ QLCChain Wallet is a fully client-side signing wallet for sending and receiving 
 
 ## Get Started
 
-- Open the Wallet  [Web Wallet](https://wallet.qlcchain.online) 
+- Open the Wallet [Web Wallet](https://wallet.qlcchain.online)
 - Create your own wallet and **Save the Seed**
-- Get test coin from QLCChain Test group, Contract us by *Link&Resources*
+- Get test coin from QLCChain Test group, Contract us by _Link&Resources_
 - Enjoy the transaction and speed.
 
 ## Links & Resources

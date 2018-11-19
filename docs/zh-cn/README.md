@@ -1,12 +1,12 @@
 <div align="right">语言:
-<a title="中文" href="/zh-cn/README.md">:cn:</a>
-<a title="英文" href="README.md">:us:</a></div>
+<a title="中文" href="#/zh-cn/README.md">:cn:</a>
+<a title="英文" href="#README.md">:us:</a></div>
 
 # QLCChain 钱包
 
 [![Build Status](https://travis-ci.com/qlcchain/QLCWallet.svg?branch=master)](https://travis-ci.com/qlcchain/QLCWallet)
 
-QLCChain钱包是一个完全用户端签名的Web钱包，可以浏览器上完美体验QLCChain[多维区块点阵](https://qlcchain.org)的快速转账。
+QLCChain 钱包是一个完全用户端签名的 Web 钱包，可以浏览器上完美体验 QLCChain[多维区块点阵](https://qlcchain.org)的快速转账。
 
 ## 开发环境
 
@@ -39,7 +39,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## 故障反馈
 
-遇到任何问题，请试用 [GitHub Issue Tracker](https://github.com/qlcchain/qlcwallet/issues) 
+遇到任何问题，请试用 [GitHub Issue Tracker](https://github.com/qlcchain/qlcwallet/issues)
 
 我们会依照您的反馈持续改进使用体验和添加新功能，请让知道您的想法！
 

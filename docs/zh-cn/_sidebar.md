@@ -1,0 +1,2 @@
+- [Getting started](/zh-cn/get-started.md)
+- [Readme](/zh-cn/README.md)

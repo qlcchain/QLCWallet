@@ -1,11 +1,11 @@
-@import "~scss/mixins";
+@import '~scss/mixins';
 nav {
-	>div>button.navbar-toggler {
-	    border-color: transparent !important;
-	    border-radius: 0;
-	    outline: 0;
+	> div > button.navbar-toggler {
+		border-color: transparent !important;
+		border-radius: 0;
+		outline: 0;
 	}
-	border-color: fade-out($red, .95);
+	border-color: fade-out($red, 0.95);
 	background-color: $darkest;
 	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.1);
 	color: white;
@@ -14,7 +14,7 @@ nav {
 	&.navbar {
 		padding-top: 0;
 		padding-bottom: 0;
-		@media(max-width: 991px) {
+		@media (max-width: 991px) {
 			padding-top: 15px;
 			padding-bottom: 15px;
 		}
@@ -29,7 +29,7 @@ nav {
 		border-radius: 20px;
 		padding: 0.25em 0.7em;
 		background-color: $light;
-		color: white
+		color: white;
 	}
 	.badge-qlc.active {
 		background-color: $default;
@@ -62,16 +62,15 @@ nav {
 		font-size: 12px;
 		font-weight: 700;
 	}
-	
+
 	.navbar-nav {
-		
-    	@media(max-width: 991px) {
+		@media (max-width: 991px) {
 			padding-top: 30px;
-    		padding-bottom: 60px;
+			padding-bottom: 60px;
 		}
 		> li.wallet {
 			margin-left: 100px;
-			@media(max-width: 992px) {
+			@media (max-width: 992px) {
 				margin-left: 0;
 			}
 			@media (max-width: 1199px) and (min-width: 992px) {
@@ -80,7 +79,7 @@ nav {
 		}
 		> li.nav-item {
 			height: 110px;
-			@media(max-width: 991px) {
+			@media (max-width: 991px) {
 				height: 60px;
 				text-align: left;
 			}
@@ -92,41 +91,44 @@ nav {
 				vertical-align: middle;
 			}
 			> .dropdown-menu {
-				margin-top:0;
+				margin-top: 0;
 				background-color: $darkest;
 				border-radius: 0;
 				border: none;
-				@media(max-width: 992px) {
+				@media (max-width: 992px) {
 					position: absolute;
-    				width: 100%;
+					width: 100%;
 				}
-				
+
 				> .dropdown-item {
 					color: white;
 					font-size: $fontSize;
 					padding: 1rem 1.5rem;
 				}
-				> .dropdown-item:hover, .dropdown-item:focus, .dropdown-item:active, .dropdown-item.active {
+				> .dropdown-item:hover,
+				.dropdown-item:focus,
+				.dropdown-item:active,
+				.dropdown-item.active {
 					background-color: $default;
 					border-radius: 0;
-    				border: none;
-    				outline: none;
+					border: none;
+					outline: none;
 				}
 			}
 			.account i {
-				background: url('/assets/img/qlc-icon-accounts.svg');
+				background: url('../../../assets/img/qlc-icon-accounts.svg');
 			}
 			.send i {
-				background: url('/assets/img/qlc-icon-send.svg');
+				background: url('../../../assets/img/qlc-icon-send.svg');
 			}
 			.addressbook i {
-				background: url('/assets/img/qlc-icon-addressbook.svg');
+				background: url('../../../assets/img/qlc-icon-addressbook.svg');
 			}
 			.settings i {
-				background: url('/assets/img/qlc-icon-settings.svg');
+				background: url('../../../assets/img/qlc-icon-settings.svg');
 			}
 			.receive i {
-				background-image: url('/assets/img/qlc-icon-receive.svg');
+				background-image: url('../../../assets/img/qlc-icon-receive.svg');
 			}
 			.settings .more {
 				height: 20px;
@@ -134,32 +136,31 @@ nav {
 				display: inline-block;
 				margin-left: 10px;
 				vertical-align: middle;
-				background: url('/assets/img/qlc-icon-arrow-down.svg');
-				@media(max-width: 992px) {
+				background: url('../../../assets/img/qlc-icon-arrow-down.svg');
+				@media (max-width: 992px) {
 					float: right;
 				}
 			}
 			.settings div {
-				@media(min-width: 992px) {
+				@media (min-width: 992px) {
 					padding: 0 2px 0 8px !important;
 				}
-				
 			}
 			.wallet i {
-				background: url('/assets/img/qlc-icon-wallet.svg');
+				background: url('../../../assets/img/qlc-icon-wallet.svg');
 			}
 			.wallet.locked i {
-				background: url('/assets/img/qlc-icon-wallet-red.svg');
+				background: url('../../../assets/img/qlc-icon-wallet-red.svg');
 			}
 			.wallet.unlocked i {
-				background: url('/assets/img/qlc-icon-wallet-green.svg');
+				background: url('../../../assets/img/qlc-icon-wallet-green.svg');
 			}
 			&.nav-item-hide {
 				@media (max-width: 1200px) and (min-width: 992px) {
 					display: none;
 				}
 			}
-			> a.nav-link:focus ,
+			> a.nav-link:focus,
 			> a.nav-link:hover,
 			> a.nav-link {
 				height: 100%;
@@ -168,40 +169,38 @@ nav {
 					margin-top: 50px;
 					padding: 0 10px 0 8px;
 					outline: 0;
-					@media(max-width: 991px) {
+					@media (max-width: 991px) {
 						margin-top: 20px;
 						padding: 0 0px 0 0px;
 						text-align: left;
 					}
-					@media(max-width: 767px) {
+					@media (max-width: 767px) {
 						margin-top: 13px;
 						padding: 0 5px 0 5px;
 						text-align: left;
 					}
 				}
-				
-				img { 
+
+				img {
 					height: 20px;
 					display: inline-block;
 					margin-right: 10px;
 				}
-				
+
 				p {
 					display: inline-block;
 					margin: 0;
 					color: white;
 					@media (max-width: 1199px) and (min-width: 992px) {
-						
 					}
 				}
 				color: white;
 				padding: 0.1rem 1.5rem;
 				@media (min-width: 992px) {
 					padding: 1.282rem 0.55rem;
-						
 				}
 				text-align: center;
-				@media(max-width: 767px) {
+				@media (max-width: 767px) {
 					padding: 0.6rem 0.55rem;
 				}
 				@media (max-width: 1199px) and (min-width: 992px) {
@@ -210,13 +209,12 @@ nav {
 				&.active {
 					color: white;
 					background-color: $default;
-					@media(min-width: 991px) {
-
+					@media (min-width: 991px) {
 						&:after {
 							width: 100%;
 							height: 4px;
 							background-color: $light;
-							content: " ";
+							content: ' ';
 							position: absolute;
 							bottom: -4px;
 							left: 50%;
@@ -229,13 +227,12 @@ nav {
 				&.locked {
 					color: white;
 					background-color: transparent;
-					@media(min-width: 991px) {
-
+					@media (min-width: 991px) {
 						&:after {
 							width: 100%;
 							height: 4px;
 							background-color: $red;
-							content: " ";
+							content: ' ';
 							position: absolute;
 							bottom: -4px;
 							left: 50%;
@@ -249,20 +246,19 @@ nav {
 		}
 	}
 	@media (min-width: 992px) {
-		border-color: fade-out(white, .7);
+		border-color: fade-out(white, 0.7);
 		.navbar-brand {
-			color: fade-out(white, .3);
+			color: fade-out(white, 0.3);
 		}
 		.navbar-nav > li.nav-item > a.nav-link,
 		.navbar-nav > li.nav-item > a.nav-link:focus {
 			position: relative;
 			&:hover {
-
 				&:after {
 					width: 100%;
 					height: 4px;
 					background-color: $light;
-					content: " ";
+					content: ' ';
 					position: absolute;
 					bottom: -4px;
 					left: 50%;
@@ -271,14 +267,13 @@ nav {
 					transform: translateX(-50%);
 				}
 			}
-
 		}
 		&.navbar-shrink {
-			border-color: fade-out($red, .95);
+			border-color: fade-out($red, 0.95);
 			.navbar-brand {
 				&:focus,
 				&:hover {
-					color: darken($green, .1);
+					color: darken($green, 0.1);
 				}
 			}
 		}

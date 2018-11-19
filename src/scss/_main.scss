@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
 	box-sizing: border-box;
 	height: 100%;
 	margin: 0;
@@ -13,7 +14,6 @@ app-root {
 }
 
 .main {
-	
 	padding-top: 170px;
 	@media (max-width: 991px) {
 		padding-top: 100px;
@@ -26,7 +26,7 @@ app-root {
 .alert.alert-info {
 	background-color: $light;
 	color: white;
-}  
+}
 .alert.alert-error {
 	background-color: $redLight;
 	color: white;
@@ -57,26 +57,27 @@ pre {
 button {
 	padding: 10px;
 	background: red;
-	border: 1px solid rgba(#000, .1);
+	border: 1px solid rgba(#000, 0.1);
 	border-width: 1px 1px 3px;
 	border-radius: 3px;
 	font: inherit;
 	color: #fff;
 	cursor: pointer;
-	text-shadow: 0 1px 0 rgba(#000, .3), 0 1px 1px rgba(#000, .2);
+	text-shadow: 0 1px 0 rgba(#000, 0.3), 0 1px 1px rgba(#000, 0.2);
 }
 
 body {
 	background: $background;
 }
 
-a, a:hover {
+a,
+a:hover {
 	@include latoBold;
 	text-decoration: none;
 	color: $default;
 }
 a:hover {
-	color: $light;	
+	color: $light;
 }
 select {
 	border-radius: 0 !important;
@@ -92,7 +93,7 @@ select {
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
-	background: #fff url('/assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
+	background: #fff url('../assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
 	background-size: 16px 16px;
 	border: 1px solid $textLight;
 	border-radius: 0;
@@ -105,13 +106,13 @@ select {
 }
 
 .custom-select.contacts {
-	background: #fff url('/assets/img/qlc-icon-addressbook-grey.svg') no-repeat right 0.75rem center;
+	background: #fff url('../assets/img/qlc-icon-addressbook-grey.svg') no-repeat right 0.75rem center;
 	background-size: 16px 16px;
 }
-.form-group { 
+.form-group {
 	margin-bottom: 0;
 }
-input.form-control  {
+input.form-control {
 	font-size: 13px;
 	border: 1px solid $textLight;
 	border-radius: 0;
@@ -122,7 +123,6 @@ input.form-control:focus {
 	box-shadow: none;
 	border: 1px solid $superLight;
 }
-
 
 .tooltip.show {
 	opacity: 1;
@@ -137,7 +137,8 @@ input.form-control:focus {
 	background-color: $default;
 	border-radius: 0;
 }
-.bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
+.bs-tooltip-top .arrow::before,
+.bs-tooltip-auto[x-placement^='top'] .arrow::before {
 	border-top-color: $default;
 }
 h1 {
@@ -149,7 +150,7 @@ h1 {
 p {
 	@include lato;
 	font-size: $fontSize;
-	color: $text;	
+	color: $text;
 }
 
 button.btn {
@@ -167,9 +168,8 @@ button.btn {
 	text-align: center;
 	width: 100%;
 	text-shadow: none;
-	
+
 	@media (max-width: 1200px) and (min-width: 992px) {
-		
 	}
 	@media (max-width: 320px) {
 		font-size: 10px;
@@ -193,19 +193,34 @@ button.btn.btn-danger:focus {
 button.btn.btn-danger:hover {
 	background-color: $redLight;
 }
-.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle,
-.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-primary.dropdown-toggle:focus,
-button.btn.btn-primary:hover,button.btn.btn-primary:focus,button.btn.btn-primary:active,button.btn.btn-primary:active:focus {
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle,
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus,
+button.btn.btn-primary:hover,
+button.btn.btn-primary:focus,
+button.btn.btn-primary:active,
+button.btn.btn-primary:active:focus {
 	background-color: $light;
 	box-shadow: none;
 }
-.btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle,
-.btn-secondary:not(:disabled):not(.disabled):active:focus, .btn-secondary:not(:disabled):not(.disabled).active:focus, .show > .btn-secondary.dropdown-toggle:focus {
+.btn-secondary:not(:disabled):not(.disabled):active,
+.btn-secondary:not(:disabled):not(.disabled).active,
+.show > .btn-secondary.dropdown-toggle,
+.btn-secondary:not(:disabled):not(.disabled):active:focus,
+.btn-secondary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-secondary.dropdown-toggle:focus {
 	background-color: $greenLight;
 	box-shadow: none;
 }
-.btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active, .show > .btn-danger.dropdown-toggle,
-.btn-danger:not(:disabled):not(.disabled):active:focus, .btn-danger:not(:disabled):not(.disabled).active:focus, .show > .btn-danger.dropdown-toggle:focus {
+.btn-danger:not(:disabled):not(.disabled):active,
+.btn-danger:not(:disabled):not(.disabled).active,
+.show > .btn-danger.dropdown-toggle,
+.btn-danger:not(:disabled):not(.disabled):active:focus,
+.btn-danger:not(:disabled):not(.disabled).active:focus,
+.show > .btn-danger.dropdown-toggle:focus {
 	background-color: $redLight;
 	box-shadow: none;
 }
