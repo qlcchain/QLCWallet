@@ -105,41 +105,81 @@
 	"build": {
 		"appId": "org.qlcchain.qlcwallet",
 		"buildVersion": "1.0.0",
-		"productName": "QlcWallet",
-		"copyright": "Copyright © 2018 QLC Chain Team",
+		"productName": "QLCWallet",
+		"asar": true,
+		"copyright": "Copyright © 2019 QLC Chain Team",
 		"directories": {
 			"output": "dist-desktop",
 			"app": "./"
 		},
+		"dmg": {
+			"window": {
+				"width": 540,
+				"height": 380
+			},
+			"contents": [
+				{
+					"x": 410,
+					"y": 230,
+					"type": "link",
+					"path": "/Applications"
+				},
+				{
+					"x": 130,
+					"y": 230,
+					"type": "file"
+				}
+			]
+		},
 		"mac": {
-			"category": "public.app-category.finance",
-			"extendInfo": {
-				"CFBundleURLTypes": [
-					{
-						"CFBundleURLName": "qlc",
-						"CFBundleURLSchemes": [
-							"qlc"
-						]
-					}
+			"target": [
+				"dmg"
+			],
+			"type": "distribution",
+			"extraResources": {
+				"from": "./extra/darwin/",
+				"to": "./",
+				"filter": [
+					"**/*"
+				]
+			},
+			"binaries": [
+				"./dist-desktop/mac/QLCWallet.app/Contents/Resources/gqlc"
+			],
+			"category": "public.app-category.finance"
+		},
+		"win": {
+			"target": [
+				"nsis",
+				"portable"
+			],
+			"extraResources": {
+				"from": "./extra/win32/${arch}",
+				"to": "./",
+				"filter": [
+					"**/*"
 				]
 			}
 		},
-		"linux": {
-			"target": "AppImage"
+		"nsis": {
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true
 		},
-		"publish": [
-			{
-				"provider": "github",
-				"owner": "qlcchain",
-				"repo": "qlcwallet"
-			}
-		],
-		"protocols": {
-			"name": "qlc",
-			"schemes": [
-				"qlc"
+		"linux": {
+			"target": [
+				"deb",
+				"AppImage"
 			],
-			"role": "Viewer"
+			"desktop": {
+				"Categories": "P2P;Finance;Security"
+			},
+			"extraResources": {
+				"from": "./extra/linux/",
+				"to": "./",
+				"filter": [
+					"**/*"
+				]
+			}
 		}
 	}
 }
