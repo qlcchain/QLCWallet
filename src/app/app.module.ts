@@ -55,8 +55,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { NavComponent } from './components/nav/nav.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 
-import { NgxAnalyticsModule } from 'ngx-analytics';
-import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
@@ -114,7 +112,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ModalModule.forRoot(),
 		AlertModule.forRoot(),
 		DeviceDetectorModule.forRoot(),
-		NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics]),
 		LoggerModule.forRoot({
 			serverLoggingUrl: `${environment.apiUrl}/logs`,
 			// serverLoggingUrl: `http://localhost:8888/logs`,
