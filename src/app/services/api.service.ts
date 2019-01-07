@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { NodeService } from './node.service';
 import { NGXLogger } from 'ngx-logger';
+
 @Injectable()
 export class ApiService {
 	rpcUrl = environment.apiUrl;
@@ -40,72 +41,81 @@ export class ApiService {
 	}
 
 	async accountsBalances(accounts: string[]): Promise<{ balances: any }> {
-		return await this.request('qlcclassic_accountsBalances', { params: accounts });
+		return await this.request('qlcclassic_accountsBalances', { params: [accounts] });
 	}
+
 	async accountsFrontiers(accounts: string[]): Promise<{ frontiers: any; error?: string }> {
-		return await this.request('qlcclassic_accountsFrontiers', { params: accounts });
+		return await this.request('qlcclassic_accountsFrontiers', { params: [accounts] });
 	}
-	async accountsPending(accounts: string[], count: number = 50): Promise<{ blocks: any }> {
-		return await this.request('qlcclassic_accountsPending', { params: [accounts, count, true] });
+
+	async accountsPending(accounts: string[], count: number = 50): Promise<{ pending: any; error?: string }> {
+		return await this.request('qlcclassic_accountsPending', { params: [[accounts], count] });
 	}
+
+	// Deprecated
 	async delegatorsCount(account: string): Promise<{ count: string }> {
 		return await this.request('delegators_count', { account });
 	}
+
 	async representativesOnline(): Promise<{ representatives: any }> {
 		return await this.request('qlcclassic_representativesOnline', {});
 	}
 
 	async blocksInfo(blocks): Promise<{ blocks: any; error?: string }> {
-		return await this.request('qlcclassic_blocksInfo', { params: [blocks, true, true] });
+		return await this.request('qlcclassic_blocksInfo', { params: [blocks] });
 	}
+
+	// Deprecated
 	async blockCount(): Promise<{ count: number; unchecked: number }> {
 		return await this.request('qlcclassic_blockCount', {});
 	}
+
 	async workGenerate(hash): Promise<{ work: string }> {
 		return await this.request('qlcclassic_workGenerate', { params: [hash] });
 	}
+
 	async process(block): Promise<{ hash: string; error?: string }> {
 		return await this.request('qlcclassic_process', { params: [block] });
 	}
-	async accountHistory(account, count = 25, raw = false): Promise<{ history: any }> {
-		return await this.request('qlcclassic_accountHistoryTopn', { params: [account, count, raw] });
+
+	async accountHistory(account, count = 25): Promise<{ history: any; error?: string }> {
+		return await this.request('qlcclassic_accountHistoryTopn', { params: [account, count] });
 	}
+
 	async accountInfo(account): Promise<any> {
-		return await this.request('qlcclassic_accountInfo', { params: [account, true, true, true] });
+		return await this.request('qlcclassic_accountInfo', { params: [account] });
 	}
+
 	async validateAccountNumber(account): Promise<{ valid: '1' | '0' }> {
 		return await this.request('qlcclassic_validateAccountNumber', { params: [account] });
 	}
+
 	async pending(account, count): Promise<any> {
-		return await this.request('qlcclassic_pending', { params: [account, count, true] });
+		return await this.request('qlcclassic_pending', { params: [account, count] });
 	}
+
 	async tokens(): Promise<{ tokens: any; error?: string }> {
 		return await this.request('qlcclassic_tokens', {});
 	}
 
-	// TODO: fix
-	async tokenByName(token_name): Promise<{ token_info: any }> {
-		const tokenRespone = await this.tokens();
-		const tokens = tokenRespone.tokens;
+	async tokenByHash(tokenHash): Promise<any> {
+		const tokens = await this.tokens();
+		if (!tokens.error) {
+			const tokenResult = tokens.tokens.result;
+			return tokenResult.filter(token => {
+				if (token.tokenId === tokenHash) {
+					return token;
+				}
+			});
+		}
 
-		let token = null;
-
-		Object.keys(tokens).map(token_hash => {
-			if (tokens.token_hash.token_name === token_name) {
-				token = tokens.token_hash;
-				token.token_hash = token_hash;
-			}
-		});
-		return token;
+		return null;
 	}
 
-	// TODO: fix
 	async accountInfoByToken(account, tokenHash): Promise<any> {
-		const account_infos = await this.accountInfo(account);
-		const token_accounts = account_infos.account_infos;
+		const accountMeta = await this.accountInfo(account);
+		const tokens = accountMeta.tokens;
 
-		return Array.isArray(token_accounts)
-			? token_accounts.filter(token_account => token_account.token_hash === tokenHash)[0]
-			: null;
+		return Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === tokenHash)[0] : null;
 	}
 }
