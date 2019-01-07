@@ -143,7 +143,8 @@ export class SendComponent implements OnInit {
 	}
 	async loadBalances() {
 		for (let i = 0; i < this.accounts.length; i++) {
-			this.accounts[i].account_info = await this.api.accountInfo(this.accounts[i].id);
+			const am = await this.api.accountInfo(this.accounts[i].id);
+			this.accounts[i].accountMeta = am.accountMeta.result;
 		}
 
 		this.selectAccount();
@@ -248,7 +249,7 @@ export class SendComponent implements OnInit {
 				this.toAccountStatus = 0;
 			}
 		}
-		if (accountInfo && accountInfo.tokens) {
+		if (accountInfo.accountMeta && accountInfo.accountMeta.result.tokens) {
 			this.toAccountStatus = 2;
 		}
 	}
@@ -387,9 +388,9 @@ export class SendComponent implements OnInit {
 		const selectedAccount = this.accounts.find(a => a.id === this.fromAccountID);
 		this.accountTokens =
 			selectedAccount !== undefined &&
-			selectedAccount.account_info.tokens !== undefined &&
-			selectedAccount.account_info.tokens.length > 0
-				? selectedAccount.account_info.tokens
+			selectedAccount.accountMeta.tokens !== undefined &&
+			selectedAccount.accountMeta.tokens.length > 0
+				? selectedAccount.accountMeta.tokens
 				: [];
 		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
 		this.selectedTokenSymbol =

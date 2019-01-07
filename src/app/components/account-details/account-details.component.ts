@@ -37,7 +37,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
 	repLabel: any = '';
 	addressBookEntry: any = null;
-	account: any = {};
+	accountMeta: any = {};
 	accountID = '';
 
 	walletAccount = null;
@@ -81,12 +81,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 			}
 		});
 		this.priceSub = this.price.lastPrice$.subscribe(event => {
-			this.account.balanceFiat = this.util.qlc
-				.rawToMqlc(this.account.balance || 0)
+			this.accountMeta.balanceFiat = this.util.qlc
+				.rawToMqlc(this.accountMeta.balance || 0)
 				.times(this.price.price.lastPrice)
 				.toNumber();
-			this.account.pendingFiat = this.util.qlc
-				.rawToMqlc(this.account.pending || 0)
+			this.accountMeta.pendingFiat = this.util.qlc
+				.rawToMqlc(this.accountMeta.pending || 0)
 				.times(this.price.price.lastPrice)
 				.toNumber();
 		});
@@ -135,13 +135,14 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		this.addressBookEntry = this.addressBook.getAccountName(this.accountID);
 		this.addressBookModel = this.addressBookEntry || '';
 		this.walletAccount = this.wallet.getWalletAccount(this.accountID);
-		this.account = await this.api.accountInfo(this.accountID);
+		this.accountMeta = await this.api.accountInfo(this.accountID);
 
-		const knownRepresentative = this.repService.getRepresentative(this.account.representative);
+		const knownRepresentative = this.repService.getRepresentative(this.accountMeta.representative);
 		this.repLabel = knownRepresentative ? knownRepresentative.name : null;
 
 		// If there is a pending balance, or the account is not opened yet, load pending transactions
-		if ((!this.account.error && this.account.pending > 0) || this.account.error) {
+		// FIXME:
+		if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
 			const pending = await this.api.pending(this.accountID, 25);
 			if (pending && pending.blocks) {
 				for (const block in pending.blocks) {
@@ -160,23 +161,23 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		}
 
 		// If the account doesnt exist, set the pending balance manually
-		if (this.account.error) {
+		if (this.accountMeta.error) {
 			const pendingRaw = this.pendingBlocks.reduce(
 				(prev: BigNumber, current: any) => prev.plus(new BigNumber(current.amount)),
 				new BigNumber(0)
 			);
-			this.account.pending = pendingRaw;
+			this.accountMeta.pending = pendingRaw;
 		}
 
 		// Set fiat values?
-		this.account.balanceRaw = new BigNumber(this.account.balance || 0).mod(this.qlc);
-		this.account.pendingRaw = new BigNumber(this.account.pending || 0).mod(this.qlc);
-		this.account.balanceFiat = this.util.qlc
-			.rawToMqlc(this.account.balance || 0)
+		this.accountMeta.balanceRaw = new BigNumber(this.accountMeta.balance || 0).mod(this.qlc);
+		this.accountMeta.pendingRaw = new BigNumber(this.accountMeta.pending || 0).mod(this.qlc);
+		this.accountMeta.balanceFiat = this.util.qlc
+			.rawToMqlc(this.accountMeta.balance || 0)
 			.times(this.price.price.lastPrice)
 			.toNumber();
-		this.account.pendingFiat = this.util.qlc
-			.rawToMqlc(this.account.pending || 0)
+		this.accountMeta.pendingFiat = this.util.qlc
+			.rawToMqlc(this.accountMeta.pending || 0)
 			.times(this.price.price.lastPrice)
 			.toNumber();
 		await this.getAccountHistory(this.accountID);
@@ -284,7 +285,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		this.showEditRepresentative = false;
 
 		const accountInfo = await this.api.accountInfo(this.accountID);
-		this.account = accountInfo;
+		this.accountMeta = accountInfo.accountMeta.result;
 		const newRep = this.repService.getRepresentative(repAccount);
 		this.repLabel = newRep ? newRep.name : '';
 

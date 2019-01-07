@@ -82,7 +82,7 @@ export class ApiService {
 		return await this.request('qlcclassic_accountHistoryTopn', { params: [account, count] });
 	}
 
-	async accountInfo(account): Promise<any> {
+	async accountInfo(account): Promise<{ accountMeta: any; error?: string }> {
 		return await this.request('qlcclassic_accountInfo', { params: [account] });
 	}
 
@@ -113,8 +113,8 @@ export class ApiService {
 	}
 
 	async accountInfoByToken(account, tokenHash): Promise<any> {
-		const accountMeta = await this.accountInfo(account);
-		const tokens = accountMeta.tokens;
+		const am = await this.accountInfo(account);
+		const tokens = am.accountMeta.result.tokens;
 
 		return Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === tokenHash)[0] : null;
 	}
