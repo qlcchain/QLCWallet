@@ -37,7 +37,7 @@
 										<a (click)="editName()" class="icon-text-link"
 											><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a
 										>
-										<a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()" class="icon-text-link"
+										<a ngxClipboard [cbContent]="accountId" (cbOnSuccess)="copied()" class="icon-text-link"
 											><span class="icon copy"></span> {{ 'COPY_ADDRESS' | translate }}</a
 										>
 									</div>
@@ -53,7 +53,7 @@
 									<a (click)="editName()" class="icon-text-link"
 										><span class="icon edit"></span> {{ 'EDIT_NAME' | translate }}</a
 									>
-									<a ngxClipboard [cbContent]="accountID" (cbOnSuccess)="copied()" class="icon-text-link"
+									<a ngxClipboard [cbContent]="accountId" (cbOnSuccess)="copied()" class="icon-text-link"
 										><span class="icon copy"></span> {{ 'COPY_ADDRESS' | translate }}</a
 									>
 								</div>
@@ -80,7 +80,7 @@
 							<div class="col-5 text-right">{{ 'ACCOUNT_DETAILS.balance' | translate }}</div>
 							<div class="col-3 pr-0 text-right">{{ 'ACCOUNT_DETAILS.value' | translate }}</div>
 						</div>
-						<div class="row align-items-center rowContent" *ngFor="let balance of account.accoutMeta">
+						<div class="row align-items-center rowContent" *ngFor="let balance of accountMeta.tokens">
 							<div class="col-4 pl-0 text-truncate">
 								<span class="tokenIcon {{ balance.token | lowercase }}"></span>{{ balance.symbol }}
 							</div>
