@@ -44,9 +44,6 @@ export class RepresentativesComponent implements OnInit {
 	selectedAccounts = [];
 	fullAccounts = [];
 
-	//TODO: remove
-	qlcTokenHash = '9bf0dd78eb52f56cf698990d7d3e4f0827de858f6bdabc7713c869482abfd914';
-
 	constructor(
 		public wallet: WalletService,
 		private api: ApiService,
@@ -180,7 +177,7 @@ export class RepresentativesComponent implements OnInit {
 					reuslt.id = account.id;
 					reuslt.addressBookName = account.addressBookName;
 					const tokenMetas = reuslt.tokens;
-					const qlcTokenMeta = tokenMetas.filter(tm => tm.type === this.qlcTokenHash)[0];
+					const qlcTokenMeta = tokenMetas.filter(tm => tm.type === this.api.qlcTokenHash)[0];
 					if (qlcTokenMeta !== undefined) {
 						reuslt.representative = qlcTokenMeta.rep;
 						reuslt.balance = qlcTokenMeta.balance;
@@ -353,9 +350,7 @@ export class RepresentativesComponent implements OnInit {
 			return this.notifications.sendWarning(this.msg4);
 		}
 
-		const infos = await this.api.accountInfo(newRep);
-		const tokenMetas = infos.accountMeta.result.tokens;
-		const qlcTokenMeta = tokenMetas ? tokenMetas.filter(tm => tm.token === this.qlcTokenHash)[0] : null;
+		const qlcTokenMeta = await this.api.accountInfoByToken(newRep);
 		if (qlcTokenMeta === undefined || qlcTokenMeta == null) {
 			this.changingRepresentatives = false;
 			return this.notifications.sendWarning(this.msg5 + ` ${newRep} ` + this.msg6);

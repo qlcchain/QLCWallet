@@ -10,7 +10,7 @@ export class ApiService {
 	// buff = new SharedArrayBuffer(32);
 	// id = new Uint32Array(this.buff);
 	id = 1;
-
+	qlcTokenHash = '9bf0dd78eb52f56cf698990d7d3e4f0827de858f6bdabc7713c869482abfd914';
 	constructor(private http: HttpClient, private node: NodeService, private logger: NGXLogger) {
 		this.logger.debug(this.rpcUrl);
 		// this.id[0] = 1;
@@ -90,8 +90,8 @@ export class ApiService {
 		return await this.request('qlcclassic_validateAccountNumber', { params: [account] });
 	}
 
-	async pending(account, count): Promise<any> {
-		return await this.request('qlcclassic_pending', { params: [account, count] });
+	async pending(account, count): Promise<{ pending: any; error?: string }> {
+		return await this.accountsPending([account], count);
 	}
 
 	async tokens(): Promise<{ tokens: any; error?: string }> {
@@ -112,7 +112,8 @@ export class ApiService {
 		return null;
 	}
 
-	async accountInfoByToken(account, tokenHash): Promise<any> {
+	//TODO: remove token hash
+	async accountInfoByToken(account, tokenHash = this.qlcTokenHash): Promise<any> {
 		const am = await this.accountInfo(account);
 		const tokens = am.accountMeta.result.tokens;
 

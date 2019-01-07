@@ -38,7 +38,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 	repLabel: any = '';
 	addressBookEntry: any = null;
 	accountMeta: any = {};
-	accountID = '';
+	accountId = '';
 
 	walletAccount = null;
 
@@ -131,30 +131,41 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
 	async loadAccountDetails() {
 		this.pendingBlocks = [];
-		this.accountID = this.router.snapshot.params.account;
-		this.addressBookEntry = this.addressBook.getAccountName(this.accountID);
+		this.accountId = this.router.snapshot.params.account;
+		this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
 		this.addressBookModel = this.addressBookEntry || '';
-		this.walletAccount = this.wallet.getWalletAccount(this.accountID);
-		this.accountMeta = await this.api.accountInfo(this.accountID);
+		this.walletAccount = this.wallet.getWalletAccount(this.accountId);
+		const am = await this.api.accountInfo(this.accountId);
+		this.accountMeta = am.accountMeta.result;
+		this.accountMeta.error = am.error;
 
-		const knownRepresentative = this.repService.getRepresentative(this.accountMeta.representative);
-		this.repLabel = knownRepresentative ? knownRepresentative.name : null;
+		const qlcToken = await this.api.accountInfoByToken(this.accountMeta.account);
+		if (qlcToken == null) {
+			this.repLabel = null;
+		} else {
+			const knownRepresentative = this.repService.getRepresentative(qlcToken.rep);
+			this.repLabel = knownRepresentative ? knownRepresentative.name : null;
+		}
 
 		// If there is a pending balance, or the account is not opened yet, load pending transactions
-		// FIXME:
 		if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
-			const pending = await this.api.pending(this.accountID, 25);
-			if (pending && pending.blocks) {
-				for (const block in pending.blocks) {
-					if (!pending.blocks.hasOwnProperty(block)) {
+			const accountPending = await this.api.pending(this.accountId, 25);
+			if (!accountPending.error && accountPending.pending.result) {
+				const pendingResult = accountPending.pending.result;
+
+				for (const account in pendingResult) {
+					if (!pendingResult.hasOwnProperty(account)) {
 						continue;
 					}
-					this.pendingBlocks.push({
-						account: pending.blocks[block].source,
-						amount: pending.blocks[block].amount,
-						timestamp: pending.blocks[block].timestamp,
-						addressBookName: this.addressBook.getAccountName(pending.blocks[block].source) || null,
-						hash: block
+					pendingResult[account].forEach(pending => {
+						this.pendingBlocks.push({
+							account: pending.pendingInfo.source,
+							amount: pending.pendingInfo.amount,
+							// TODO: fill timestamp
+							// timestamp: accountPending.blocks[block].timestamp,
+							addressBookName: this.addressBook.getAccountName(pending.pendingInfo.source) || null,
+							hash: pending.block
+						});
 					});
 				}
 			}
@@ -180,9 +191,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 			.rawToMqlc(this.accountMeta.pending || 0)
 			.times(this.price.price.lastPrice)
 			.toNumber();
-		await this.getAccountHistory(this.accountID);
+		await this.getAccountHistory(this.accountId);
 
-		const qrCode = await QRCode.toDataURL(`${this.accountID}`);
+		const qrCode = await QRCode.toDataURL(`${this.accountId}`);
 		this.qrCodeImage = qrCode;
 	}
 
@@ -252,7 +263,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 	async loadMore() {
 		if (this.pageSize <= this.maxPageSize) {
 			this.pageSize += 25;
-			await this.getAccountHistory(this.accountID, false);
+			await this.getAccountHistory(this.accountId, false);
 		}
 	}
 
@@ -266,7 +277,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		const repAccount = this.representativeModel;
 
 		const valid = await this.api.validateAccountNumber(repAccount);
-		if (!valid || valid.valid !== '1') {
+		if (!valid || !valid.valid) {
 			return this.notifications.sendWarning(this.msg2);
 		}
 		try {
@@ -284,7 +295,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		this.representativeModel = '';
 		this.showEditRepresentative = false;
 
-		const accountInfo = await this.api.accountInfo(this.accountID);
+		const accountInfo = await this.api.accountInfo(this.accountId);
 		this.accountMeta = accountInfo.accountMeta.result;
 		const newRep = this.repService.getRepresentative(repAccount);
 		this.repLabel = newRep ? newRep.name : '';
@@ -297,7 +308,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		if (!addressBookName) {
 			// Check for deleting an entry in the address book
 			if (this.addressBookEntry) {
-				this.addressBook.deleteAddress(this.accountID);
+				this.addressBook.deleteAddress(this.accountId);
 				this.notifications.sendSuccess(this.msg5);
 				this.addressBookEntry = null;
 			}
@@ -307,7 +318,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		}
 
 		try {
-			await this.addressBook.saveAddress(this.accountID, addressBookName);
+			await this.addressBook.saveAddress(this.accountId, addressBookName);
 		} catch (err) {
 			this.notifications.sendError(err.message);
 			return;
