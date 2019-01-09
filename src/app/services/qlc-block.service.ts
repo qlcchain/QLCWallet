@@ -7,7 +7,7 @@ import { WorkPoolService } from './work-pool.service';
 import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 import { WalletService } from './wallet.service';
-import { LedgerService } from './ledger.service';
+// import { LedgerService } from './ledger.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 const nacl = window['nacl'];
 
@@ -31,7 +31,7 @@ export class QLCBlockService {
 		private util: UtilService,
 		private workPool: WorkPoolService,
 		private notifications: NotificationService,
-		private ledgerService: LedgerService,
+		// private ledgerService: LedgerService,
 		public settings: AppSettingsService,
 		private trans: TranslateService
 	) {
@@ -82,24 +82,24 @@ export class QLCBlockService {
 		let blockData;
 		const balanceDecimal = new BigNumber(toAcct.balance).toString(10);
 
-		let signature = null;
+		const signature = null;
 		if (ledger) {
-			const ledgerBlock = {
-				previousBlock: toAcct.frontier,
-				representative: representativeAccount,
-				balance: balanceDecimal
-			};
-			try {
-				this.sendLedgerNotification();
-				await this.ledgerService.updateCache(walletAccount.index, toAcct.frontier);
-				const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
-				this.clearLedgerNotification();
-				signature = sig.signature;
-			} catch (err) {
-				this.clearLedgerNotification();
-				this.sendLedgerDeniedNotification();
-				return;
-			}
+			// const ledgerBlock = {
+			// 	previousBlock: toAcct.frontier,
+			// 	representative: representativeAccount,
+			// 	balance: balanceDecimal
+			// };
+			// try {
+			// 	this.sendLedgerNotification();
+			// 	await this.ledgerService.updateCache(walletAccount.index, toAcct.frontier);
+			// 	const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
+			// 	this.clearLedgerNotification();
+			// 	signature = sig.signature;
+			// } catch (err) {
+			// 	this.clearLedgerNotification();
+			// 	this.sendLedgerDeniedNotification();
+			// 	return;
+			// }
 		}
 
 		if (!this.workPool.workExists(toAcct.frontier)) {
@@ -145,25 +145,25 @@ export class QLCBlockService {
 		let blockData;
 		const representative = fromAccount.representative || this.representativeAccount;
 
-		let signature = null;
+		const signature = null;
 		if (ledger) {
-			const ledgerBlock = {
-				previousBlock: fromAccount.frontier,
-				representative: representative,
-				balance: remainingDecimal,
-				recipient: toAccountID
-			};
-			try {
-				this.sendLedgerNotification();
-				await this.ledgerService.updateCache(walletAccount.index, fromAccount.frontier);
-				const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
-				this.clearLedgerNotification();
-				signature = sig.signature;
-			} catch (err) {
-				this.clearLedgerNotification();
-				this.sendLedgerDeniedNotification();
-				return;
-			}
+			// const ledgerBlock = {
+			// 	previousBlock: fromAccount.frontier,
+			// 	representative: representative,
+			// 	balance: remainingDecimal,
+			// 	recipient: toAccountID
+			// };
+			// try {
+			// 	this.sendLedgerNotification();
+			// 	await this.ledgerService.updateCache(walletAccount.index, fromAccount.frontier);
+			// 	const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
+			// 	this.clearLedgerNotification();
+			// 	signature = sig.signature;
+			// } catch (err) {
+			// 	this.clearLedgerNotification();
+			// 	this.sendLedgerDeniedNotification();
+			// 	return;
+			// }
 		}
 
 		if (!this.workPool.workExists(fromAccount.frontier)) {
@@ -218,30 +218,30 @@ export class QLCBlockService {
 		const newBalanceDecimal = openEquiv ? srcAmount : new BigNumber(toAcct.balance).plus(srcAmount).toString(10);
 
 		// We have everything we need, we need to obtain a signature
-		let signature = null;
+		const signature = null;
 		if (ledger) {
-			const ledgerBlock: any = {
-				representative: representative,
-				balance: newBalanceDecimal,
-				sourceBlock: sourceBlock
-			};
-			if (!openEquiv) {
-				ledgerBlock.previousBlock = toAcct.frontier;
-			}
-			try {
-				this.sendLedgerNotification();
-				// On new accounts, we do not need to cache anything
-				if (!openEquiv) {
-					await this.ledgerService.updateCache(walletAccount.index, toAcct.frontier);
-				}
-				const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
-				this.notifications.removeNotification('ledger-sign');
-				signature = sig.signature.toUpperCase();
-			} catch (err) {
-				this.notifications.removeNotification('ledger-sign');
-				this.notifications.sendWarning(this.msg6);
-				return;
-			}
+			// const ledgerBlock: any = {
+			// 	representative: representative,
+			// 	balance: newBalanceDecimal,
+			// 	sourceBlock: sourceBlock
+			// };
+			// if (!openEquiv) {
+			// 	ledgerBlock.previousBlock = toAcct.frontier;
+			// }
+			// try {
+			// 	this.sendLedgerNotification();
+			// 	// On new accounts, we do not need to cache anything
+			// 	if (!openEquiv) {
+			// 		await this.ledgerService.updateCache(walletAccount.index, toAcct.frontier);
+			// 	}
+			// 	const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
+			// 	this.notifications.removeNotification('ledger-sign');
+			// 	signature = sig.signature.toUpperCase();
+			// } catch (err) {
+			// 	this.notifications.removeNotification('ledger-sign');
+			// 	this.notifications.sendWarning(this.msg6);
+			// 	return;
+			// }
 		}
 
 		workBlock = openEquiv ? this.util.account.getAccountPublicKey(walletAccount.id) : previousBlock;

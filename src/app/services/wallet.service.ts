@@ -10,7 +10,7 @@ import { QLCBlockService } from './qlc-block.service';
 import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 import { PriceService } from './price.service';
-import { LedgerService } from './ledger.service';
+// import { LedgerService } from './ledger.service';
 import { NGXLogger } from 'ngx-logger';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
@@ -85,7 +85,7 @@ export class WalletService {
 		private workPool: WorkPoolService,
 		private websocket: WebsocketService,
 		private qlcBlock: QLCBlockService,
-		private ledgerService: LedgerService,
+		// private ledgerService: LedgerService,
 		private notifications: NotificationService,
 		private logger: NGXLogger
 	) {
@@ -195,7 +195,7 @@ export class WalletService {
 		await this.reloadBalances(true);
 
 		if (walletType === 'ledger') {
-			this.ledgerService.loadLedger(true);
+			// this.ledgerService.loadLedger(true);
 		}
 
 		return this.wallet;
@@ -400,31 +400,31 @@ export class WalletService {
 		return this.wallet;
 	}
 
-	async createLedgerAccount(index) {
-		const account = await this.ledgerService.getLedgerAccount(index);
+	// async createLedgerAccount(index) {
+	// 	const account = await this.ledgerService.getLedgerAccount(index);
 
-		const accountID = account.address;
-		const addressBookName = this.addressBook.getAccountName(accountID);
+	// 	const accountID = account.address;
+	// 	const addressBookName = this.addressBook.getAccountName(accountID);
 
-		const newAccount: WalletAccount = {
-			id: accountID,
-			frontiers: null,
-			secret: null,
-			keyPair: null,
-			balance: new BigNumber(0),
-			pending: new BigNumber(0),
-			pendingCount: 0,
-			balanceRaw: new BigNumber(0),
-			pendingRaw: new BigNumber(0),
-			balanceFiat: 0,
-			pendingFiat: 0,
-			index: index,
-			addressBookName,
-			accountMeta: {}
-		};
+	// 	const newAccount: WalletAccount = {
+	// 		id: accountID,
+	// 		frontiers: null,
+	// 		secret: null,
+	// 		keyPair: null,
+	// 		balance: new BigNumber(0),
+	// 		pending: new BigNumber(0),
+	// 		pendingCount: 0,
+	// 		balanceRaw: new BigNumber(0),
+	// 		pendingRaw: new BigNumber(0),
+	// 		balanceFiat: 0,
+	// 		pendingFiat: 0,
+	// 		index: index,
+	// 		addressBookName,
+	// 		accountMeta: {}
+	// 	};
 
-		return newAccount;
-	}
+	// 	return newAccount;
+	// }
 
 	async createSeedAccount(index) {
 		const accountBytes = this.util.account.generateAccountSecretKeyBytes(this.wallet.seedBytes, index);
@@ -686,12 +686,12 @@ export class WalletService {
 		} else if (this.wallet.type === 'seed') {
 			newAccount = await this.createSeedAccount(index);
 		} else if (this.wallet.type === 'ledger') {
-			try {
-				newAccount = await this.createLedgerAccount(index);
-			} catch (err) {
-				this.notifications.sendWarning(`Unable to load account from ledger.  Make sure it is connected`);
-				throw err;
-			}
+			// try {
+			// 	newAccount = await this.createLedgerAccount(index);
+			// } catch (err) {
+			// 	this.notifications.sendWarning(`Unable to load account from ledger.  Make sure it is connected`);
+			// 	throw err;
+			// }
 		}
 
 		this.wallet.accounts.push(newAccount);

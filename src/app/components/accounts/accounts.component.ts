@@ -5,7 +5,7 @@ import { NotificationService } from '../../services/notification.service';
 import { AddressBookService } from '../../services/address-book.service';
 import { ModalService } from '../../services/modal.service';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { LedgerService, LedgerStatus } from '../../services/ledger.service';
+// import { LedgerService, LedgerStatus } from '../../services/ledger.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 @Component({
@@ -40,7 +40,7 @@ export class AccountsComponent implements OnInit {
 		private addressBook: AddressBookService,
 		public modal: ModalService,
 		public settings: AppSettingsService,
-		private ledger: LedgerService,
+		// private ledger: LedgerService,
 		private trans: TranslateService
 	) {
 		// console.log(this.wallet);
@@ -154,19 +154,19 @@ export class AccountsComponent implements OnInit {
 		}
 	}
 
-	async showLedgerAddress(account) {
-		if (this.ledger.ledger.status !== LedgerStatus.READY) {
-			return this.notificationService.sendWarning(this.msg9);
-		}
-		this.notificationService.sendInfo(this.msg10, { identifier: 'ledger-account', length: 0 });
-		try {
-			await this.ledger.getLedgerAccount(account.index, true);
-			this.notificationService.sendSuccess(this.msg11);
-		} catch (err) {
-			this.notificationService.sendError(this.msg12);
-		}
-		this.notificationService.removeNotification('ledger-account');
-	}
+	// async showLedgerAddress(account) {
+	// 	if (this.ledger.ledger.status !== LedgerStatus.READY) {
+	// 		return this.notificationService.sendWarning(this.msg9);
+	// 	}
+	// 	this.notificationService.sendInfo(this.msg10, { identifier: 'ledger-account', length: 0 });
+	// 	try {
+	// 		await this.ledger.getLedgerAccount(account.index, true);
+	// 		this.notificationService.sendSuccess(this.msg11);
+	// 	} catch (err) {
+	// 		this.notificationService.sendError(this.msg12);
+	// 	}
+	// 	this.notificationService.removeNotification('ledger-account');
+	// }
 
 	editName(account) {
 		account.editName = true;
