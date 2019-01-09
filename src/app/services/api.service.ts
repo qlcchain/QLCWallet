@@ -44,7 +44,7 @@ export class ApiService {
 	}
 
 	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_accountsPending', { params: [[accounts], count] });
+		return await this.request('qlcclassic_accountsPending', { params: [accounts, count] });
 	}
 
 	// Deprecated

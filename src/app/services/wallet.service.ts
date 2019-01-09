@@ -577,9 +577,11 @@ export class WalletService {
 		const hashes = [];
 		this.wallet.accounts.forEach(account => {
 			const tokensMeta = account.accountMeta.tokens;
-			tokensMeta.forEach(tokenMeta => {
-				hashes.push(tokenMeta.header);
-			});
+			if (tokensMeta && Array.isArray(tokensMeta)) {
+				tokensMeta.forEach(tm => {
+					hashes.push(tm.header);
+				});
+			}
 		});
 		hashes.forEach(hash => this.workPool.addWorkToCache(hash));
 
