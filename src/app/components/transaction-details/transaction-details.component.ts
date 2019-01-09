@@ -4,6 +4,7 @@ import { ApiService } from '../../services/api.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import BigNumber from 'bignumber.js';
 import { AddressBookService } from '../../services/address-book.service';
+import { UtilService } from 'app/services/util.service';
 
 @Component({
 	selector: 'app-transaction-details',
@@ -17,7 +18,6 @@ export class TransactionDetailsComponent implements OnInit {
 	transaction: any = {};
 	hashID = '';
 	blockType = 'send';
-	isStateBlock = true;
 
 	toAccountID = '';
 	fromAccountID = '';
@@ -35,6 +35,7 @@ export class TransactionDetailsComponent implements OnInit {
 		private router: Router,
 		private addressBook: AddressBookService,
 		private api: ApiService,
+		private util: UtilService,
 		public settings: AppSettingsService
 	) {}
 
@@ -56,58 +57,31 @@ export class TransactionDetailsComponent implements OnInit {
 		this.transactionJSON = '';
 		this.showBlockData = false;
 		this.token = '';
-		let legacyFromAccount = '';
+		// let legacyFromAccount = '';
 		this.amountRaw = new BigNumber(0);
 		const hash = this.route.snapshot.params.transaction;
 		this.hashID = hash;
 		const blockData = await this.api.blocksInfo([hash]);
-		if (!blockData || blockData.error || !blockData.blocks[hash]) {
+		if (!blockData || blockData.error) {
 			this.transaction = null;
 			return;
 		}
-		const hashData = blockData.blocks[hash];
-		const hashContents = JSON.parse(hashData.contents);
-		hashData.contents = hashContents;
+		const hashData = blockData.result[0];
+		// const hashContents = JSON.parse(hashData);
+		// hashData.contents = hashContents;
 
-		this.transactionJSON = JSON.stringify(hashData.contents, null, 4);
+		this.transactionJSON = JSON.stringify(hashData, null, 4);
 
-		const tokenInfo = await this.api.tokenByHash(hashData.contents.token);
+		const tokenInfo = await this.api.tokenByHash(hashData.token);
 		if (!tokenInfo) {
 			console.warn('failed to query ');
 		} else {
 			this.token = tokenInfo.tokenSymbol;
 		}
-		this.token = this.token || hashData.contents.tokenName;
-		this.blockType = hashData.contents.type;
-		if (this.blockType === 'state') {
-			const isOpen = hashData.contents.previous === '0000000000000000000000000000000000000000000000000000000000000000';
-			if (isOpen) {
-				this.blockType = 'open';
-			} else {
-				const prevRes = await this.api.blocksInfo([hashData.contents.previous]);
-				const prevData = prevRes.blocks[hashData.contents.previous];
-				prevData.contents = JSON.parse(prevData.contents);
-				if (!prevData.contents.balance) {
-					// Previous block is not a state block.
-					this.blockType = prevData.contents.type;
-					legacyFromAccount = prevData.source_account;
-				} else {
-					const prevBalance = new BigNumber(prevData.contents.balance);
-					const curBalance = new BigNumber(hashData.contents.balance);
-					const balDifference = curBalance.minus(prevBalance);
-					if (balDifference.isNegative()) {
-						this.blockType = 'send';
-					} else if (balDifference.isZero()) {
-						this.blockType = 'change';
-					} else {
-						this.blockType = 'receive';
-					}
-				}
-			}
-		} else {
-			this.isStateBlock = false;
-		}
-		if (hashData.amount) {
+		this.token = this.token || hashData.tokenName;
+		this.blockType = hashData.subType;
+
+		if (hashData.balance) {
 			this.amountRaw = new BigNumber(hashData.amount).mod(this.qlc);
 		}
 
@@ -117,23 +91,31 @@ export class TransactionDetailsComponent implements OnInit {
 		let toAccount = '';
 		switch (this.blockType) {
 			case 'send':
-				fromAccount = this.transaction.block_account;
-				toAccount = this.transaction.contents.destination || this.transaction.contents.link_as_account;
+				fromAccount = this.transaction.address;
+				toAccount = this.util.account.getPublicAccountID(this.util.hex.toUint8(this.transaction.link));
 				break;
 			case 'open':
+				const linkBlock = await this.api.blocksInfo([this.transaction.link]);
+				if (!linkBlock.error) {
+					fromAccount = linkBlock.result[0].address;
+				} else {
+					fromAccount = this.util.account.getPublicAccountID(this.util.hex.toUint8(this.transaction.link));
+				}
+				toAccount = this.transaction.address;
+				break;
 			case 'receive':
-				fromAccount = this.transaction.source_account;
-				toAccount = this.transaction.block_account;
+				fromAccount = this.util.account.getPublicAccountID(this.util.hex.toUint8(this.transaction.link));
+				toAccount = this.transaction.address;
 				break;
 			case 'change':
-				fromAccount = this.transaction.block_account;
-				toAccount = this.transaction.contents.representative;
+				fromAccount = this.transaction.address;
+				toAccount = this.transaction.representative;
 				break;
 		}
 
-		if (legacyFromAccount) {
-			fromAccount = legacyFromAccount;
-		}
+		// if (legacyFromAccount) {
+		// 	fromAccount = legacyFromAccount;
+		// }
 
 		this.toAccountID = toAccount;
 		this.fromAccountID = fromAccount;

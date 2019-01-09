@@ -73,8 +73,7 @@ export class QLCBlockService {
 	}
 
 	async generateChange(walletAccount, representativeAccount, ledger = false) {
-		const tokenTypeHash = '9bf0dd78eb52f56cf698990d7d3e4f0827de858f6bdabc7713c869482abfd914';
-		const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
+		const toAcct = await this.api.accountInfoByToken(walletAccount.id, this.api.qlcTokenHash);
 		if (!toAcct) {
 			throw new Error(this.msg1 + ` ${toAcct.token} ` + this.msg2);
 		}
@@ -83,40 +82,22 @@ export class QLCBlockService {
 		const balanceDecimal = new BigNumber(toAcct.balance).toString(10);
 
 		const signature = null;
-		if (ledger) {
-			// const ledgerBlock = {
-			// 	previousBlock: toAcct.frontier,
-			// 	representative: representativeAccount,
-			// 	balance: balanceDecimal
-			// };
-			// try {
-			// 	this.sendLedgerNotification();
-			// 	await this.ledgerService.updateCache(walletAccount.index, toAcct.frontier);
-			// 	const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
-			// 	this.clearLedgerNotification();
-			// 	signature = sig.signature;
-			// } catch (err) {
-			// 	this.clearLedgerNotification();
-			// 	this.sendLedgerDeniedNotification();
-			// 	return;
-			// }
-		}
 
-		if (!this.workPool.workExists(toAcct.frontier)) {
+		if (!this.workPool.workExists(toAcct.header)) {
 			this.notifications.sendInfo(this.msg3);
 		}
 
 		blockData = {
-			type: 'state',
-			account: walletAccount.id,
-			previous: toAcct.frontier,
+			type: 'State',
+			address: walletAccount.id,
+			previous: toAcct.header,
 			representative: representativeAccount,
 			balance: balanceDecimal,
 			link: this.zeroHash,
 			extra: this.zeroHash,
-			token: tokenTypeHash,
+			token: this.api.qlcTokenHash,
 			signature: signature,
-			work: await this.workPool.getWork(toAcct.frontier)
+			work: await this.workPool.getWork(toAcct.header)
 		};
 
 		if (!signature) {
@@ -125,9 +106,9 @@ export class QLCBlockService {
 
 		const processResponse = await this.api.process(blockData);
 		if (processResponse && processResponse.hash) {
-			walletAccount.frontier = processResponse.hash;
+			walletAccount.header = processResponse.hash;
 			this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
-			this.workPool.removeFromCache(toAcct.frontier);
+			this.workPool.removeFromCache(toAcct.header);
 			return processResponse.hash;
 		} else {
 			return null;
@@ -143,43 +124,24 @@ export class QLCBlockService {
 		const remainingDecimal = new BigNumber(fromAccount.balance).minus(rawAmount).toString(10);
 
 		let blockData;
-		const representative = fromAccount.representative || this.representativeAccount;
+		const representative = fromAccount.rep || this.representativeAccount;
 
 		const signature = null;
-		if (ledger) {
-			// const ledgerBlock = {
-			// 	previousBlock: fromAccount.frontier,
-			// 	representative: representative,
-			// 	balance: remainingDecimal,
-			// 	recipient: toAccountID
-			// };
-			// try {
-			// 	this.sendLedgerNotification();
-			// 	await this.ledgerService.updateCache(walletAccount.index, fromAccount.frontier);
-			// 	const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
-			// 	this.clearLedgerNotification();
-			// 	signature = sig.signature;
-			// } catch (err) {
-			// 	this.clearLedgerNotification();
-			// 	this.sendLedgerDeniedNotification();
-			// 	return;
-			// }
-		}
 
-		if (!this.workPool.workExists(fromAccount.frontier)) {
+		if (!this.workPool.workExists(fromAccount.header)) {
 			this.notifications.sendInfo(this.msg3);
 		}
 
 		blockData = {
-			type: 'state',
-			account: walletAccount.id,
-			previous: fromAccount.frontier,
+			type: 'State',
+			address: walletAccount.id,
+			previous: fromAccount.header,
 			representative: representative,
 			balance: remainingDecimal,
 			token: tokenTypeHash,
 			link: this.util.account.getAccountPublicKey(toAccountID),
 			extra: this.zeroHash,
-			work: await this.workPool.getWork(fromAccount.frontier),
+			work: await this.workPool.getWork(fromAccount.header),
 			signature: signature
 		};
 
@@ -192,18 +154,18 @@ export class QLCBlockService {
 			throw new Error(processResponse.error || this.msg5);
 		}
 
-		walletAccount.frontier = processResponse.hash;
+		walletAccount.header = processResponse.hash;
 		this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
-		this.workPool.removeFromCache(fromAccount.frontier);
+		this.workPool.removeFromCache(fromAccount.header);
 
 		return processResponse.hash;
 	}
 
 	async generateReceive(walletAccount, sourceBlock, ledger = false) {
 		const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
-		const srcFullBlockInfo = srcBlockInfo.blocks[sourceBlock];
+		const srcFullBlockInfo = srcBlockInfo.result[sourceBlock];
 		srcFullBlockInfo.block = JSON.parse(srcFullBlockInfo.contents);
-		const srcAmount = new BigNumber(srcBlockInfo.blocks[sourceBlock].amount);
+		const srcAmount = new BigNumber(srcBlockInfo.result[sourceBlock].amount);
 		const tokenTypeHash = srcFullBlockInfo.block.token;
 
 		const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
@@ -211,43 +173,19 @@ export class QLCBlockService {
 		let blockData: any = {};
 		let workBlock = null;
 
-		const openEquiv = !toAcct || !toAcct.frontier;
+		const openEquiv = !toAcct || !toAcct.header;
 
-		const previousBlock = !openEquiv ? toAcct.frontier : this.zeroHash;
+		const previousBlock = !openEquiv ? toAcct.header : this.zeroHash;
 		const representative = !openEquiv ? toAcct.representative : this.representativeAccount;
 		const newBalanceDecimal = openEquiv ? srcAmount : new BigNumber(toAcct.balance).plus(srcAmount).toString(10);
 
 		// We have everything we need, we need to obtain a signature
 		const signature = null;
-		if (ledger) {
-			// const ledgerBlock: any = {
-			// 	representative: representative,
-			// 	balance: newBalanceDecimal,
-			// 	sourceBlock: sourceBlock
-			// };
-			// if (!openEquiv) {
-			// 	ledgerBlock.previousBlock = toAcct.frontier;
-			// }
-			// try {
-			// 	this.sendLedgerNotification();
-			// 	// On new accounts, we do not need to cache anything
-			// 	if (!openEquiv) {
-			// 		await this.ledgerService.updateCache(walletAccount.index, toAcct.frontier);
-			// 	}
-			// 	const sig = await this.ledgerService.signBlock(walletAccount.index, ledgerBlock);
-			// 	this.notifications.removeNotification('ledger-sign');
-			// 	signature = sig.signature.toUpperCase();
-			// } catch (err) {
-			// 	this.notifications.removeNotification('ledger-sign');
-			// 	this.notifications.sendWarning(this.msg6);
-			// 	return;
-			// }
-		}
 
 		workBlock = openEquiv ? this.util.account.getAccountPublicKey(walletAccount.id) : previousBlock;
 		blockData = {
-			type: 'state',
-			account: walletAccount.id,
+			type: 'State',
+			address: walletAccount.id,
 			previous: previousBlock,
 			representative: representative,
 			balance: newBalanceDecimal,
@@ -269,7 +207,7 @@ export class QLCBlockService {
 		blockData.work = await this.workPool.getWork(workBlock);
 		const processResponse = await this.api.process(blockData);
 		if (processResponse && processResponse.hash) {
-			walletAccount.frontier = processResponse.hash;
+			walletAccount.header = processResponse.hash;
 			this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
 			this.workPool.removeFromCache(workBlock);
 			return processResponse.hash;

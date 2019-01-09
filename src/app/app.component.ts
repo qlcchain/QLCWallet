@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { WalletService } from './services/wallet.service';
 import { AddressBookService } from './services/address-book.service';
 import { AppSettingsService } from './services/app-settings.service';
-import { WebsocketService } from './services/websocket.service';
+// import { WebsocketService } from './services/websocket.service';
 import { PriceService } from './services/price.service';
 import { NotificationService } from './services/notification.service';
 import { PowService } from './services/pow.service';
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
 		private walletService: WalletService,
 		private addressBook: AddressBookService,
 		public settings: AppSettingsService,
-		private websocket: WebsocketService,
+		// private websocket: WebsocketService,
 		private notifications: NotificationService,
 		private pow: PowService,
 		public nodeService: NodeService,
@@ -55,14 +55,14 @@ export class AppComponent implements OnInit {
 		this.addressBook.loadAddressBook();
 		this.workPool.loadWorkCache();
 		await this.walletService.loadStoredWallet();
-		this.websocket.connect();
+		// this.websocket.connect();
 
 		await this.updateFiatPrices();
 
 		this.representative.loadRepresentativeList();
 
 		// If the wallet is locked and there is a pending balance, show a warning to unlock the wallet
-		if (this.wallet.locked && this.wallet.pending.gt(0)) {
+		if (this.wallet.locked && this.wallet.pendingCount > 0) {
 			this.notifications.sendWarning(`New incoming transaction - unlock the wallet to receive it!`, {
 				length: 0,
 				identifier: 'pending-locked'

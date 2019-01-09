@@ -173,7 +173,7 @@ export class RepresentativesComponent implements OnInit {
 		const walletAccountInfos = await Promise.all(
 			this.wallet.wallet.accounts.map(account =>
 				this.api.accountInfo(account.id).then(res => {
-					const reuslt = res.accountMeta.result;
+					const reuslt = res.result;
 					reuslt.id = account.id;
 					reuslt.addressBookName = account.addressBookName;
 					const tokenMetas = reuslt.tokens;
@@ -198,7 +198,7 @@ export class RepresentativesComponent implements OnInit {
 		const repInfos = await Promise.all(
 			representatives.map(rep =>
 				this.api.accountInfo(rep.id).then(res => {
-					const reuslt = res.accountMeta.result;
+					const reuslt = res.result;
 					reuslt.account = rep.id;
 					reuslt.delegatedWeight = rep.weight;
 					reuslt.accounts = rep.accounts;

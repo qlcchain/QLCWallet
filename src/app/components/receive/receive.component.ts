@@ -96,7 +96,7 @@ export class ReceiveComponent implements OnInit {
 			return;
 		}
 
-		const pendingResult = accoutsPending.pending.result;
+		const pendingResult = accoutsPending.result;
 
 		for (const account in pendingResult) {
 			if (!pendingResult.hasOwnProperty(account)) {
@@ -121,7 +121,7 @@ export class ReceiveComponent implements OnInit {
 		if (this.pendingBlocks.length) {
 			const accountsFrontier = await this.api.accountsFrontiers(this.pendingBlocks.map(p => p.account));
 			if (!accountsFrontier.error) {
-				const frontierResult = accountsFrontier.frontiers.result;
+				const frontierResult = accountsFrontier.result;
 				for (const account in frontierResult) {
 					if (!frontierResult.hasOwnProperty(account)) {
 						continue;

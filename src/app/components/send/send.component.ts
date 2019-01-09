@@ -48,9 +48,9 @@ export class SendComponent implements OnInit {
 	msg13 = '';
 
 	amounts = [
-		{ name: 'QLC (1 Mqlc)', shortName: 'QLC', value: 'mqlc' },
-		{ name: 'kqlc (0.001 Mqlc)', shortName: 'kqlc', value: 'kqlc' },
-		{ name: 'qlc (0.000001 Mqlc)', shortName: 'qlc', value: 'qlc' }
+		{ name: 'QLC', shortName: 'QLC', value: 'QLC' },
+		{ name: 'kqlc (0.001 QLC)', shortName: 'kqlc', value: 'kqlc' },
+		{ name: 'qlc (0.000001 QLC)', shortName: 'qlc', value: 'qlc' }
 	];
 
 	selectedAmount = this.amounts[0];
@@ -142,11 +142,27 @@ export class SendComponent implements OnInit {
 		});
 	}
 	async loadBalances() {
-		for (let i = 0; i < this.accounts.length; i++) {
-			const am = await this.api.accountInfo(this.accounts[i].id);
-			this.accounts[i].accountMeta = am.accountMeta.result;
+		const tokenMap = {};
+		const tokens = await this.api.tokens();
+		if (!tokens.error) {
+			tokens.result.forEach(token => {
+				tokenMap[token.tokenId] = token;
+			});
 		}
 
+		// fill account meta
+		for (const account of this.accounts) {
+			const accountInfo = await this.api.accountInfo(account.id);
+			if (!accountInfo.error) {
+				const am = accountInfo.result;
+				for (const token of am.tokens) {
+					if (tokenMap.hasOwnProperty(token.type)) {
+						token.tokenInfo = tokenMap[token.type];
+					}
+				}
+				account.accountMeta = am;
+			}
+		}
 		this.selectAccount();
 	}
 
@@ -165,8 +181,18 @@ export class SendComponent implements OnInit {
 		const accountIDWithBalance = this.accounts.reduce((previous, current) => {
 			if (previous) {
 				return previous;
-			} else if (current.balance.gt(0)) {
-				return current.id;
+			}
+			const tokens = current.accountMeta.tokens;
+			if (tokens) {
+				const filter = tokens.filter(tokenMeta => {
+					return tokenMeta.balance > 0;
+				});
+
+				if (filter && filter.length > 0) {
+					return current.id;
+				} else {
+					return null;
+				}
 			} else {
 				return null;
 			}
@@ -248,8 +274,7 @@ export class SendComponent implements OnInit {
 			} else {
 				this.toAccountStatus = 0;
 			}
-		}
-		if (accountInfo.accountMeta && accountInfo.accountMeta.result.tokens) {
+		} else if (accountInfo.result && accountInfo.result.tokens) {
 			this.toAccountStatus = 2;
 		}
 	}
@@ -263,7 +288,7 @@ export class SendComponent implements OnInit {
 			return this.notificationService.sendWarning(this.msg3);
 		}
 
-		const from = await this.api.accountInfoByToken(this.fromAccountID, this.selectedToken.token_hash);
+		const from = await this.api.accountInfoByToken(this.fromAccountID, this.selectedToken.type);
 		// let to = await this.api.accountInfoByToken(this.toAccountID, this.selectedToken.token_hash);
 		if (!from) {
 			return this.notificationService.sendError(this.msg4);
@@ -291,7 +316,7 @@ export class SendComponent implements OnInit {
 			return this.notificationService.sendWarning(warnMessage);
 		}
 		if (from.balanceBN.minus(rawAmount).isLessThan(0)) {
-			return this.notificationService.sendError(this.msg8 + `${this.selectedToken.token}`);
+			return this.notificationService.sendError(this.msg8 + `${this.selectedToken.tokenInfo.tokenName}`);
 		}
 
 		// Determine a proper raw amount to show in the UI, if a decimal was entered
@@ -306,7 +331,7 @@ export class SendComponent implements OnInit {
 		// Start precopmuting the work...
 		this.fromAddressBook = this.addressBookService.getAccountName(this.fromAccountID);
 		this.toAddressBook = this.addressBookService.getAccountName(this.toAccountID);
-		this.workPool.addWorkToCache(this.fromAccount.frontier);
+		this.workPool.addWorkToCache(this.fromAccount.header);
 		this.activePanel = 'confirm';
 	}
 
@@ -325,7 +350,7 @@ export class SendComponent implements OnInit {
 			const newHash = await this.qlcBlock.generateSend(
 				walletAccount,
 				this.toAccountID,
-				this.selectedToken.token_hash,
+				this.selectedToken.type,
 				this.rawAmount,
 				this.walletService.isLedgerWallet()
 			);
@@ -377,7 +402,7 @@ export class SendComponent implements OnInit {
 
 	selectToken() {
 		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-			this.selectedToken = this.accountTokens.find(a => a.symbol === this.selectedTokenSymbol);
+			this.selectedToken = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === this.selectedTokenSymbol);
 		} else {
 			this.selectedToken = '';
 		}
@@ -394,7 +419,10 @@ export class SendComponent implements OnInit {
 				: [];
 		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
 		this.selectedTokenSymbol =
-			this.selectedToken !== undefined && this.selectedToken.symbol !== undefined ? this.selectedToken.symbol : '';
+			this.selectedToken !== undefined && this.selectedToken.tokenInfo.tokenSymbol !== undefined
+				? this.selectedToken.tokenInfo.tokenSymbol
+				: '';
+
 		this.resetRaw();
 	}
 
@@ -405,7 +433,7 @@ export class SendComponent implements OnInit {
 	getAmountBaseValue(value) {
 		switch (this.selectedAmount.value) {
 			default:
-			case 'qlc':
+			case 'QLC':
 				return this.util.qlc.qlcToRaw(value);
 			case 'kqlc':
 				return this.util.qlc.kqlcToRaw(value);
@@ -417,7 +445,7 @@ export class SendComponent implements OnInit {
 	getAmountValueFromBase(value) {
 		switch (this.selectedAmount.value) {
 			default:
-			case 'qlc':
+			case 'QLC':
 				return this.util.qlc.rawToQlc(value);
 			case 'kqlc':
 				return this.util.qlc.rawToKqlc(value);

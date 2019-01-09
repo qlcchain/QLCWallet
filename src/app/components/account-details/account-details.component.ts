@@ -135,41 +135,60 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
 		this.addressBookModel = this.addressBookEntry || '';
 		this.walletAccount = this.wallet.getWalletAccount(this.accountId);
-		const am = await this.api.accountInfo(this.accountId);
-		this.accountMeta = am.accountMeta.result;
-		this.accountMeta.error = am.error;
+		const tokenMap = {};
+		const tokens = await this.api.tokens();
+		if (!tokens.error) {
+			tokens.result.forEach(token => {
+				tokenMap[token.tokenId] = token;
+			});
+		}
 
-		const qlcToken = await this.api.accountInfoByToken(this.accountMeta.account);
-		if (qlcToken == null) {
+		// fill account meta
+		const accountInfo = await this.api.accountInfo(this.accountId);
+		if (!accountInfo.error) {
+			const am = accountInfo.result;
+			for (const token of am.tokens) {
+				if (tokenMap.hasOwnProperty(token.type)) {
+					token.tokenInfo = tokenMap[token.type];
+				}
+			}
+			this.accountMeta = am;
+		}
+
+		if (this.accountMeta && this.accountMeta.tokens) {
 			this.repLabel = null;
-		} else {
-			const knownRepresentative = this.repService.getRepresentative(qlcToken.rep);
-			this.repLabel = knownRepresentative ? knownRepresentative.name : null;
+			const filter = this.accountMeta.tokens.filter(token => {
+				return token.type === this.api.qlcTokenHash;
+			});
+			if (filter.length > 0) {
+				const knownRepresentative = this.repService.getRepresentative(filter.rep);
+				this.repLabel = knownRepresentative ? knownRepresentative.name : null;
+			}
 		}
 
 		// If there is a pending balance, or the account is not opened yet, load pending transactions
-		if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
-			const accountPending = await this.api.pending(this.accountId, 25);
-			if (!accountPending.error && accountPending.pending.result) {
-				const pendingResult = accountPending.pending.result;
+		// if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
+		const accountPending = await this.api.pending(this.accountId, 25);
+		if (!accountPending.error && accountPending.result) {
+			const pendingResult = accountPending.result;
 
-				for (const account in pendingResult) {
-					if (!pendingResult.hasOwnProperty(account)) {
-						continue;
-					}
-					pendingResult[account].forEach(pending => {
-						this.pendingBlocks.push({
-							account: pending.pendingInfo.source,
-							amount: pending.pendingInfo.amount,
-							// TODO: fill timestamp
-							// timestamp: accountPending.blocks[block].timestamp,
-							addressBookName: this.addressBook.getAccountName(pending.pendingInfo.source) || null,
-							hash: pending.block
-						});
-					});
+			for (const account in pendingResult) {
+				if (!pendingResult.hasOwnProperty(account)) {
+					continue;
 				}
+				pendingResult[account].forEach(pending => {
+					this.pendingBlocks.push({
+						account: pending.pendingInfo.source,
+						amount: pending.pendingInfo.amount,
+						// TODO: fill timestamp
+						// timestamp: accountPending.blocks[block].timestamp,
+						addressBookName: this.addressBook.getAccountName(pending.pendingInfo.source) || null,
+						hash: pending.block
+					});
+				});
 			}
 		}
+		// }
 
 		// If the account doesnt exist, set the pending balance manually
 		if (this.accountMeta.error) {
@@ -181,16 +200,16 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		}
 
 		// Set fiat values?
-		this.accountMeta.balanceRaw = new BigNumber(this.accountMeta.balance || 0).mod(this.qlc);
-		this.accountMeta.pendingRaw = new BigNumber(this.accountMeta.pending || 0).mod(this.qlc);
-		this.accountMeta.balanceFiat = this.util.qlc
-			.rawToMqlc(this.accountMeta.balance || 0)
-			.times(this.price.price.lastPrice)
-			.toNumber();
-		this.accountMeta.pendingFiat = this.util.qlc
-			.rawToMqlc(this.accountMeta.pending || 0)
-			.times(this.price.price.lastPrice)
-			.toNumber();
+		// this.accountMeta.balanceRaw = new BigNumber(this.accountMeta.balance || 0).mod(this.qlc);
+		// this.accountMeta.pendingRaw = new BigNumber(this.accountMeta.pending || 0).mod(this.qlc);
+		// this.accountMeta.balanceFiat = this.util.qlc
+		// 	.rawToMqlc(this.accountMeta.balance || 0)
+		// 	.times(this.price.price.lastPrice)
+		// 	.toNumber();
+		// this.accountMeta.pendingFiat = this.util.qlc
+		// 	.rawToMqlc(this.accountMeta.pending || 0)
+		// 	.times(this.price.price.lastPrice)
+		// 	.toNumber();
 		await this.getAccountHistory(this.accountId);
 
 		const qrCode = await QRCode.toDataURL(`${this.accountId}`);
@@ -211,52 +230,25 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 			this.pageSize = 25;
 		}
 		const accountHistory = await this.api.accountHistory(account, this.pageSize);
-		const additionalBlocksInfo = [];
+		// const additionalBlocksInfo = [];
 
+		this.accountHistory = [];
 		if (!accountHistory.error) {
-			const historyResult = accountHistory.history.result;
-			this.accountHistory = historyResult.map(block => {
-				if (block.type.toLowerCase() === 'state') {
-					// For Open and receive blocks, we need to look up block info to get originating account
-					if (block.subtype === 'open' || block.subtype === 'receive') {
-						additionalBlocksInfo.push({ hash: block.hash, link: block.link });
-						block.addressBookName = this.addressBook.getAccountName(block.account) || null;
-					} else {
-						block.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(block.link));
-						block.addressBookName = this.addressBook.getAccountName(block.link_as_account) || null;
+			const historyResult = accountHistory.result;
+			for (const block of historyResult) {
+				// For Open and receive blocks, we need to look up block info to get originating account
+				if (block.subType === 'open' || block.subType === 'receive') {
+					const preBlock = await this.api.blocksInfo([block.link]);
+					if (!preBlock.error) {
+						block.link_as_account = preBlock.result[0].address;
 					}
 				} else {
-					block.addressBookName = this.addressBook.getAccountName(block.account) || null;
+					block.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(block.link));
 				}
-				return block;
-			});
-
-			// Remove change blocks now that we are using the raw output
-			this.accountHistory = this.accountHistory.filter(h => h.type !== 'change' && h.subtype !== 'change');
-
-			if (additionalBlocksInfo.length) {
-				const blocksInfo = await this.api.blocksInfo(additionalBlocksInfo.map(b => b.link));
-				for (const block in blocksInfo.blocks) {
-					if (!blocksInfo.blocks.hasOwnProperty(block)) {
-						continue;
-					}
-					const matchingBlock = additionalBlocksInfo.find(a => a.link === block);
-					if (!matchingBlock) {
-						continue;
-					}
-					const accountInHistory = this.accountHistory.find(h => h.hash === matchingBlock.hash);
-					if (!accountInHistory) {
-						continue;
-					}
-
-					const blockData = blocksInfo.blocks[block];
-
-					accountInHistory.link_as_account = blockData.block_account;
-					accountInHistory.addressBookName = this.addressBook.getAccountName(blockData.block_account) || null;
-				}
+				block.addressBookName = this.addressBook.getAccountName(block.address) || null;
+				this.accountHistory.push(block);
 			}
-		} else {
-			this.accountHistory = [];
+			this.accountHistory = this.accountHistory.filter(h => h.subType !== 'change');
 		}
 	}
 
@@ -296,10 +288,13 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		this.showEditRepresentative = false;
 
 		const accountInfo = await this.api.accountInfo(this.accountId);
-		this.accountMeta = accountInfo.accountMeta.result;
-		const newRep = this.repService.getRepresentative(repAccount);
-		this.repLabel = newRep ? newRep.name : '';
-
+		if (accountInfo.error) {
+			this.repLabel = '';
+		} else {
+			this.accountMeta = accountInfo.result;
+			const newRep = this.repService.getRepresentative(repAccount);
+			this.repLabel = newRep ? newRep.name : '';
+		}
 		this.notifications.sendSuccess(this.msg4);
 	}
 

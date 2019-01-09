@@ -117,7 +117,9 @@ export class AccountsComponent implements OnInit {
 		for (let i = 0; i < this.accounts.length; i++) {
 			// console.log(this.accounts[i]);
 			const am = await this.api.accountInfo(this.accounts[i].id);
-			this.accounts[i].accountMeta = am.accountMeta.result;
+			if (!am.error) {
+				this.accounts[i].accountMeta = am.result;
+			}
 		}
 		// walletAccount.account_info = await this.api.accountInfo(accountID);
 	}

@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js';
 import { AddressBookService } from './address-book.service';
 import * as CryptoJS from 'crypto-js';
 import { WorkPoolService } from './work-pool.service';
-import { WebsocketService } from './websocket.service';
+// import { WebsocketService } from './websocket.service';
 import { QLCBlockService } from './qlc-block.service';
 import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
@@ -17,17 +17,17 @@ export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
 export interface WalletAccount {
 	id: string;
-	frontiers: any | null;
+	// frontiers: any | null;
 	secret: any;
 	keyPair: any;
 	index: number;
-	balance: BigNumber;
-	pending: BigNumber;
+	// balance: BigNumber;
+	// pending: BigNumber;
 	pendingCount: number;
-	balanceRaw: BigNumber;
-	pendingRaw: BigNumber;
-	balanceFiat: number;
-	pendingFiat: number;
+	// balanceRaw: BigNumber;
+	// pendingRaw: BigNumber;
+	// balanceFiat: number;
+	// pendingFiat: number;
 	addressBookName: string | null;
 	accountMeta: any;
 }
@@ -36,13 +36,13 @@ export interface FullWallet {
 	seedBytes: any;
 	seed: string | null;
 	// tokens: any;
-	balance: BigNumber;
-	pending: BigNumber;
+	// balance: BigNumber;
+	// pending: BigNumber;
 	pendingCount: number;
-	balanceRaw: BigNumber;
-	pendingRaw: BigNumber;
-	balanceFiat: number;
-	pendingFiat: number;
+	// balanceRaw: BigNumber;
+	// pendingRaw: BigNumber;
+	// balanceFiat: number;
+	// pendingFiat: number;
 	accounts: WalletAccount[];
 	accountsIndex: number;
 	locked: boolean;
@@ -59,13 +59,13 @@ export class WalletService {
 		seedBytes: null,
 		seed: '',
 		// tokens: {},
-		balance: new BigNumber(0),
-		pending: new BigNumber(0),
+		// balance: new BigNumber(0),
+		// pending: new BigNumber(0),
 		pendingCount: 0,
-		balanceRaw: new BigNumber(0),
-		pendingRaw: new BigNumber(0),
-		balanceFiat: 0,
-		pendingFiat: 0,
+		// balanceRaw: new BigNumber(0),
+		// pendingRaw: new BigNumber(0),
+		// balanceFiat: 0,
+		// pendingFiat: 0,
 		accounts: [],
 		accountsIndex: 0,
 		locked: false,
@@ -83,41 +83,41 @@ export class WalletService {
 		private addressBook: AddressBookService,
 		private price: PriceService,
 		private workPool: WorkPoolService,
-		private websocket: WebsocketService,
+		// private websocket: WebsocketService,
 		private qlcBlock: QLCBlockService,
 		// private ledgerService: LedgerService,
 		private notifications: NotificationService,
 		private logger: NGXLogger
 	) {
-		this.websocket.newTransactions$.subscribe(async transaction => {
-			if (!transaction) {
-				return; // Not really a new transaction
-			}
+		// this.websocket.newTransactions$.subscribe(async transaction => {
+		// 	if (!transaction) {
+		// 		return; // Not really a new transaction
+		// 	}
 
-			// Find out if this is a send, with our account as a destination or not
-			const walletAccountIDs = this.wallet.accounts.map(a => a.id);
-			if (transaction.block.type === 'send' && walletAccountIDs.indexOf(transaction.block.destination) !== -1) {
-				// Perform an automatic receive
-				const walletAccount = this.wallet.accounts.find(a => a.id === transaction.block.destination);
-				if (walletAccount) {
-					// If the wallet is locked, show a notification
-					if (this.wallet.locked) {
-						const lockMessage = 'New incoming transaction - unlock the wallet to receive it!';
-						this.notifications.sendWarning(lockMessage, {
-							length: 0,
-							identifier: 'pending-locked'
-						});
-					}
-					this.addPendingBlock(walletAccount.id, transaction.hash, transaction.amount, transaction.token);
-					await this.processPendingBlocks();
-				}
-			} else if (transaction.block.type === 'state') {
-				await this.processStateBlock(transaction);
-			}
+		// 	// Find out if this is a send, with our account as a destination or not
+		// 	const walletAccountIDs = this.wallet.accounts.map(a => a.id);
+		// 	if (transaction.block.type === 'send' && walletAccountIDs.indexOf(transaction.block.destination) !== -1) {
+		// 		// Perform an automatic receive
+		// 		const walletAccount = this.wallet.accounts.find(a => a.id === transaction.block.destination);
+		// 		if (walletAccount) {
+		// 			// If the wallet is locked, show a notification
+		// 			if (this.wallet.locked) {
+		// 				const lockMessage = 'New incoming transaction - unlock the wallet to receive it!';
+		// 				this.notifications.sendWarning(lockMessage, {
+		// 					length: 0,
+		// 					identifier: 'pending-locked'
+		// 				});
+		// 			}
+		// 			this.addPendingBlock(walletAccount.id, transaction.hash, transaction.amount, transaction.token);
+		// 			await this.processPendingBlocks();
+		// 		}
+		// 	} else if (transaction.block.type === 'state') {
+		// 		await this.processStateBlock(transaction);
+		// 	}
 
-			// TODO: We don't really need to call to update balances, we should be able to balance on our own from here
-			await this.reloadBalances();
-		});
+		// 	// TODO: We don't really need to call to update balances, we should be able to balance on our own from here
+		// 	await this.reloadBalances();
+		// });
 
 		this.addressBook.addressBook$.subscribe(newAddressBook => {
 			this.reloadAddressBook();
@@ -215,9 +215,9 @@ export class WalletService {
 
 		await this.reloadBalances(true);
 
-		if (this.wallet.accounts.length) {
-			this.websocket.subscribeAccounts(this.wallet.accounts.map(a => a.id));
-		}
+		// if (this.wallet.accounts.length) {
+		// 	this.websocket.subscribeAccounts(this.wallet.accounts.map(a => a.id));
+		// }
 
 		return this.wallet;
 	}
@@ -343,7 +343,7 @@ export class WalletService {
 
 			if (!accountFrontier.error) {
 				// if frontiers contains this account
-				const frontierResult = accountFrontier.frontiers.result;
+				const frontierResult = accountFrontier.result;
 				Object.keys(frontierResult).map(account => {
 					if (batchAccounts.hasOwnProperty(account)) {
 						batchAccounts[account].used = true;
@@ -434,16 +434,16 @@ export class WalletService {
 
 		const newAccount: WalletAccount = {
 			id: accountName,
-			frontiers: null,
+			// frontiers: null,
 			secret: accountBytes,
 			keyPair: accountKeyPair,
-			balance: new BigNumber(0),
-			pending: new BigNumber(0),
+			// balance: new BigNumber(0),
+			// pending: new BigNumber(0),
 			pendingCount: 0,
-			balanceRaw: new BigNumber(0),
-			pendingRaw: new BigNumber(0),
-			balanceFiat: 0,
-			pendingFiat: 0,
+			// balanceRaw: new BigNumber(0),
+			// pendingRaw: new BigNumber(0),
+			// balanceFiat: 0,
+			// pendingFiat: 0,
 			index: index,
 			addressBookName,
 			accountMeta: {}
@@ -456,9 +456,9 @@ export class WalletService {
 	 * Reset wallet to a base state, without changing reference to the main object
 	 */
 	resetWallet() {
-		if (this.wallet.accounts.length) {
-			this.websocket.unsubscribeAccounts(this.wallet.accounts.map(a => a.id)); // Unsubscribe from old accounts
-		}
+		// if (this.wallet.accounts.length) {
+		// 	this.websocket.unsubscribeAccounts(this.wallet.accounts.map(a => a.id)); // Unsubscribe from old accounts
+		// }
 		this.wallet.type = 'seed';
 		this.wallet.password = '';
 		this.wallet.locked = false;
@@ -466,10 +466,10 @@ export class WalletService {
 		this.wallet.seedBytes = null;
 		this.wallet.accounts = [];
 		this.wallet.accountsIndex = 0;
-		this.wallet.balance = new BigNumber(0);
-		this.wallet.pending = new BigNumber(0);
-		this.wallet.balanceFiat = 0;
-		this.wallet.pendingFiat = 0;
+		// this.wallet.balance = new BigNumber(0);
+		// this.wallet.pending = new BigNumber(0);
+		// this.wallet.balanceFiat = 0;
+		// this.wallet.pendingFiat = 0;
 	}
 
 	isConfigured() {
@@ -494,50 +494,49 @@ export class WalletService {
 	}
 
 	isLedgerWallet() {
-		return this.wallet.type === 'ledger';
+		// return this.wallet.type === 'ledger';
+		return false;
 	}
 
 	reloadFiatBalances() {
-		const fiatPrice = this.price.price.lastPrice;
-
-		this.wallet.accounts.forEach(account => {
-			account.balanceFiat = this.util.qlc
-				.rawToMqlc(account.balance)
-				.times(fiatPrice)
-				.toNumber();
-			account.pendingFiat = this.util.qlc
-				.rawToMqlc(account.pending)
-				.times(fiatPrice)
-				.toNumber();
-		});
-
-		this.wallet.balanceFiat = this.util.qlc
-			.rawToMqlc(this.wallet.balance)
-			.times(fiatPrice)
-			.toNumber();
-		this.wallet.pendingFiat = this.util.qlc
-			.rawToMqlc(this.wallet.pending)
-			.times(fiatPrice)
-			.toNumber();
+		// const fiatPrice = this.price.price.lastPrice;
+		// this.wallet.accounts.forEach(account => {
+		// 	account.balanceFiat = this.util.qlc
+		// 		.rawToMqlc(account.balance)
+		// 		.times(fiatPrice)
+		// 		.toNumber();
+		// 	account.pendingFiat = this.util.qlc
+		// 		.rawToMqlc(account.pending)
+		// 		.times(fiatPrice)
+		// 		.toNumber();
+		// });
+		// this.wallet.balanceFiat = this.util.qlc
+		// 	.rawToMqlc(this.wallet.balance)
+		// 	.times(fiatPrice)
+		// 	.toNumber();
+		// this.wallet.pendingFiat = this.util.qlc
+		// 	.rawToMqlc(this.wallet.pending)
+		// 	.times(fiatPrice)
+		// 	.toNumber();
 	}
 
 	// FIXME: show by token type
 	async reloadBalances(reloadPending = true) {
-		const fiatPrice = this.price.price.lastPrice;
-		this.wallet.balance = new BigNumber(0);
-		this.wallet.pending = new BigNumber(0);
-		this.wallet.pendingCount = 0;
-		this.wallet.balanceRaw = new BigNumber(0);
-		this.wallet.pendingRaw = new BigNumber(0);
-		this.wallet.balanceFiat = 0;
-		this.wallet.pendingFiat = 0;
-		const accountIDs = this.wallet.accounts.map(a => a.id);
+		// const fiatPrice = this.price.price.lastPrice;
+		// this.wallet.balance = new BigNumber(0);
+		// this.wallet.pending = new BigNumber(0);
+		// this.wallet.pendingCount = 0;
+		// this.wallet.balanceRaw = new BigNumber(0);
+		// this.wallet.pendingRaw = new BigNumber(0);
+		// this.wallet.balanceFiat = 0;
+		// this.wallet.pendingFiat = 0;
+		// const accountIds = this.wallet.accounts.map(a => a.id);
 
-		const accounts = await this.api.accountsBalances(accountIDs);
-		const accountsFrontier = await this.api.accountsFrontiers(accountIDs);
+		// const accountsBalance = await this.api.accountsBalances(accountIds);
+		// const accountsFrontier = await this.api.accountsFrontiers(accountIds);
 		const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 		if (!accountsPending.error) {
-			const pendingResult = accountsPending.pending.result;
+			const pendingResult = accountsPending.result;
 			for (const account in pendingResult) {
 				if (!pendingResult.hasOwnProperty(account)) {
 					continue;
@@ -546,85 +545,61 @@ export class WalletService {
 			}
 		}
 
-		// this.wallet.tokens = await this.api.tokens();
-		// const allFrontiers = [];
-		// for (const account in frontiers.frontiers) {
-		//   allFrontiers.push({ account, frontier: frontiers.frontiers[account] });
-		// }
-		// const frontierBlocks = await this.api.blocksInfo(allFrontiers.map(f => f.frontier));
-
-		let walletBalance = new BigNumber(0);
-		let walletPending = new BigNumber(0);
-
-		for (const accountID in accounts.balances) {
-			if (!accounts.balances.hasOwnProperty(accountID)) {
-				continue;
-			}
-			// Find the account, update it
-			const walletAccount = this.wallet.accounts.find(a => a.id === accountID);
-			if (!walletAccount) {
-				continue;
-			}
-			walletAccount.balance = new BigNumber(accounts.balances[accountID].balance);
-			walletAccount.pending = new BigNumber(accounts.balances[accountID].pending);
-
-			walletAccount.balanceRaw = new BigNumber(walletAccount.balance).mod(this.qlc);
-			walletAccount.pendingRaw = new BigNumber(walletAccount.pending).mod(this.qlc);
-
-			walletAccount.balanceFiat = this.util.qlc
-				.rawToMqlc(walletAccount.balance)
-				.times(fiatPrice)
-				.toNumber();
-			walletAccount.pendingFiat = this.util.qlc
-				.rawToMqlc(walletAccount.pending)
-				.times(fiatPrice)
-				.toNumber();
-
-			walletAccount.frontiers = accountsFrontier.frontiers.result[accountID] || null;
-
-			// walletAccount.account_info = await this.api.accountInfo(accountID);
-
-			// Look at the accounts latest block to determine if they are using state blocks
-			// if (walletAccount.frontier && frontierBlocks.blocks[walletAccount.frontier]) {
-			//   const frontierBlock = frontierBlocks.blocks[walletAccount.frontier];
-			//   const frontierBlockData = JSON.parse(frontierBlock.contents);
-			//   if (frontierBlockData.type === 'state') {
-			//     walletAccount.useStateBlocks = true;
-			//   }
-			// }
-
-			walletBalance = walletBalance.plus(walletAccount.balance);
-			walletPending = walletPending.plus(walletAccount.pending);
+		const tokenMap = {};
+		const tokens = await this.api.tokens();
+		if (!tokens.error) {
+			tokens.result.forEach(token => {
+				tokenMap[token.tokenId] = token;
+			});
 		}
+
+		// fill account meta
+		for (const account of this.wallet.accounts) {
+			const accountInfo = await this.api.accountInfo(account.id);
+			if (!accountInfo.error) {
+				const am = accountInfo.result;
+				for (const token of am.tokens) {
+					if (tokenMap.hasOwnProperty(token.type)) {
+						token.tokenInfo = tokenMap[token.type];
+					}
+					this.logger.debug(JSON.stringify(token));
+				}
+				account.accountMeta = am;
+			}
+		}
+
+		// for (let account of this.wallet.accounts) {
+		// 	this.logger.debug(JSON.stringify(account));
+		// }
 
 		// Make sure any frontiers are in the work pool
 		// If they have no frontier, we want to use their pub key?
 		const hashes = [];
-		this.wallet.accounts.map(account => {
-			const tokenFontierMap = account.frontiers;
-			Object.keys(tokenFontierMap).map(tokenType => {
-				hashes.push(tokenFontierMap[tokenType]);
+		this.wallet.accounts.forEach(account => {
+			const tokensMeta = account.accountMeta.tokens;
+			tokensMeta.forEach(tokenMeta => {
+				hashes.push(tokenMeta.header);
 			});
 		});
 		hashes.forEach(hash => this.workPool.addWorkToCache(hash));
 
-		this.wallet.balance = walletBalance;
-		this.wallet.pending = walletPending;
+		// this.wallet.balance = walletBalance;
+		// this.wallet.pending = walletPending;
 
-		this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.qlc);
-		this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.qlc);
+		// this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.qlc);
+		// this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.qlc);
 
-		this.wallet.balanceFiat = this.util.qlc
-			.rawToMqlc(walletBalance)
-			.times(fiatPrice)
-			.toNumber();
-		this.wallet.pendingFiat = this.util.qlc
-			.rawToMqlc(walletPending)
-			.times(fiatPrice)
-			.toNumber();
+		// this.wallet.balanceFiat = this.util.qlc
+		// 	.rawToMqlc(walletBalance)
+		// 	.times(fiatPrice)
+		// 	.toNumber();
+		// this.wallet.pendingFiat = this.util.qlc
+		// 	.rawToMqlc(walletPending)
+		// 	.times(fiatPrice)
+		// 	.toNumber();
 
 		// If there is a pending balance, search for the actual pending transactions
-		if (reloadPending && walletPending.gt(0)) {
+		if (reloadPending && this.wallet.pendingCount > 0) {
 			await this.loadPendingBlocksForWallet();
 		}
 	}
@@ -635,23 +610,23 @@ export class WalletService {
 
 		const newAccount: WalletAccount = {
 			id: accountID,
-			frontiers: null,
+			// frontiers: null,
 			secret: null,
 			keyPair: null,
-			balance: new BigNumber(0),
-			pending: new BigNumber(0),
+			// balance: new BigNumber(0),
+			// pending: new BigNumber(0),
 			pendingCount: 0,
-			balanceRaw: new BigNumber(0),
-			pendingRaw: new BigNumber(0),
-			balanceFiat: 0,
-			pendingFiat: 0,
+			// balanceRaw: new BigNumber(0),
+			// pendingRaw: new BigNumber(0),
+			// balanceFiat: 0,
+			// pendingFiat: 0,
 			index: index,
 			addressBookName,
 			accountMeta: {}
 		};
 
 		this.wallet.accounts.push(newAccount);
-		this.websocket.subscribeAccounts([accountID]);
+		// this.websocket.subscribeAccounts([accountID]);
 		return newAccount;
 	}
 
@@ -701,7 +676,7 @@ export class WalletService {
 			await this.reloadBalances();
 		}
 
-		this.websocket.subscribeAccounts([newAccount.id]);
+		// this.websocket.subscribeAccounts([newAccount.id]);
 
 		this.saveWalletExport();
 
@@ -726,7 +701,7 @@ export class WalletService {
 			this.wallet.accountsIndex = walletAccount.index;
 		}
 
-		this.websocket.unsubscribeAccounts([accountID]);
+		// this.websocket.unsubscribeAccounts([accountID]);
 
 		// Reload the balances, save new wallet state
 		await this.reloadBalances();
@@ -759,7 +734,7 @@ export class WalletService {
 		if (accountsPending.error) {
 			return;
 		}
-		const pendingResult = accountsPending.pending;
+		const pendingResult = accountsPending.result;
 		for (const account in pendingResult) {
 			if (!pendingResult.hasOwnProperty(account)) {
 				continue;

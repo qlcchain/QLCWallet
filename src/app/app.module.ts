@@ -30,7 +30,7 @@ import { WorkPoolService } from './services/work-pool.service';
 import { ConfigureAppComponent } from './components/configure-app/configure-app.component';
 import { AppSettingsService } from './services/app-settings.service';
 
-import { WebsocketService } from './services/websocket.service';
+// import { WebsocketService } from './services/websocket.service';
 import { QLCBlockService } from './services/qlc-block.service';
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
 import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
@@ -129,7 +129,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ModalService,
 		WorkPoolService,
 		AppSettingsService,
-		WebsocketService,
+		// WebsocketService,
 		QLCBlockService,
 		PriceService,
 		PowService,

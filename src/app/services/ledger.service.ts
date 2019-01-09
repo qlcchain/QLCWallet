@@ -171,7 +171,7 @@ export class LedgerService {
 			// await this.loadLedger(); // Make sure ledger is ready
 		}
 		const blockResponse = await this.api.blocksInfo([blockHash]);
-		const blockData = blockResponse.blocks[blockHash];
+		const blockData = blockResponse.result[blockHash];
 		if (!blockData) {
 			throw new Error(`Unable to load block data`);
 		}

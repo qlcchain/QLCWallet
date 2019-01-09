@@ -9,10 +9,9 @@
 			"type": "chrome",
 			"request": "launch",
 			"url": "http://localhost:4200",
-			"smartStep": true,
 			"sourceMaps": true,
-			"webRoot": "${workspaceRoot}",
-			"trace": true,
+			"webRoot": "${workspaceRoot}/src",
+			// "trace": true,
 			"userDataDir": "${workspaceRoot}/.vscode/chrome"
 			// "runtimeExecutable": "/opt/google/chrome/google-chrome"
 		}
