@@ -354,6 +354,7 @@ export class SendComponent implements OnInit {
 				this.rawAmount,
 				this.walletService.isLedgerWallet()
 			);
+			// console.log('hash >>>> ' + newHash);
 			if (newHash) {
 				this.notificationService.sendSuccess(this.msg11 + ` ${this.amount} ${this.selectedToken.token}!`);
 				this.activePanel = 'send';

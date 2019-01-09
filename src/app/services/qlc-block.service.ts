@@ -105,11 +105,11 @@ export class QLCBlockService {
 		}
 
 		const processResponse = await this.api.process(blockData);
-		if (processResponse && processResponse.hash) {
-			walletAccount.header = processResponse.hash;
-			this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
+		if (processResponse && processResponse.result) {
+			walletAccount.header = processResponse.result;
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
 			this.workPool.removeFromCache(toAcct.header);
-			return processResponse.hash;
+			return processResponse.result;
 		} else {
 			return null;
 		}
@@ -117,13 +117,13 @@ export class QLCBlockService {
 
 	async generateSend(walletAccount, toAccountID, tokenTypeHash, rawAmount, ledger = false) {
 		const fromAccount = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
+		// console.log(JSON.stringify(fromAccount, null, 4));
 		if (!fromAccount) {
 			throw new Error(this.msg4 + ` ${walletAccount.id}`);
 		}
 
 		const remainingDecimal = new BigNumber(fromAccount.balance).minus(rawAmount).toString(10);
 
-		let blockData;
 		const representative = fromAccount.rep || this.representativeAccount;
 
 		const signature = null;
@@ -131,8 +131,9 @@ export class QLCBlockService {
 		if (!this.workPool.workExists(fromAccount.header)) {
 			this.notifications.sendInfo(this.msg3);
 		}
-
-		blockData = {
+		const work = await this.workPool.getWork(fromAccount.header);
+		// console.log('work >>> ' + work);
+		const blockData = {
 			type: 'State',
 			address: walletAccount.id,
 			previous: fromAccount.header,
@@ -141,24 +142,27 @@ export class QLCBlockService {
 			token: tokenTypeHash,
 			link: this.util.account.getAccountPublicKey(toAccountID),
 			extra: this.zeroHash,
-			work: await this.workPool.getWork(fromAccount.header),
+			work: work,
 			signature: signature
 		};
 
 		if (!signature) {
 			blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
 		}
+		// console.log(JSON.stringify(blockData, null, 4));
 
 		const processResponse = await this.api.process(blockData);
-		if (!processResponse || !processResponse.hash) {
+		// console.log(processResponse);
+
+		if (!processResponse || processResponse.error) {
 			throw new Error(processResponse.error || this.msg5);
 		}
 
-		walletAccount.header = processResponse.hash;
-		this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
+		walletAccount.header = processResponse.result;
+		this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
 		this.workPool.removeFromCache(fromAccount.header);
 
-		return processResponse.hash;
+		return processResponse.result;
 	}
 
 	async generateReceive(walletAccount, sourceBlock, ledger = false) {
@@ -206,11 +210,11 @@ export class QLCBlockService {
 
 		blockData.work = await this.workPool.getWork(workBlock);
 		const processResponse = await this.api.process(blockData);
-		if (processResponse && processResponse.hash) {
-			walletAccount.header = processResponse.hash;
-			this.workPool.addWorkToCache(processResponse.hash); // Add new hash into the work pool
+		if (processResponse && processResponse.result) {
+			walletAccount.header = processResponse.result;
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
 			this.workPool.removeFromCache(workBlock);
-			return processResponse.hash;
+			return processResponse.result;
 		} else {
 			return null;
 		}
@@ -219,7 +223,7 @@ export class QLCBlockService {
 	signStateBlock(stateBlock, keyPair) {
 		const context = blake.blake2bInit(32, null);
 		blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
-		blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.account)));
+		blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.address)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.previous));
 		blake.blake2bUpdate(
 			context,

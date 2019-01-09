@@ -69,7 +69,7 @@ export class ApiService {
 		return await this.request('qlcclassic_workGenerate', { params: [hash] });
 	}
 
-	async process(block): Promise<{ hash: string; error?: string }> {
+	async process(block): Promise<{ result: string; error?: string }> {
 		return await this.request('qlcclassic_process', { params: [block] });
 	}
 
