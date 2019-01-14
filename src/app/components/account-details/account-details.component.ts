@@ -270,7 +270,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		const repAccount = this.representativeModel;
 
 		const valid = await this.api.validateAccountNumber(repAccount);
-		if (!valid || !valid.valid) {
+		if (!valid.result) {
 			return this.notifications.sendWarning(this.msg2);
 		}
 		try {

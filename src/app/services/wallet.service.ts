@@ -21,7 +21,7 @@ export interface WalletAccount {
 	secret: any;
 	keyPair: any;
 	index: number;
-	// balance: BigNumber;
+	balance: BigNumber;
 	// pending: BigNumber;
 	pendingCount: number;
 	// balanceRaw: BigNumber;
@@ -437,7 +437,7 @@ export class WalletService {
 			// frontiers: null,
 			secret: accountBytes,
 			keyPair: accountKeyPair,
-			// balance: new BigNumber(0),
+			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
 			// balanceRaw: new BigNumber(0),
@@ -562,6 +562,9 @@ export class WalletService {
 					if (tokenMap.hasOwnProperty(token.type)) {
 						token.tokenInfo = tokenMap[token.type];
 					}
+					if (token.type === this.api.qlcTokenHash) {
+						account.balance = new BigNumber(token.balance);
+					}
 					this.logger.debug(JSON.stringify(token));
 				}
 				account.accountMeta = am;
@@ -615,7 +618,7 @@ export class WalletService {
 			// frontiers: null,
 			secret: null,
 			keyPair: null,
-			// balance: new BigNumber(0),
+			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
 			// balanceRaw: new BigNumber(0),

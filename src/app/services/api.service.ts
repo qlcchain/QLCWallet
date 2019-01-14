@@ -52,8 +52,8 @@ export class ApiService {
 		return await this.request('delegators_count', { account });
 	}
 
-	async representativesOnline(): Promise<{ representatives: any }> {
-		return await this.request('qlcclassic_representativesOnline', {});
+	async representativesOnline(): Promise<{ result: any }> {
+		return await this.request('qlcclassic_getOnlineRepresentatives', {});
 	}
 
 	async blocksInfo(blocks): Promise<{ result: any; error?: string }> {
@@ -81,8 +81,8 @@ export class ApiService {
 		return await this.request('qlcclassic_accountInfo', { params: [account] });
 	}
 
-	async validateAccountNumber(account): Promise<{ valid: '1' | '0' }> {
-		return await this.request('qlcclassic_validateAccountNumber', { params: [account] });
+	async validateAccountNumber(account): Promise<{ result: true | false }> {
+		return await this.request('qlcclassic_validateAccount', { params: [account] });
 	}
 
 	async pending(account, count): Promise<{ result: any; error?: string }> {

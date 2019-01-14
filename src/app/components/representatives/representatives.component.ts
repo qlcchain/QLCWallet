@@ -131,7 +131,7 @@ export class RepresentativesComponent implements OnInit {
 			const repOnline = onlineReps.indexOf(representative.account) !== -1;
 			const knownRep = this.representativeService.getRepresentative(representative.account);
 
-			const qlcWeight = this.util.qlc.rawToMqlc(representative.weight || 0);
+			const qlcWeight = this.util.qlc.rawToQlc(representative.weight || 0);
 			const percent = qlcWeight.div(totalSupply).times(100);
 
 			// Determine the status based on some factors
@@ -185,7 +185,7 @@ export class RepresentativesComponent implements OnInit {
 					} else {
 						this.logger.debug(`${account.id} does not hold any Root_Token`);
 					}
-					return res;
+					return reuslt;
 				})
 			)
 		);
@@ -203,7 +203,7 @@ export class RepresentativesComponent implements OnInit {
 					reuslt.delegatedWeight = rep.weight;
 					reuslt.accounts = rep.accounts;
 
-					return res;
+					return reuslt;
 				})
 			)
 		);
@@ -238,16 +238,11 @@ export class RepresentativesComponent implements OnInit {
 
 	async getOnlineRepresentatives() {
 		const representatives = [];
-		try {
-			const reps = await this.api.representativesOnline();
-			for (const representative in reps.representatives) {
-				if (!reps.representatives.hasOwnProperty(representative)) {
-					continue;
-				}
-				representatives.push(representative);
+		const reps = await this.api.representativesOnline();
+		if (reps.result) {
+			for (const rep of reps.result) {
+				representatives.push(rep);
 			}
-		} catch (err) {
-			this.notifications.sendWarning(this.msg1);
 		}
 
 		return representatives;
@@ -345,7 +340,7 @@ export class RepresentativesComponent implements OnInit {
 		this.changingRepresentatives = true;
 
 		const valid = await this.api.validateAccountNumber(newRep);
-		if (!valid || valid.valid !== '1') {
+		if (!valid.result) {
 			this.changingRepresentatives = false;
 			return this.notifications.sendWarning(this.msg4);
 		}

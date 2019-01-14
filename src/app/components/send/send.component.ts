@@ -281,7 +281,7 @@ export class SendComponent implements OnInit {
 
 	async sendTransaction() {
 		const isValid = await this.api.validateAccountNumber(this.toAccountID);
-		if (!isValid || isValid.valid === '0') {
+		if (!isValid.result) {
 			return this.notificationService.sendWarning(this.msg2);
 		}
 		if (!this.fromAccountID || !this.toAccountID) {
