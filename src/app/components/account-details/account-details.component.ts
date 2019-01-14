@@ -180,10 +180,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 					this.pendingBlocks.push({
 						account: pending.pendingInfo.source,
 						amount: pending.pendingInfo.amount,
+						token: pending.tokenName,
 						// TODO: fill timestamp
 						// timestamp: accountPending.blocks[block].timestamp,
 						addressBookName: this.addressBook.getAccountName(pending.pendingInfo.source) || null,
-						hash: pending.block
+						hash: pending.hash
 					});
 				});
 			}

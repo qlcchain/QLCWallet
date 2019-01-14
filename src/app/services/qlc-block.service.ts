@@ -11,7 +11,7 @@ import { WalletService } from './wallet.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 const nacl = window['nacl'];
 
-const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000006';
+const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000000';
 
 @Injectable()
 export class QLCBlockService {
@@ -222,20 +222,33 @@ export class QLCBlockService {
 
 	signStateBlock(stateBlock, keyPair) {
 		const context = blake.blake2bInit(32, null);
+		// console.log('type: ' + this.util.hex.fromUint8(this.util.hex.toUint8(STATE_BLOCK_PREAMBLE)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(STATE_BLOCK_PREAMBLE));
+		// console.log(
+		// 	'address: ' +
+		// 		this.util.hex.fromUint8(this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.address)))
+		// );
 		blake.blake2bUpdate(context, this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.address)));
+		// console.log('previous: ' + this.util.hex.fromUint8(this.util.hex.toUint8(stateBlock.previous)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.previous));
+		// console.log('token: ' + this.util.hex.fromUint8(this.util.hex.toUint8(stateBlock.token)));
+		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token));
+		// console.log('rep: ' + this.util.hex.fromUint8(this.util.account.getAccountPublicKey(stateBlock.representative)));
 		blake.blake2bUpdate(
 			context,
 			this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.representative))
 		);
 
 		const balance = new BigNumber(stateBlock.balance).toString(16);
+		// console.log('balance: ' + this.util.hex.fromUint8(this.util.hex.toUint8(balance)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(balance));
+		// console.log('link: ' + this.util.hex.fromUint8(this.util.hex.toUint8(stateBlock.link)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.link));
+		// console.log('extra: ' + this.util.hex.fromUint8(this.util.hex.toUint8(stateBlock.extra)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.extra));
-		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token));
 		const hashBytes = blake.blake2bFinal(context);
+		// console.log('block hash >>> ' + this.util.hex.fromUint8(hashBytes));
+
 		const privKey = keyPair.secretKey;
 		const signed = nacl.sign.detached(hashBytes, privKey);
 		const signature = this.util.hex.fromUint8(signed);

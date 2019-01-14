@@ -97,7 +97,7 @@ function uint4ToUint5(uintValue) {
 function uint4ToHex(uint4) {
 	let hex = '';
 	for (let i = 0; i < uint4.length; i++) {
-		hex += uint4[i].toString(16).toUpperCase();
+		hex += uint4[i].toString(16);
 	}
 	return hex;
 }
@@ -132,7 +132,7 @@ function uint8ToHex(uintValue) {
 	let hex = '';
 	let aux;
 	for (let i = 0; i < uintValue.length; i++) {
-		aux = uintValue[i].toString(16).toUpperCase();
+		aux = uintValue[i].toString(16);
 		if (aux.length === 1) {
 			aux = '0' + aux;
 		}
