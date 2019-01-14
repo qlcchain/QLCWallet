@@ -54,14 +54,15 @@ function hexToUint4(hexValue) {
 
 	return uint4;
 }
-function hexToUint8(hexValue) {
-	const length = (hexValue.length / 2) | 0;
-	const uint8 = new Uint8Array(length);
-	for (let i = 0; i < length; i++) {
-		uint8[i] = parseInt(hexValue.substr(i * 2, 2), 16);
+function hexToUint8(hexString) {
+	if (hexString.length % 2 > 0) {
+		hexString = '0' + hexString;
 	}
-
-	return uint8;
+	const byteArray = [];
+	for (let i = 0; i < hexString.length; i += 2) {
+		byteArray.push(parseInt(hexString.slice(i, i + 2), 16));
+	}
+	return Uint8Array.from(byteArray);
 }
 
 /** Uint4 Functions **/

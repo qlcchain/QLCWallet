@@ -167,27 +167,34 @@ export class QLCBlockService {
 
 	async generateReceive(walletAccount, sourceBlock, ledger = false) {
 		const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
-		const srcFullBlockInfo = srcBlockInfo.result[sourceBlock];
-		srcFullBlockInfo.block = JSON.parse(srcFullBlockInfo.contents);
-		const srcAmount = new BigNumber(srcBlockInfo.result[sourceBlock].amount);
-		const tokenTypeHash = srcFullBlockInfo.block.token;
+		if (srcBlockInfo && !srcBlockInfo.error && srcBlockInfo.result.length > 0) {
+			console.log('find block info of ' + sourceBlock);
+		} else {
+			console.log('can not find block info of ' + sourceBlock);
+			return null;
+		}
+		const sendBlock = srcBlockInfo.result[0];
+
+		const srcAmount = new BigNumber(sendBlock.amount);
+		const tokenTypeHash = sendBlock.token;
 
 		const toAcct = await this.api.accountInfoByToken(walletAccount.id, tokenTypeHash);
-
-		let blockData: any = {};
-		let workBlock = null;
-
 		const openEquiv = !toAcct || !toAcct.header;
-
 		const previousBlock = !openEquiv ? toAcct.header : this.zeroHash;
-		const representative = !openEquiv ? toAcct.representative : this.representativeAccount;
+		const representative = !openEquiv ? toAcct.rep : this.representativeAccount;
 		const newBalanceDecimal = openEquiv ? srcAmount : new BigNumber(toAcct.balance).plus(srcAmount).toString(10);
 
 		// We have everything we need, we need to obtain a signature
 		const signature = null;
 
-		workBlock = openEquiv ? this.util.account.getAccountPublicKey(walletAccount.id) : previousBlock;
-		blockData = {
+		const workBlock = openEquiv ? this.util.account.getAccountPublicKey(walletAccount.id) : previousBlock;
+		if (!this.workPool.workExists(workBlock)) {
+			this.notifications.sendInfo(this.msg3);
+		}
+
+		const work = await this.workPool.getWork(workBlock);
+		console.log('receive block: ' + work);
+		const blockData = {
 			type: 'State',
 			address: walletAccount.id,
 			previous: previousBlock,
@@ -196,25 +203,21 @@ export class QLCBlockService {
 			token: tokenTypeHash,
 			link: sourceBlock,
 			extra: this.zeroHash,
-			signature: signature,
-			work: null
+			work: work,
+			signature: signature
 		};
 
 		if (!signature) {
 			blockData.signature = this.signStateBlock(blockData, walletAccount.keyPair);
 		}
 
-		if (!this.workPool.workExists(workBlock)) {
-			this.notifications.sendInfo(this.msg3);
-		}
-
-		blockData.work = await this.workPool.getWork(workBlock);
 		const processResponse = await this.api.process(blockData);
 		if (processResponse && processResponse.result) {
-			walletAccount.header = processResponse.result;
+			const header = processResponse.result;
+			walletAccount.header = header;
 			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
 			this.workPool.removeFromCache(workBlock);
-			return processResponse.result;
+			return header;
 		} else {
 			return null;
 		}
@@ -233,14 +236,19 @@ export class QLCBlockService {
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.previous));
 		// console.log('token: ' + this.util.hex.fromUint8(this.util.hex.toUint8(stateBlock.token)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.token));
-		// console.log('rep: ' + this.util.hex.fromUint8(this.util.account.getAccountPublicKey(stateBlock.representative)));
+		// console.log(
+		// 	'rep: ' +
+		// 		this.util.hex.fromUint8(this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.representative)))
+		// );
 		blake.blake2bUpdate(
 			context,
 			this.util.hex.toUint8(this.util.account.getAccountPublicKey(stateBlock.representative))
 		);
 
 		const balance = new BigNumber(stateBlock.balance).toString(16);
-		// console.log('balance: ' + this.util.hex.fromUint8(this.util.hex.toUint8(balance)));
+		// console.log(
+		// 	`balance:  ${stateBlock.balance}(${balance}) >>> ${this.util.hex.fromUint8(this.util.hex.toUint8(balance))}(${this.util.hex.toUint8(balance)})}`
+		// );
 		blake.blake2bUpdate(context, this.util.hex.toUint8(balance));
 		// console.log('link: ' + this.util.hex.fromUint8(this.util.hex.toUint8(stateBlock.link)));
 		blake.blake2bUpdate(context, this.util.hex.toUint8(stateBlock.link));

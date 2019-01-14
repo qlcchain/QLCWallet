@@ -743,7 +743,7 @@ export class WalletService {
 			}
 
 			pendingResult[account].forEach(pending => {
-				this.addPendingBlock(account, pending.block, pending.pendingInfo.amount, pending.pendingInfo.type);
+				this.addPendingBlock(account, pending.hash, pending.pendingInfo.amount, pending.pendingInfo.type);
 			});
 		}
 
@@ -775,7 +775,7 @@ export class WalletService {
 			}
 			this.successfulBlocks.push(nextBlock.hash);
 
-			const receiveAmount = this.util.qlc.rawToMqlc(nextBlock.amount);
+			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
 			this.notifications.sendSuccess(
 				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} QLC!`
 			);

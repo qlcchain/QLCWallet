@@ -110,6 +110,9 @@ export class ApiService {
 	//TODO: remove token hash
 	async accountInfoByToken(account, tokenHash = this.qlcTokenHash): Promise<any> {
 		const am = await this.accountInfo(account);
+		if (am.error) {
+			return null;
+		}
 		const tokens = am.result.tokens;
 
 		return Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === tokenHash)[0] : null;

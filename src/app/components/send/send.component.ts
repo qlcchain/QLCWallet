@@ -356,7 +356,7 @@ export class SendComponent implements OnInit {
 			);
 			// console.log('hash >>>> ' + newHash);
 			if (newHash) {
-				this.notificationService.sendSuccess(this.msg11 + ` ${this.amount} ${this.selectedToken.token}!`);
+				this.notificationService.sendSuccess(this.msg11 + ` ${this.amount} ${this.selectedToken.tokenInfo.tokenName}!`);
 				this.activePanel = 'send';
 				this.amount = null;
 				this.amountFiat = null;

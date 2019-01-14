@@ -105,7 +105,7 @@ export class ReceiveComponent implements OnInit {
 
 			pendingResult[account].forEach(pending => {
 				const pendingTx = {
-					block: pending.block,
+					block: pending.hash,
 					amount: pending.pendingInfo.amount,
 					source: pending.pendingInfo.source,
 					tokenName: pending.tokenName,
@@ -164,7 +164,7 @@ export class ReceiveComponent implements OnInit {
 		pendingBlock.loading = true;
 
 		const newBlock = await this.qlcBlock.generateReceive(walletAccount, sendBlock, this.walletService.isLedgerWallet());
-
+		// console.log('receive block hash >>> ' + newBlock);
 		if (newBlock) {
 			this.notificationService.sendSuccess(this.msg3 + ` ` + pendingBlock.tokenName);
 		} else {
