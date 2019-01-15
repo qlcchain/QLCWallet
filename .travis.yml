@@ -1,10 +1,10 @@
 language: node_js
 node_js:
-- node
+  - node
 sudo: false
 cache:
   directories:
-  - node_modules
+    - node_modules
 
 install:
   - npm i -g npm
@@ -14,12 +14,11 @@ install:
 script:
   - ng lint
   - npm run wallet:build
-
-deploy:
-  provider: releases
-  api_key:
-    secure: VPuFJt6nDXXZspC9briguG9IXrkD0i2fBLgJbzJrjCsG0grI/2r+WQJta/7edNp61AHzHfLwr/gEcLqpKfJ+eoK1U4NevF5nMKBZnndAQVnBuu6ycPxI/yaO1QbzassprnGz7uGu5pL1uKmyMS6AZ9MDLsA1qg2+rEUF0/v9HC7gArs4EnbN3jwMmd4pII95M7LuWLBPVlY5u6DSaiAlOKddLYiY24hSHMfxxLi8uTuZ+OHOHyPQk1KLjttIE1Ve3K8J+nb1iY3nVBVX6l7/vU7A9JuNFIAQUkuLf8NfZFM+o11v0wIwJ3J5l+6US1u7QXHna9hjvqRHavMhA8tqKjrin9fFRtir5dIs126K6TeaFGs1mIUCqwVUcvbNJU2xw8iapaXx8LP4ugrbQgTsMWC0eKIyMWodtqgJuTWart5OdDLkl/CftCezvETCAkfDXycFoWCCZXS5ik34JCt7udcOKZoPcYcH/0fxoXgM7jg8jPb4AG+Z+8tSHD7RNDSqRtnnIfAQuEzKRvaRm9mPCTTtpHrv8xVJxcwQ3QLo4HRiCh5hjf2pM4dFgWB3IQ4H2tK3o1ERXUg56vOuH8b8g1znSte/reVLU10IZiA+tE/ulfppxipGUCHCDOdt7csFg8oqcZJLs14sbXGcpFnsMj8UCdj/M7auZAMHsjLWe8g=
-  file_glob: true
-  file: dist/*
-  on:
-    tags: true
+# deploy:
+#   provider: releases
+#   api_key:
+#     secure: VPuFJt6nDXXZspC9briguG9IXrkD0i2fBLgJbzJrjCsG0grI/2r+WQJta/7edNp61AHzHfLwr/gEcLqpKfJ+eoK1U4NevF5nMKBZnndAQVnBuu6ycPxI/yaO1QbzassprnGz7uGu5pL1uKmyMS6AZ9MDLsA1qg2+rEUF0/v9HC7gArs4EnbN3jwMmd4pII95M7LuWLBPVlY5u6DSaiAlOKddLYiY24hSHMfxxLi8uTuZ+OHOHyPQk1KLjttIE1Ve3K8J+nb1iY3nVBVX6l7/vU7A9JuNFIAQUkuLf8NfZFM+o11v0wIwJ3J5l+6US1u7QXHna9hjvqRHavMhA8tqKjrin9fFRtir5dIs126K6TeaFGs1mIUCqwVUcvbNJU2xw8iapaXx8LP4ugrbQgTsMWC0eKIyMWodtqgJuTWart5OdDLkl/CftCezvETCAkfDXycFoWCCZXS5ik34JCt7udcOKZoPcYcH/0fxoXgM7jg8jPb4AG+Z+8tSHD7RNDSqRtnnIfAQuEzKRvaRm9mPCTTtpHrv8xVJxcwQ3QLo4HRiCh5hjf2pM4dFgWB3IQ4H2tK3o1ERXUg56vOuH8b8g1znSte/reVLU10IZiA+tE/ulfppxipGUCHCDOdt7csFg8oqcZJLs14sbXGcpFnsMj8UCdj/M7auZAMHsjLWe8g=
+#   file_glob: true
+#   file: dist/*
+#   on:
+#     tags: true
