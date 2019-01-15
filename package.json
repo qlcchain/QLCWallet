@@ -1,6 +1,6 @@
 {
 	"name": "qlcwallet",
-	"version": "1.0.0",
+	"version": "2.0.1",
 	"license": "MIT",
 	"description": "Wallet for interacting with QLC Chain",
 	"author": {
@@ -120,7 +120,7 @@
 	},
 	"build": {
 		"appId": "org.qlcchain.qlcwallet",
-		"buildVersion": "1.0.0",
+		"buildVersion": "2.0.1",
 		"productName": "QLCWallet",
 		"asar": true,
 		"directories": {
