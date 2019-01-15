@@ -30,7 +30,7 @@ import { WorkPoolService } from './services/work-pool.service';
 import { ConfigureAppComponent } from './components/configure-app/configure-app.component';
 import { AppSettingsService } from './services/app-settings.service';
 
-import { WebsocketService } from './services/websocket.service';
+// import { WebsocketService } from './services/websocket.service';
 import { QLCBlockService } from './services/qlc-block.service';
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
 import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
@@ -45,7 +45,7 @@ import { RepresentativesComponent } from './components/representatives/represent
 import { RepresentativeService } from './services/representative.service';
 import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
 import { NodeService } from './services/node.service';
-import { LedgerService } from './services/ledger.service';
+// import { LedgerService } from './services/ledger.service';
 
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -55,8 +55,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { NavComponent } from './components/nav/nav.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 
-import { NgxAnalyticsModule } from 'ngx-analytics';
-import { NgxAnalyticsGoogleAnalytics } from 'ngx-analytics/ga';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
@@ -114,7 +112,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ModalModule.forRoot(),
 		AlertModule.forRoot(),
 		DeviceDetectorModule.forRoot(),
-		NgxAnalyticsModule.forRoot([NgxAnalyticsGoogleAnalytics]),
 		LoggerModule.forRoot({
 			serverLoggingUrl: `${environment.apiUrl}/logs`,
 			// serverLoggingUrl: `http://localhost:8888/logs`,
@@ -132,13 +129,13 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ModalService,
 		WorkPoolService,
 		AppSettingsService,
-		WebsocketService,
+		// WebsocketService,
 		QLCBlockService,
 		PriceService,
 		PowService,
 		RepresentativeService,
-		NodeService,
-		LedgerService
+		NodeService
+		// LedgerService
 	],
 	bootstrap: [AppComponent]
 })

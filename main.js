@@ -1,11 +1,59 @@
 const { app, BrowserWindow, shell, Menu, protocol, webFrame } = require('electron');
 // const autoUpdater = require('electron-updater').autoUpdater;
+const { Console } = require('console');
+const is = require('electron-util');
+const toExecutableName = require('to-executable-name');
 const url = require('url');
 const path = require('path');
+const crossSpawn = require('cross-spawn');
+const signalExit = require('signal-exit');
+
+const basePath = is.development ? __dirname : path.join(process.resourcesPath, 'app.asar.unpacked', 'ember-electron');
+global.resourcesPath = path.normalize(path.join(basePath, 'resources'));
 
 app.setAsDefaultProtocolClient('qlc'); // Register handler for xrb: links
 
 let mainWindow;
+
+const forceKill = (child, timeout = 5000) => {
+	if (!child.killed) {
+		child.kill();
+	}
+
+	if (child.stdin) {
+		child.stdin.destroy();
+	}
+
+	if (child.stdout) {
+		child.stdout.destroy();
+	}
+
+	if (child.stderr) {
+		child.stderr.destroy();
+	}
+
+	const { pid } = child;
+	child.unref();
+
+	const interval = 500;
+	function poll() {
+		try {
+			process.kill(pid, 0);
+			setTimeout(() => {
+				try {
+					process.kill(pid, 'SIGKILL');
+					console.log('Forcefully killed process PID:', pid);
+				} catch (e) {
+					setTimeout(poll, interval);
+				}
+			}, timeout);
+		} catch (e) {
+			// ignore
+		}
+	}
+
+	return setTimeout(poll, interval);
+};
 
 function createWindow() {
 	// Create the browser window.
@@ -53,6 +101,39 @@ app.on('ready', () => {
 	// Once the app is ready, launch the wallet window
 	createWindow();
 
+	// start gqlc
+	// console.log(`path: ${global.resourcesPath}`);
+	// const cmd = path.join(global.resourcesPath, toExecutableName('gqlc'));
+	// console.log(`starg qglc ${cmd}`);
+	// const child = crossSpawn(cmd, {
+	// 	windowsHide: true,
+	// 	stdio: ['ignore', 'pipe', 'pipe']
+	// });
+
+	// if (!child) {
+	// 	const err = new Error('gqlc not started');
+	// 	err.code = 'ENOENT';
+	// 	err.path = cmd;
+	// 	throw err;
+	// }
+
+	// child.stdout.on('data', data => console.log('[node]', String(data).trim()));
+	// child.stderr.on('data', data => console.log('[node]', String(data).trim()));
+
+	// console.log(`start gqlc, ${child}`);
+
+	// const killHandler = () => child.kill();
+	// const removeExitHandler = signalExit(killHandler);
+	// child.once('exit', () => {
+	// 	removeExitHandler();
+	// 	global.isNodeStarted = false;
+	// 	console.log(`Node exiting (PID ${pid})`);
+	// 	forceKill(child);
+	// });
+
+	// app.once('will-quit', killHandler);
+	// child.once('exit', () => app.removeListener('will-quit', killHandler));
+
 	// Detect when the application has been loaded using an xrb: link, send it to the wallet to load
 	app.on('open-url', (event, path) => {
 		if (!mainWindow) {
@@ -79,7 +160,9 @@ app.on('ready', () => {
 app.on('window-all-closed', function() {
 	// On OS X it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
+
 	if (process.platform !== 'darwin') {
+		// close gqlc
 		app.quit();
 	}
 });

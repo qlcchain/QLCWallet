@@ -85,73 +85,62 @@ export class ReceiveComponent implements OnInit {
 	}
 
 	async loadPendingForAll() {
+		return this.loadPendingByAccounts(this.accounts.map(a => a.id));
+	}
+
+	async loadPendingByAccounts(accounts) {
 		this.pendingBlocks = [];
 
-		const pending = await this.api.accountsPending(this.accounts.map(a => a.id));
-		if (!pending || !pending.blocks) {
+		const accoutsPending = await this.api.accountsPending(accounts);
+		if (accoutsPending.error) {
 			return;
 		}
 
-		for (const account in pending.blocks) {
-			if (!pending.blocks.hasOwnProperty(account)) {
+		const pendingResult = accoutsPending.result;
+
+		for (const account in pendingResult) {
+			if (!pendingResult.hasOwnProperty(account)) {
 				continue;
 			}
-			for (const block in pending.blocks[account]) {
-				if (!pending.blocks[account].hasOwnProperty(block)) {
-					continue;
-				}
+
+			pendingResult[account].forEach(pending => {
 				const pendingTx = {
-					block: block,
-					amount: pending.blocks[account][block].amount,
-					source: pending.blocks[account][block].source,
-					tokenName: pending.blocks[account][block].token,
-					token: pending.blocks[account][block].token_hash,
+					block: pending.hash,
+					amount: pending.pendingInfo.amount,
+					source: pending.pendingInfo.source,
+					tokenName: pending.tokenName,
+					token: pending.type,
 					account: account
 				};
 				// Account should be one of ours, so we should maybe know the frontier block for it?
 				this.pendingBlocks.push(pendingTx);
-			}
+			});
 		}
 
 		// Now, only if we have results, do a unique on the account names, and run account info on all of them?
 		if (this.pendingBlocks.length) {
-			const frontiers = await this.api.accountsFrontiers(this.pendingBlocks.map(p => p.account));
-			if (frontiers && frontiers.frontiers) {
-				for (const account in frontiers.frontiers) {
-					if (frontiers.frontiers.hasOwnProperty(account)) {
-						const token_frontiers = frontiers.frontiers[account];
-						Object.keys(token_frontiers).map(token_account => {
-							const latest_block_hash = token_frontiers[token_account];
-							this.logger.debug(
-								`[loadPendingForAll]: cache work ${latest_block_hash} of token_account ${token_account} in ${account}`
-							);
-							this.workPool.addWorkToCache(latest_block_hash);
-						});
+			const accountsFrontier = await this.api.accountsFrontiers(this.pendingBlocks.map(p => p.account));
+			if (!accountsFrontier.error) {
+				const frontierResult = accountsFrontier.result;
+				for (const account in frontierResult) {
+					if (!frontierResult.hasOwnProperty(account)) {
+						continue;
 					}
+					const tokensFrontierMap = frontierResult[account];
+					Object.keys(tokensFrontierMap).map(tokenType => {
+						const latestBlockHash = tokensFrontierMap[tokenType];
+						this.logger.debug(
+							`[loadPendingForAll]: cache work ${latestBlockHash} of token_account ${tokenType} in ${account}`
+						);
+						this.workPool.addWorkToCache(latestBlockHash);
+					});
 				}
 			}
 		}
 	}
 
 	async loadPendingForAccount(account) {
-		this.pendingBlocks = [];
-
-		const pending = await this.api.pending(account, 50);
-		if (!pending || !pending.blocks) {
-			return;
-		}
-
-		Object.keys(pending.blocks).map(block => {
-			const pendingTx = {
-				block: block,
-				amount: pending.blocks[block].amount,
-				source: pending.blocks[block].source,
-				tokenName: pending.blocks[block].token,
-				token: pending.blocks[block].token_hash,
-				account: account
-			};
-			this.pendingBlocks.push(pendingTx);
-		});
+		return this.loadPendingByAccounts([account]);
 	}
 
 	async getPending(account) {
@@ -163,7 +152,8 @@ export class ReceiveComponent implements OnInit {
 	}
 
 	async receivePending(pendingBlock) {
-		const sourceBlock = pendingBlock.block;
+		const sendBlock = pendingBlock.block;
+		if (!sendBlock) return;
 		const walletAccount = this.walletService.wallet.accounts.find(a => a.id === pendingBlock.account);
 		if (!walletAccount) {
 			throw new Error(this.msg1);
@@ -174,12 +164,8 @@ export class ReceiveComponent implements OnInit {
 		}
 		pendingBlock.loading = true;
 
-		const newBlock = await this.qlcBlock.generateReceive(
-			walletAccount,
-			sourceBlock,
-			this.walletService.isLedgerWallet()
-		);
-
+		const newBlock = await this.qlcBlock.generateReceive(walletAccount, sendBlock, this.walletService.isLedgerWallet());
+		// console.log('receive block hash >>> ' + newBlock);
 		if (newBlock) {
 			this.notificationService.sendSuccess(this.msg3 + ` ` + pendingBlock.tokenName);
 		} else {
