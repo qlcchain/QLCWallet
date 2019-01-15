@@ -168,9 +168,9 @@ export class QLCBlockService {
 	async generateReceive(walletAccount, sourceBlock, ledger = false) {
 		const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
 		if (srcBlockInfo && !srcBlockInfo.error && srcBlockInfo.result.length > 0) {
-			console.log('find block info of ' + sourceBlock);
+			// console.log('find block info of ' + sourceBlock);
 		} else {
-			console.log('can not find block info of ' + sourceBlock);
+			// console.log('can not find block info of ' + sourceBlock);
 			return null;
 		}
 		const sendBlock = srcBlockInfo.result[0];

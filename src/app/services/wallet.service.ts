@@ -520,20 +520,8 @@ export class WalletService {
 		// 	.toNumber();
 	}
 
-	// FIXME: show by token type
 	async reloadBalances(reloadPending = true) {
-		// const fiatPrice = this.price.price.lastPrice;
-		// this.wallet.balance = new BigNumber(0);
-		// this.wallet.pending = new BigNumber(0);
-		// this.wallet.pendingCount = 0;
-		// this.wallet.balanceRaw = new BigNumber(0);
-		// this.wallet.pendingRaw = new BigNumber(0);
-		// this.wallet.balanceFiat = 0;
-		// this.wallet.pendingFiat = 0;
-		// const accountIds = this.wallet.accounts.map(a => a.id);
-
-		// const accountsBalance = await this.api.accountsBalances(accountIds);
-		// const accountsFrontier = await this.api.accountsFrontiers(accountIds);
+		this.wallet.pendingCount = 0;
 		const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 		if (!accountsPending.error) {
 			const pendingResult = accountsPending.result;
@@ -544,6 +532,8 @@ export class WalletService {
 				this.wallet.pendingCount += pendingResult[account].length;
 			}
 		}
+
+		// console.log('pendingCount >>> ' + this.wallet.pendingCount);
 
 		const tokenMap = {};
 		const tokens = await this.api.tokens();
@@ -587,21 +577,6 @@ export class WalletService {
 			}
 		});
 		hashes.forEach(hash => this.workPool.addWorkToCache(hash));
-
-		// this.wallet.balance = walletBalance;
-		// this.wallet.pending = walletPending;
-
-		// this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.qlc);
-		// this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.qlc);
-
-		// this.wallet.balanceFiat = this.util.qlc
-		// 	.rawToMqlc(walletBalance)
-		// 	.times(fiatPrice)
-		// 	.toNumber();
-		// this.wallet.pendingFiat = this.util.qlc
-		// 	.rawToMqlc(walletPending)
-		// 	.times(fiatPrice)
-		// 	.toNumber();
 
 		// If there is a pending balance, search for the actual pending transactions
 		if (reloadPending && this.wallet.pendingCount > 0) {

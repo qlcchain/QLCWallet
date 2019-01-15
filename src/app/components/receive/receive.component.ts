@@ -153,6 +153,7 @@ export class ReceiveComponent implements OnInit {
 
 	async receivePending(pendingBlock) {
 		const sendBlock = pendingBlock.block;
+		if (!sendBlock) return;
 		const walletAccount = this.walletService.wallet.accounts.find(a => a.id === pendingBlock.account);
 		if (!walletAccount) {
 			throw new Error(this.msg1);
