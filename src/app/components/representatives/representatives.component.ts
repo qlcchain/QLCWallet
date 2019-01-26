@@ -179,7 +179,7 @@ export class RepresentativesComponent implements OnInit {
 					const tokenMetas = reuslt.tokens;
 					const qlcTokenMeta = tokenMetas.filter(tm => tm.type === this.api.qlcTokenHash)[0];
 					if (qlcTokenMeta !== undefined) {
-						reuslt.representative = qlcTokenMeta.rep;
+						reuslt.representative = qlcTokenMeta.representative;
 						reuslt.balance = qlcTokenMeta.balance;
 						this.logger.debug(`${account.id} resp: ${reuslt.representative} balance: ${reuslt.balance}`);
 					} else {
