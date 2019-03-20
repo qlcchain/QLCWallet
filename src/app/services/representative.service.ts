@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class RepresentativeService {
 	storeKey = `qlcwallet-representatives`;
 
@@ -13,13 +15,33 @@ export class RepresentativeService {
 	// Default representatives list
 	defaultRepresentatives = [
 		{
-			id: 'qlc_3oftfjxu9x9pcjh1je3xfpikd441w1wo313qjc6ie1es5aobwed5x4pjojic',
+			id: 'qlc_1t1uynkmrs597z4ns6ymppwt65baksgdjy1dnw483ubzm97oayyo38ertg44',
 			name: 'QLCChain genesis Rep',
 			trusted: true
 		},
 		{
-			id: 'qlc_371pkh5kkd1dn43cwxnbb1a4yg363rh9un9a13kkezbcppuicejxgixyyrrw',
-			name: 'QLCChain Wallet Rep',
+			id: 'qlc_13y4fhit91okrjej7593ufbdbb96fh91rpg9byirg47yg9k9q7yxmhmebkrr',
+			name: 'QLCChain Wallet Rep 1',
+			trusted: true
+		},
+		{
+			id: 'qlc_16itxekp4tfd415jzghfbyigujdtstn4jz6s19ne965am4jq91nx9yuz9wca',
+			name: 'QLCChain Wallet Rep 2',
+			trusted: true
+		},
+		{
+			id: 'qlc_359bm4fjhfp9ayxnugw49mdytjjfq9dyty6taugonsfc33cza48b1p4kis5b',
+			name: 'QLCChain Wallet Rep 3',
+			trusted: true
+		},
+		{
+			id: 'qlc_3becyh5w8qzmesd6a75yh1azneotjjgfpj1hkfi9zrj7fuf9cyr7qy5wt1fc',
+			name: 'QLCChain Wallet Rep 4',
+			trusted: true
+		},
+		{
+			id: 'qlc_3nygrrfooudn69uw6sbqr3nkcyndta4oqy4938t1eqxr6yjtpi3fndad1gr7',
+			name: 'QLCChain Wallet Rep 5',
 			trusted: true
 		}
 	];

@@ -92,7 +92,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 		});
 
 		await this.loadAccountDetails();
-		// console.log(this.accountHistory);
+
 		this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
 			this.loadLang();
 		});
@@ -100,31 +100,24 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
 	loadLang() {
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg1').subscribe((res: string) => {
-			// console.log(res);
 			this.msg1 = res;
 		});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg2').subscribe((res: string) => {
-			// console.log(res);
 			this.msg2 = res;
 		});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg3').subscribe((res: string) => {
-			// console.log(res);
 			this.msg3 = res;
 		});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg4').subscribe((res: string) => {
-			// console.log(res);
 			this.msg4 = res;
 		});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {
-			// console.log(res);
 			this.msg5 = res;
 		});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {
-			// console.log(res);
 			this.msg6 = res;
 		});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg7').subscribe((res: string) => {
-			// console.log(res);
 			this.msg7 = res;
 		});
 	}
@@ -178,12 +171,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 				}
 				pendingResult[account].forEach(pending => {
 					this.pendingBlocks.push({
-						account: pending.pendingInfo.source,
-						amount: pending.pendingInfo.amount,
+						account: pending.source,
+						amount: pending.amount,
 						token: pending.tokenName,
 						// TODO: fill timestamp
 						// timestamp: accountPending.blocks[block].timestamp,
-						addressBookName: this.addressBook.getAccountName(pending.pendingInfo.source) || null,
+						addressBookName: this.addressBook.getAccountName(pending.source) || null,
 						hash: pending.hash
 					});
 				});
@@ -238,7 +231,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 			const historyResult = accountHistory.result;
 			for (const block of historyResult) {
 				// For Open and receive blocks, we need to look up block info to get originating account
-				if (block.subType === 'open' || block.subType === 'receive') {
+				if (block.type === 'Open' || block.type === 'Receive') {
 					const preBlock = await this.api.blocksInfo([block.link]);
 					if (!preBlock.error) {
 						block.link_as_account = preBlock.result[0].address;
@@ -246,10 +239,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 				} else {
 					block.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(block.link));
 				}
-				block.addressBookName = this.addressBook.getAccountName(block.address) || null;
+				block.addressBookName = this.addressBook.getAccountName(block.link_as_account) || null;
 				this.accountHistory.push(block);
 			}
-			this.accountHistory = this.accountHistory.filter(h => h.subType !== 'change');
+			this.accountHistory = this.accountHistory.filter(h => h.type !== 'Change');
 		}
 	}
 

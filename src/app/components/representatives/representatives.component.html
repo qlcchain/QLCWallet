@@ -82,11 +82,13 @@
 						<select class="custom-select" [(ngModel)]="changeAccountID" (change)="newAccountID(changeAccountID)">
 							<option [value]="null">{{ 'REPRESENTATIVES.select_accounts_to_change' | translate }}</option>
 							<option [value]="'all'">{{ 'REPRESENTATIVES.all_accounts' | translate }}</option>
-							<option *ngFor="let account of wallet.wallet.accounts" [value]="account.id"
-								>{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id | squeeze }} ({{
-									account.balance | qlc: settings.settings.displayDenomination
-								}})</option
-							>
+							<ng-container *ngFor="let account of wallet.wallet.accounts">
+								<option [value]="account.id" *ngIf="account.balance > 0"
+									>{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id | squeeze }} ({{
+										account.balance | qlc: settings.settings.displayDenomination
+									}})
+								</option>
+							</ng-container>
 						</select>
 					</div>
 				</div>
@@ -94,7 +96,7 @@
 			<div class="row align-items-center rowContent autoHP py-3" *ngFor="let account of selectedAccounts">
 				<div class="col-md-2 px-0 pb-3 pb-md-0 d-none d-md-block text-truncate dataName"></div>
 				<div class="col-md-8 col-11 px-0 text-left text-truncate">
-					<span class="name" *ngIf="account.addressBookName">{{ account.addressBookName }}</span>
+					<span class="name" *ngIf="account.addressBookName">{{ account.addressBookName }} </span>
 					<span class="address">{{ account.id }}</span>
 				</div>
 				<div class="col-md-2 col-1 px-0 text-right">

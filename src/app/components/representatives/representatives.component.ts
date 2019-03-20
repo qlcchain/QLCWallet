@@ -173,19 +173,21 @@ export class RepresentativesComponent implements OnInit {
 		const walletAccountInfos = await Promise.all(
 			this.wallet.wallet.accounts.map(account =>
 				this.api.accountInfo(account.id).then(res => {
-					const reuslt = res.result;
-					reuslt.id = account.id;
-					reuslt.addressBookName = account.addressBookName;
-					const tokenMetas = reuslt.tokens;
-					const qlcTokenMeta = tokenMetas.filter(tm => tm.type === this.api.qlcTokenHash)[0];
-					if (qlcTokenMeta !== undefined) {
-						reuslt.representative = qlcTokenMeta.rep || qlcTokenMeta.representative;
-						reuslt.balance = qlcTokenMeta.balance;
-						this.logger.debug(`${account.id} resp: ${reuslt.representative} balance: ${reuslt.balance}`);
-					} else {
-						this.logger.debug(`${account.id} does not hold any Root_Token`);
+					if (res.result) {
+						const result = res.result;
+						result.id = account.id;
+						result.addressBookName = account.addressBookName;
+						const tokenMetas = result.tokens;
+						const qlcTokenMeta = tokenMetas.filter(tm => tm.type === this.api.qlcTokenHash)[0];
+						if (qlcTokenMeta !== undefined) {
+							result.representative = qlcTokenMeta.rep || qlcTokenMeta.representative;
+							result.balance = qlcTokenMeta.balance;
+							this.logger.debug(`${account.id} resp: ${result.representative} balance: ${result.balance}`);
+						} else {
+							this.logger.debug(`${account.id} does not hold any Root_Token`);
+						}
+						return result;
 					}
-					return reuslt;
 				})
 			)
 		);
@@ -197,13 +199,15 @@ export class RepresentativesComponent implements OnInit {
 		// Run an accountInfo call for each representative, carry on data.  The uglyness allows for them to run in parallel
 		const repInfos = await Promise.all(
 			representatives.map(rep =>
-				this.api.accountInfo(rep.id).then(res => {
-					const reuslt = res.result;
-					reuslt.account = rep.id;
-					reuslt.delegatedWeight = rep.weight;
-					reuslt.accounts = rep.accounts;
+				this.api.accountInfo(rep.id).then(async res => {
+					const result = res.result;
+					result.account = rep.id;
+					//result.delegatedWeight = rep.weight;
+					const votingWeight = await this.api.accountVotingWeight(rep.id);
+					result.delegatedWeight = votingWeight.result;
+					result.accounts = rep.accounts;
 
-					return reuslt;
+					return result;
 				})
 			)
 		);
@@ -238,7 +242,7 @@ export class RepresentativesComponent implements OnInit {
 
 	async getOnlineRepresentatives() {
 		const representatives = [];
-		const reps = await this.api.representativesOnline();
+		const reps = await this.api.onlineRepresentatives();
 		if (reps.result) {
 			for (const rep of reps.result) {
 				representatives.push(rep);
@@ -257,7 +261,7 @@ export class RepresentativesComponent implements OnInit {
 		setTimeout(() => this.repInput.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 	}
 
-	newAccountID(accountID) {
+	async newAccountID(accountID) {
 		const newAccount = accountID || this.changeAccountID;
 		if (!newAccount) {
 			return; // Didn't select anything
@@ -279,7 +283,7 @@ export class RepresentativesComponent implements OnInit {
 		if (newAccount === 'all') {
 			this.selectedAccounts.push({ id: 'All Accounts' });
 		} else {
-			const walletAccount = this.wallet.getWalletAccount(newAccount);
+			const walletAccount = await this.wallet.getWalletAccount(newAccount);
 			this.selectedAccounts.push(walletAccount);
 		}
 
@@ -295,7 +299,7 @@ export class RepresentativesComponent implements OnInit {
 		const search = this.toRepresentativeID || '';
 		const representatives = this.representativeService.getSortedRepresentatives();
 
-		const matches = representatives.filter(a => a.name.toLowerCase().indexOf(search.toLowerCase()) !== -1).slice(0, 5);
+		const matches = representatives.filter(a => a.name.toLowerCase().indexOf(search.toLowerCase()) !== -1);
 
 		this.representativeResults$.next(matches);
 	}
@@ -371,7 +375,11 @@ export class RepresentativesComponent implements OnInit {
 
 		// Now loop and change them
 		for (const account of accountsNeedingChange) {
-			const walletAccount = this.wallet.getWalletAccount(account.id);
+			console.log('account');
+			console.log(account);
+			const walletAccount = await this.wallet.getWalletAccount(account.id);
+			console.log('walletAccount');
+			console.log(walletAccount);
 			if (!walletAccount) {
 				continue; // Unable to find account in the wallet? wat?
 			}
@@ -393,7 +401,7 @@ export class RepresentativesComponent implements OnInit {
 		this.changingRepresentatives = false;
 
 		this.notifications.sendSuccess(this.msg10);
-
+		this.searchRepresentatives();
 		await this.loadRepresentativeOverview();
 	}
 }

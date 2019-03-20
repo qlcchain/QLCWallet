@@ -11,8 +11,9 @@ import { AppSettingsService } from '../../services/app-settings.service';
 import { QLCBlockService } from '../../services/qlc-block.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { interval } from 'rxjs';
-const nacl = window['nacl'];
+import { interval, timer } from 'rxjs';
+import { NodeService } from '../../services/node.service';
+import { AddressBookService } from '../../services/address-book.service';
 
 @Component({
 	selector: 'app-receive',
@@ -25,13 +26,13 @@ export class ReceiveComponent implements OnInit {
 	pendingAccountModel = 0;
 	pendingBlocks = [];
 
-	private refreshInterval$ = interval(1000);
-
 	msg1 = '';
 	msg2 = '';
 	msg3 = '';
 	msg4 = '';
 	msg5 = '';
+
+	private refreshInterval$ = interval(1000);
 
 	constructor(
 		private walletService: WalletService,
@@ -43,17 +44,18 @@ export class ReceiveComponent implements OnInit {
 		private qlcBlock: QLCBlockService,
 		private util: UtilService,
 		private trans: TranslateService,
-		private logger: NGXLogger
+		private logger: NGXLogger,
+		private node: NodeService,
+		private addressBook: AddressBookService
 	) {
 		this.loadLang();
 	}
 
 	async ngOnInit() {
-		await this.loadPendingForAll();
 		this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
 			this.loadLang();
 		});
-
+		this.load();
 		this.refreshInterval$.subscribe(() => {
 			if (this.pendingBlocks.length !== this.walletService.wallet.pendingCount) {
 				this.loadPendingForAll();
@@ -61,25 +63,35 @@ export class ReceiveComponent implements OnInit {
 		});
 	}
 
+	load() {
+		if (this.node.status === true) {
+			this.loadPendingForAll();
+		} else {
+			this.reload();
+		}
+	}
+
+	async reload() {
+		const source = timer(200);
+		const abc = source.subscribe(async val => {
+			this.load();
+		});
+	}
+
 	loadLang() {
 		this.trans.get('RECEIVE_WARNINGS.msg1').subscribe((res: string) => {
-			// console.log(res);
 			this.msg1 = res;
 		});
 		this.trans.get('RECEIVE_WARNINGS.msg2').subscribe((res: string) => {
-			// console.log(res);
 			this.msg2 = res;
 		});
 		this.trans.get('RECEIVE_WARNINGS.msg3').subscribe((res: string) => {
-			// console.log(res);
 			this.msg3 = res;
 		});
 		this.trans.get('RECEIVE_WARNINGS.msg4').subscribe((res: string) => {
-			// console.log(res);
 			this.msg4 = res;
 		});
 		this.trans.get('RECEIVE_WARNINGS.msg5').subscribe((res: string) => {
-			// console.log(res);
 			this.msg5 = res;
 		});
 	}
@@ -95,7 +107,6 @@ export class ReceiveComponent implements OnInit {
 		if (accoutsPending.error) {
 			return;
 		}
-
 		const pendingResult = accoutsPending.result;
 
 		for (const account in pendingResult) {
@@ -106,11 +117,13 @@ export class ReceiveComponent implements OnInit {
 			pendingResult[account].forEach(pending => {
 				const pendingTx = {
 					block: pending.hash,
-					amount: pending.pendingInfo.amount,
-					source: pending.pendingInfo.source,
+					amount: pending.amount,
+					source: pending.source,
+					sourceAddressBookName: this.addressBook.getAccountName(pending.source) || null,
 					tokenName: pending.tokenName,
 					token: pending.type,
-					account: account
+					account: account,
+					accountAddressBookName: this.addressBook.getAccountName(account) || null
 				};
 				// Account should be one of ours, so we should maybe know the frontier block for it?
 				this.pendingBlocks.push(pendingTx);
@@ -118,7 +131,7 @@ export class ReceiveComponent implements OnInit {
 		}
 
 		// Now, only if we have results, do a unique on the account names, and run account info on all of them?
-		if (this.pendingBlocks.length) {
+		/*if (this.pendingBlocks.length) {
 			const accountsFrontier = await this.api.accountsFrontiers(this.pendingBlocks.map(p => p.account));
 			if (!accountsFrontier.error) {
 				const frontierResult = accountsFrontier.result;
@@ -136,7 +149,7 @@ export class ReceiveComponent implements OnInit {
 					});
 				}
 			}
-		}
+		}*/
 	}
 
 	async loadPendingForAccount(account) {
@@ -154,7 +167,7 @@ export class ReceiveComponent implements OnInit {
 	async receivePending(pendingBlock) {
 		const sendBlock = pendingBlock.block;
 		if (!sendBlock) return;
-		const walletAccount = this.walletService.wallet.accounts.find(a => a.id === pendingBlock.account);
+		const walletAccount = await this.walletService.getWalletAccount(pendingBlock.account);
 		if (!walletAccount) {
 			throw new Error(this.msg1);
 		}

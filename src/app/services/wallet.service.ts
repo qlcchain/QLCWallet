@@ -12,6 +12,7 @@ import { AppSettingsService } from './app-settings.service';
 import { PriceService } from './price.service';
 // import { LedgerService } from './ledger.service';
 import { NGXLogger } from 'ngx-logger';
+import { interval } from 'rxjs';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -24,6 +25,7 @@ export interface WalletAccount {
 	balance: BigNumber;
 	// pending: BigNumber;
 	pendingCount: number;
+	privateKey: string;
 	// balanceRaw: BigNumber;
 	// pendingRaw: BigNumber;
 	// balanceFiat: number;
@@ -49,7 +51,9 @@ export interface FullWallet {
 	password: string;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class WalletService {
 	qlc = 100000000;
 	storeKey = `qlc-wallet`;
@@ -75,6 +79,8 @@ export class WalletService {
 	processingPending = false;
 	pendingBlocks = [];
 	successfulBlocks = [];
+
+	private pendingRefreshInterval$ = interval(10000);
 
 	constructor(
 		private util: UtilService,
@@ -122,6 +128,23 @@ export class WalletService {
 		this.addressBook.addressBook$.subscribe(newAddressBook => {
 			this.reloadAddressBook();
 		});
+
+		this.pendingRefreshInterval$.subscribe(async () => {
+			// check every 10 sec for new pending transactions
+			let pendingCount = 0;
+			const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
+
+			if (!accountsPending.error) {
+				const pendingResult = accountsPending.result;
+				for (const account in pendingResult) {
+					if (!pendingResult.hasOwnProperty(account)) {
+						continue;
+					}
+					pendingCount += pendingResult[account].length;
+				}
+			}
+			this.wallet.pendingCount = pendingCount;
+		});
 	}
 
 	async processStateBlock(transaction) {
@@ -149,8 +172,16 @@ export class WalletService {
 		});
 	}
 
-	getWalletAccount(accountID) {
-		return this.wallet.accounts.find(a => a.id === accountID);
+	async getWalletAccount(accountID) {
+		const returnData: any = this.wallet.accounts.find(a => a.id === accountID);
+		if (returnData.privateKey === '' || returnData.privateKey == null) {
+			const keys = await this.api.accountCreate(this.wallet.seed, returnData.index);
+			if (keys.result) {
+				returnData.privateKey = keys.result.privKey;
+			}
+		}
+		return returnData;
+		//return this.wallet.accounts.find(a => a.id === accountID);
 	}
 
 	async loadStoredWallet() {
@@ -265,6 +296,7 @@ export class WalletService {
 		this.wallet.accounts.forEach(a => {
 			a.keyPair = null;
 			a.secret = null;
+			a.privateKey = null;
 		});
 
 		this.wallet.locked = true;
@@ -274,7 +306,7 @@ export class WalletService {
 
 		return true;
 	}
-	unlockWallet(password: string) {
+	async unlockWallet(password: string) {
 		try {
 			const decryptedBytes = CryptoJS.AES.decrypt(this.wallet.seed, password);
 			const decryptedSeed = decryptedBytes.toString(CryptoJS.enc.Utf8);
@@ -440,6 +472,7 @@ export class WalletService {
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
+			privateKey: '',
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -596,6 +629,7 @@ export class WalletService {
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
+			privateKey: '',
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -664,7 +698,7 @@ export class WalletService {
 	}
 
 	async removeWalletAccount(accountID: string) {
-		const walletAccount = this.getWalletAccount(accountID);
+		const walletAccount = await this.getWalletAccount(accountID);
 		const errMessage = 'Account is not in wallet';
 		if (!walletAccount) {
 			throw new Error(errMessage);
@@ -721,7 +755,7 @@ export class WalletService {
 			}
 
 			pendingResult[account].forEach(pending => {
-				this.addPendingBlock(account, pending.hash, pending.pendingInfo.amount, pending.pendingInfo.type);
+				this.addPendingBlock(account, pending.hash, pending.amount, pending.type);
 			});
 		}
 
@@ -741,7 +775,7 @@ export class WalletService {
 		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
 			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
 		}
-		const walletAccount = this.getWalletAccount(nextBlock.account);
+		const walletAccount = await this.getWalletAccount(nextBlock.account);
 		if (!walletAccount) {
 			return; // Dispose of the block, no matching account
 		}

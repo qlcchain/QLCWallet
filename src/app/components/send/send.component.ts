@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BigNumber } from 'bignumber.js';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timer } from 'rxjs';
 import { AddressBookService } from '../../services/address-book.service';
 import { ApiService } from '../../services/api.service';
 import { AppSettingsService } from '../../services/app-settings.service';
@@ -12,8 +12,7 @@ import { QLCBlockService } from '../../services/qlc-block.service';
 import { UtilService } from '../../services/util.service';
 import { WalletService } from '../../services/wallet.service';
 import { WorkPoolService } from '../../services/work-pool.service';
-
-const nacl = window['nacl'];
+import { NodeService } from '../../services/node.service';
 
 @Component({
 	selector: 'app-send',
@@ -80,12 +79,27 @@ export class SendComponent implements OnInit {
 		private workPool: WorkPoolService,
 		public settings: AppSettingsService,
 		private util: UtilService,
-		private trans: TranslateService
+		private trans: TranslateService,
+		private node: NodeService
 	) {
-		if (this.accounts !== undefined && this.accounts.length > 0) {
-			this.searchAddressBook();
-		}
 		this.loadLang();
+		this.load();
+	}
+	load() {
+		if (this.node.status === true) {
+			if (this.accounts !== undefined && this.accounts.length > 0) {
+				this.searchAddressBook();
+			}
+		} else {
+			this.reload();
+		}
+	}
+
+	async reload() {
+		const source = timer(200);
+		const abc = source.subscribe(async val => {
+			this.load();
+		});
 	}
 	loadLang() {
 		this.trans.get('SEND_WARNINGS.msg1').subscribe((res: string) => {
@@ -168,6 +182,7 @@ export class SendComponent implements OnInit {
 
 	async ngOnInit() {
 		const params = this.router.snapshot.queryParams;
+		const account = this.router.snapshot.params.account;
 		if (params && params.amount) {
 			this.amount = params.amount;
 		}
@@ -197,8 +212,9 @@ export class SendComponent implements OnInit {
 				return null;
 			}
 		}, null);
-
-		if (accountIDWithBalance) {
+		if (account !== undefined) {
+			this.fromAccountID = account;
+		} else if (accountIDWithBalance) {
 			this.fromAccountID = accountIDWithBalance;
 		} else {
 			this.fromAccountID = this.accounts.length ? this.accounts[0].id : '';
@@ -209,7 +225,7 @@ export class SendComponent implements OnInit {
 		this.loadBalances();
 	}
 
-	// An update to the Nano amount, sync the fiat value
+	// An update to the QLC amount, sync the fiat value
 	syncFiatPrice() {
 		const rawAmount = this.getAmountBaseValue(this.amount || 0).plus(this.amountRaw);
 		if (rawAmount.lte(0)) {
@@ -230,14 +246,14 @@ export class SendComponent implements OnInit {
 		this.amountFiat = fiatAmount;
 	}
 
-	// An update to the fiat amount, sync the nano value based on currently selected denomination
-	syncNanoPrice() {
+	// An update to the fiat amount, sync the QLC value based on currently selected denomination
+	syncQlcPrice() {
 		const fiatAmount = this.amountFiat || 0;
 		const rawAmount = this.util.qlc.mqlcToRaw(new BigNumber(fiatAmount).div(this.price.price.lastPrice));
-		const nanoVal = this.util.qlc.rawToQlc(rawAmount);
-		const nanoAmount = this.getAmountValueFromBase(this.util.qlc.qlcToRaw(nanoVal));
+		const qlcVal = this.util.qlc.rawToQlc(rawAmount);
+		const qlcAmount = this.getAmountValueFromBase(this.util.qlc.qlcToRaw(qlcVal));
 
-		this.amount = nanoAmount.toNumber();
+		this.amount = qlcAmount.toNumber();
 	}
 
 	searchAddressBook() {
@@ -331,12 +347,12 @@ export class SendComponent implements OnInit {
 		// Start precopmuting the work...
 		this.fromAddressBook = this.addressBookService.getAccountName(this.fromAccountID);
 		this.toAddressBook = this.addressBookService.getAccountName(this.toAccountID);
-		this.workPool.addWorkToCache(this.fromAccount.header);
+		//this.workPool.addWorkToCache(this.fromAccount.header);
 		this.activePanel = 'confirm';
 	}
 
 	async confirmTransaction() {
-		const walletAccount = this.walletService.wallet.accounts.find(a => a.id === this.fromAccountID);
+		const walletAccount = await this.walletService.getWalletAccount(this.fromAccountID);
 		if (!walletAccount) {
 			throw new Error(this.msg9);
 		}
@@ -350,7 +366,7 @@ export class SendComponent implements OnInit {
 			const newHash = await this.qlcBlock.generateSend(
 				walletAccount,
 				this.toAccountID,
-				this.selectedToken.type,
+				this.selectedToken.tokenName,
 				this.rawAmount,
 				this.walletService.isLedgerWallet()
 			);
@@ -420,7 +436,7 @@ export class SendComponent implements OnInit {
 				: [];
 		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
 		this.selectedTokenSymbol =
-			this.selectedToken !== undefined && this.selectedToken.tokenInfo.tokenSymbol !== undefined
+			this.selectedToken !== undefined && this.selectedToken.tokenInfo !== undefined
 				? this.selectedToken.tokenInfo.tokenSymbol
 				: '';
 

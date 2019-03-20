@@ -1,74 +1,120 @@
 <div class="container addressbook" *ngIf="activePanel == 0">
-  <div class="row">
-    <div class="col-12 pl-0 pr-0">
-      <h1>{{ 'ADDRESS_BOOK.address_book_title' | translate }}</h1><button type="submit" class="btn btn-primary content-header" (click)="activePanel = 1;">{{ 'ADDRESS_BOOK.add_new_contact' | translate }}</button>
-    </div>
-  </div>
-  <div class="row defaultTable">
-    <div class="col-12" *ngIf="activePanel == 0" >
-      <div class="row align-items-center rowTitles">
-        <div class="col-md-2 pl-0 col-4">{{ 'ADDRESS_BOOK.name' | translate }}</div>
-        <div class="px-0 col-1 d-none d-md-block"></div>
-        <div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6">{{ 'ADDRESS_BOOK.account_id' | translate }}</div>
-        <div class="px-0 col-1 d-none d-md-block"></div>
-        <div class="col-md-2 col-1 px-0 price text-right d-none d-md-block">{{ 'ADDRESS_BOOK.options' | translate }}</div>
-      </div>
-      <div class="row align-items-center rowContent" *ngFor="let addressBook of addressBook$ | async;" [attr.data-account]="addressBook.account">
-        <div class="col-md-2 pl-0 col-4 text-truncate name" (click)="editEntry(addressBook)" >{{ addressBook.name }}</div>
-        <div class="px-0 col-1 d-none d-md-block"><a href="#" tooltip="{{ 'ADDRESS_BOOK.drag_to_move' | translate }}" class="icon drag"></a></div>
-        <div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6 text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}" ><a [routerLink]="'/account/' + addressBook.account" class="address">{{ addressBook.account }}</a></div>
-        <div class="px-0 col-1 text-center"><a ngxClipboard [cbContent]="addressBook.account" (cbOnSuccess)="copied()" tooltip="{{ 'COPY_TO_CLIPBOARD' | translate }}" class="icon copy"></a></div>
-        <div class="col-md-2 col-1 px-0 text-right"><a (click)="deleteAddress(addressBook.account)" tooltip="{{ 'ADDRESS_BOOK.delete_contact' | translate }}" class="icon delete"></a></div>
-      </div>
-      
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12 px-0 content">
-      <p>
-          {{ 'ADDRESS_BOOK.info' | translate }}
-      </p>
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-12 pl-0 pr-0">
+			<h1>{{ 'ADDRESS_BOOK.address_book_title' | translate }}</h1>
+			<button type="submit" class="btn btn-primary content-header" (click)="activePanel = 1">
+				{{ 'ADDRESS_BOOK.add_new_contact' | translate }}
+			</button>
+		</div>
+	</div>
+	<div class="row defaultTable">
+		<div class="col-12" *ngIf="activePanel == 0">
+			<div class="row align-items-center rowTitles">
+				<div class="col-md-2 pl-0 col-4">{{ 'ADDRESS_BOOK.name' | translate }}</div>
+				<div class="px-0 col-1 d-none d-md-block"></div>
+				<div class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6">{{ 'ADDRESS_BOOK.account_id' | translate }}</div>
+				<div class="px-0 col-1 d-none d-md-block"></div>
+				<div class="col-md-2 col-1 px-0 price text-right d-none d-md-block">
+					{{ 'ADDRESS_BOOK.options' | translate }}
+				</div>
+			</div>
+			<div
+				class="row align-items-center rowContent"
+				*ngFor="let addressBook of (addressBook$ | async)"
+				[attr.data-account]="addressBook.account"
+			>
+				<div class="col-md-2 pl-0 col-4 text-truncate name" (click)="editEntry(addressBook)">
+					{{ addressBook.name }}
+				</div>
+				<div class="px-0 col-1 d-none d-md-block">
+					<!--<a href="#" tooltip="{{ 'ADDRESS_BOOK.drag_to_move' | translate }}" class="icon drag"></a>-->
+				</div>
+				<div
+					class="col-lg-6 pr-2 pr-md-0 col-md-6 col-6 text-truncate"
+					tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}"
+				>
+					<a [routerLink]="'/account/' + addressBook.account" class="address">{{ addressBook.account }}</a>
+				</div>
+				<div class="px-0 col-1 text-center">
+					<a
+						ngxClipboard
+						[cbContent]="addressBook.account"
+						(cbOnSuccess)="copied()"
+						tooltip="{{ 'COPY_TO_CLIPBOARD' | translate }}"
+						class="icon copy"
+					></a>
+				</div>
+				<div class="col-md-2 col-1 px-0 text-right">
+					<a
+						(click)="deleteAddress(addressBook.account)"
+						tooltip="{{ 'ADDRESS_BOOK.delete_contact' | translate }}"
+						class="icon delete"
+					></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12 px-0 content">
+			<p>
+				{{ 'ADDRESS_BOOK.info' | translate }}
+			</p>
+		</div>
+	</div>
 </div>
 
 <div class="container" *ngIf="activePanel == 1">
-  <div class="row">
-    <div class="col-12 px-0">
-      <h1>{{ 'ADDRESS_BOOK.add_edit_contact' | translate }}</h1>
-    </div>
-  </div>
-  <div class="row defaultTable content">
-    <div class="col-12">
-      <div class="row align-items-center rowContent">
-        <div class="col-md-2 px-0 text-truncate dataName">{{ 'ADDRESS_BOOK.account_id' | translate }}</div>
-        <div class="col-md-10 px-0 text-left text-truncate">
-          <div class="form-group">
-            <div class="input-group">
-              <input type="text" class="form-control" onfocus="this.placeholder = ''" placeholder="{{ 'ADDRESS_BOOK.account_id_placeholder' | translate }}" [(ngModel)]="newAddressAccount" >
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row align-items-center rowContent mobile-break">
-        <div class="col-md-2 px-0 text-truncate dataName">{{ 'ADDRESS_BOOK.name' | translate }}</div>
-        <div class="col-md-10 px-0 text-left text-truncate">
-          <div class="form-group">
-            <div class="input-group">
-              <input type="text" class="form-control" onfocus="this.placeholder = ''" placeholder="{{ 'ADDRESS_BOOK.name_placeholder' | translate }}"  [(ngModel)]="newAddressName" (keyup.enter)="saveNewAddress()">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row align-items-center align-items-center rowDefault">
-        <div class="col-md-2 px-0 text-truncate dataName"></div>
-        <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pr-md-2 text-center text-truncate mobile-break">
-          <button type="submit" class="btn btn-danger" (click)="cancelNewAddress()">{{ 'CANCEL' | translate }}</button>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pl-md-2 text-left text-truncate">
-          <button type="submit" class="btn btn-primary" (click)="saveNewAddress()">{{ 'ADDRESS_BOOK.save_contact' | translate }}</button>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-12 px-0">
+			<h1>{{ 'ADDRESS_BOOK.add_edit_contact' | translate }}</h1>
+		</div>
+	</div>
+	<div class="row defaultTable content">
+		<div class="col-12">
+			<div class="row align-items-center rowContent">
+				<div class="col-md-2 px-0 text-truncate dataName">{{ 'ADDRESS_BOOK.account_id' | translate }}</div>
+				<div class="col-md-10 px-0 text-left text-truncate">
+					<div class="form-group">
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								onfocus="this.placeholder = ''"
+								placeholder="{{ 'ADDRESS_BOOK.account_id_placeholder' | translate }}"
+								[(ngModel)]="newAddressAccount"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row align-items-center rowContent mobile-break">
+				<div class="col-md-2 px-0 text-truncate dataName">{{ 'ADDRESS_BOOK.name' | translate }}</div>
+				<div class="col-md-10 px-0 text-left text-truncate">
+					<div class="form-group">
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								onfocus="this.placeholder = ''"
+								placeholder="{{ 'ADDRESS_BOOK.name_placeholder' | translate }}"
+								[(ngModel)]="newAddressName"
+								(keyup.enter)="saveNewAddress()"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row align-items-center align-items-center rowDefault">
+				<div class="col-md-2 px-0 text-truncate dataName"></div>
+				<div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pr-md-2 text-center text-truncate mobile-break">
+					<button type="submit" class="btn btn-danger" (click)="cancelNewAddress()">{{ 'CANCEL' | translate }}</button>
+				</div>
+				<div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pl-md-2 text-left text-truncate">
+					<button type="submit" class="btn btn-primary" (click)="saveNewAddress()">
+						{{ 'ADDRESS_BOOK.save_contact' | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

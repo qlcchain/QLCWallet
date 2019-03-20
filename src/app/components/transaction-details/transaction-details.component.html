@@ -12,10 +12,10 @@
 			<div class="col-12">
 				<div class="row align-items-center title">
 					<div class="col-12 px-0 ">
-						<span *ngIf="blockType == 'send'">{{ 'TRANSACTION_DETAILS.send' | translate }}</span>
-						<span *ngIf="blockType == 'open'">{{ 'TRANSACTION_DETAILS.receive' | translate }}</span>
-						<span *ngIf="blockType == 'receive'">{{ 'TRANSACTION_DETAILS.receive' | translate }}</span>
-						<span *ngIf="blockType == 'change'">{{ 'TRANSACTION_DETAILS.change_representative' | translate }}</span>
+						<span *ngIf="blockType == 'Send'">{{ 'TRANSACTION_DETAILS.send' | translate }}</span>
+						<span *ngIf="blockType == 'Open'">{{ 'TRANSACTION_DETAILS.receive' | translate }}</span>
+						<span *ngIf="blockType == 'Eeceive'">{{ 'TRANSACTION_DETAILS.receive' | translate }}</span>
+						<span *ngIf="blockType == 'Change'">{{ 'TRANSACTION_DETAILS.change_representative' | translate }}</span>
 					</div>
 				</div>
 				<div class="row align-items-center fromText">
@@ -24,7 +24,7 @@
 				<div class="row align-items-center fromAddress">
 					<div class="col-12 ">
 						<a [routerLink]="'/account/' + fromAccountID" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
-							<span class="name" *ngIf="fromAddressBook">{{ fromAddressBook }}</span>
+							<span class="name" *ngIf="fromAddressBook">{{ fromAddressBook }} </span>
 							<span class="address">{{ fromAccountID }}</span>
 						</a>
 					</div>
@@ -42,7 +42,7 @@
 				<div class="row align-items-center toAddress">
 					<div class="col-12 ">
 						<a [routerLink]="'/account/' + toAccountID" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
-							<span class="name" *ngIf="toAddressBook">{{ toAddressBook }}</span>
+							<span class="name" *ngIf="toAddressBook">{{ toAddressBook }} </span>
 							<span class="address">{{ toAccountID }}</span>
 						</a>
 					</div>
@@ -68,7 +68,7 @@
 				<div class="row align-items-center rowContent">
 					<div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.date' | translate }}:</div>
 					<div class="col-9 px-0 text-left text-truncate">
-						<span *ngIf="transaction.timestamp">{{ transaction?.timestamp | date: 'short' }}</span>
+						<span *ngIf="transaction.timestamp">{{ transaction?.timestamp * 1000 | date: 'short' }}</span>
 						<span *ngIf="!transaction.timestamp">{{ 'N_A' | translate }}</span>
 					</div>
 				</div>
@@ -97,13 +97,13 @@
 						<a [routerLink]="'/transaction/' + transaction?.source">{{ transaction?.source }}</a>
 					</div>
 				</div>
-				<div class="row align-items-center rowContent" *ngIf="transaction?.link && blockType == 'receive'">
+				<div class="row align-items-center rowContent" *ngIf="transaction?.link && blockType == 'Receive'">
 					<div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.link_source' | translate }}:</div>
 					<div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_BLOCK_DETAILS' | translate }}">
 						<a [routerLink]="'/transaction/' + transaction?.link">{{ transaction?.link }}</a>
 					</div>
 				</div>
-				<div class="row align-items-center rowContent" *ngIf="transaction?.link_as_account && blockType == 'send'">
+				<div class="row align-items-center rowContent" *ngIf="transaction?.link_as_account && blockType == 'Send'">
 					<div class="col-2 px-0 text-truncate dataName">{{ 'TRANSACTION_DETAILS.link_destination' | translate }}:</div>
 					<div class="col-9 px-0 text-left text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
 						<a [routerLink]="'/account/' + transaction?.link_as_account">{{ transaction?.link_as_account }}</a>

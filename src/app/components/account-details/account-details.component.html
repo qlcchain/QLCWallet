@@ -118,7 +118,7 @@
 				</div>
 				<div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate ">
 					<a [routerLink]="'/account/' + pending.account">
-						<span *ngIf="pending.addressBookName" class="name">{{ pending.addressBookName }}</span>
+						<span *ngIf="pending.addressBookName" class="name">{{ pending.addressBookName }} </span>
 						<span class="address">{{ pending.account }}</span>
 					</a>
 				</div>
@@ -151,7 +151,7 @@
 			</div>
 			<div class="row align-items-center rowContent" *ngFor="let history of accountHistory">
 				<div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate">
-					<span *ngIf="history.timestamp">{{ history.timestamp | date: 'short' }}</span
+					<span *ngIf="history.timestamp">{{ history.timestamp * 1000 | date: 'short' }}</span
 					><span *ngIf="!history.timestamp">{{ 'ACCOUNT_DETAILS.n_a' | translate }}</span>
 				</div>
 				<div
@@ -164,15 +164,13 @@
 					</a>
 				</div>
 				<div
-					class="col-3 col-md-2 price text-right {{
-						history.subType == 'send' ? 'negative_change' : 'positive_change'
-					}}"
+					class="col-3 col-md-2 price text-right {{ history.type == 'Send' ? 'negative_change' : 'positive_change' }}"
 				>
 					{{ history.amount | qlc: settings.settings.displayDenomination }}
 				</div>
 				<div
 					class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right {{
-						history.subType == 'send' ? 'negative_change' : 'positive_change'
+						history.type == 'Send' ? 'negative_change' : 'positive_change'
 					}}"
 				>
 					{{ history.tokenName }}

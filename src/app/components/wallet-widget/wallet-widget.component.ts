@@ -18,8 +18,6 @@ export class WalletWidgetComponent implements OnInit {
 
 	unlockPassword = '';
 
-	modal: any = null;
-
 	modalRef: BsModalRef;
 
 	msg1 = '';
@@ -41,10 +39,6 @@ export class WalletWidgetComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		const UIkit = (window as any).UIkit;
-		const modal = UIkit.modal(document.getElementById('unlock-wallet-modal'));
-		this.modal = modal;
-
 		// this.ledgerService.ledgerStatus$.subscribe((ledgerStatus: string) => {
 		//   this.ledgerStatus = ledgerStatus;
 		// });
@@ -55,31 +49,24 @@ export class WalletWidgetComponent implements OnInit {
 
 	loadLang() {
 		this.trans.get('WALLET_WARNINGS.msg1').subscribe((res: string) => {
-			// console.log(res);
 			this.msg1 = res;
 		});
 		this.trans.get('WALLET_WARNINGS.msg2').subscribe((res: string) => {
-			// console.log(res);
 			this.msg2 = res;
 		});
 		this.trans.get('WALLET_WARNINGS.msg3').subscribe((res: string) => {
-			// console.log(res);
 			this.msg3 = res;
 		});
 		this.trans.get('WALLET_WARNINGS.msg4').subscribe((res: string) => {
-			// console.log(res);
 			this.msg4 = res;
 		});
 		this.trans.get('WALLET_WARNINGS.msg5').subscribe((res: string) => {
-			// console.log(res);
 			this.msg5 = res;
 		});
 		this.trans.get('WALLET_WARNINGS.msg6').subscribe((res: string) => {
-			// console.log(res);
 			this.msg6 = res;
 		});
 		this.trans.get('WALLET_WARNINGS.msg7').subscribe((res: string) => {
-			// console.log(res);
 			this.msg7 = res;
 		});
 	}

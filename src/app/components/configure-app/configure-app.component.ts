@@ -92,7 +92,7 @@ export class ConfigureAppComponent implements OnInit {
 		{ name: 'Best Option Available', value: 'best' },
 		{ name: 'Client Side - WebGL (Chrome/Firefox)', value: 'clientWebGL' },
 		{ name: 'Client Side - CPU', value: 'clientCPU' },
-		{ name: 'Server - NanoVault Server', value: 'server' }
+		{ name: 'Server', value: 'server' }
 	];
 	selectedPoWOption = this.powOptions[0].value;
 
@@ -276,7 +276,7 @@ export class ConfigureAppComponent implements OnInit {
 			{ name: 'Best Option Available', value: 'best' },
 			{ name: 'Client Side - WebGL (Chrome/Firefox)', value: 'clientWebGL' },
 			{ name: 'Client Side - CPU', value: 'clientCPU' },
-			{ name: 'Server - NanoVault Server', value: 'server' }
+			{ name: 'Server', value: 'server' }
 		];
 
 		this.blockOptions = [{ name: this.msg21, value: false }, { name: this.msg22, value: true }];

@@ -19,7 +19,7 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarResponsive" [collapse]="isCollapsed">
 			<ul class="navbar-nav ml-auto">
-				<li class="nav-item">
+				<li class="nav-item" (click)="isCollapsed = !isCollapsed">
 					<a class="nav-link account" routerLink="/accounts" routerLinkActive="active">
 						<div>
 							<i></i>
@@ -27,7 +27,7 @@
 						</div>
 					</a>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item" (click)="isCollapsed = !isCollapsed">
 					<a routerLink="/send" routerLinkActive="active" class="nav-link send"
 						><div>
 							<i></i>
@@ -35,7 +35,7 @@
 						</div></a
 					>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item" (click)="isCollapsed = !isCollapsed">
 					<a routerLink="/receive" routerLinkActive="active" class="nav-link receive">
 						<div>
 							<i></i>
@@ -53,7 +53,7 @@
 						</div>
 					</a>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item" (click)="isCollapsed = !isCollapsed">
 					<a routerLink="/address-book" routerLinkActive="active" class="nav-link addressbook"
 						><div>
 							<i></i>
@@ -77,21 +77,41 @@
 							<span class="more"></span></div
 					></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown" *dropdownMenu>
-						<a routerLink="/representatives" routerLinkActive="active" class="dropdown-item" href="#">{{
-							'NAV.representatives' | translate
-						}}</a>
-						<a routerLink="/configure-app" routerLinkActive="active" class="dropdown-item" href="#">{{
-							'NAV.appsettings' | translate
-						}}</a>
-						<a routerLink="/manage-wallet" routerLinkActive="active" class="dropdown-item" href="#">{{
-							'NAV.managewallet' | translate
-						}}</a>
-						<a routerLink="/configure-wallet" routerLinkActive="active" class="dropdown-item" href="#">{{
-							'NAV.configurenewwallet' | translate
-						}}</a>
+						<a
+							routerLink="/representatives"
+							routerLinkActive="active"
+							class="dropdown-item"
+							href="#"
+							(click)="isCollapsed = !isCollapsed"
+							>{{ 'NAV.representatives' | translate }}</a
+						>
+						<a
+							routerLink="/configure-app"
+							routerLinkActive="active"
+							class="dropdown-item"
+							href="#"
+							(click)="isCollapsed = !isCollapsed"
+							>{{ 'NAV.appsettings' | translate }}</a
+						>
+						<a
+							routerLink="/manage-wallet"
+							routerLinkActive="active"
+							class="dropdown-item"
+							href="#"
+							(click)="isCollapsed = !isCollapsed"
+							>{{ 'NAV.managewallet' | translate }}</a
+						>
+						<a
+							routerLink="/configure-wallet"
+							routerLinkActive="active"
+							class="dropdown-item"
+							href="#"
+							(click)="isCollapsed = !isCollapsed"
+							>{{ 'NAV.configurenewwallet' | translate }}</a
+						>
 					</div>
 				</li>
-				<li class="nav-item wallet"><app-wallet-widget></app-wallet-widget></li>
+				<li class="nav-item wallet" (click)="isCollapsed = !isCollapsed"><app-wallet-widget></app-wallet-widget></li>
 			</ul>
 		</div>
 	</div>

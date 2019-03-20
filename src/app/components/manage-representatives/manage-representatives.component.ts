@@ -158,7 +158,7 @@ export class ManageRepresentativesComponent implements OnInit, AfterViewInit {
 
 	async getOnlineRepresentatives() {
 		const representatives = [];
-		const reps = await this.api.representativesOnline();
+		const reps = await this.api.onlineRepresentatives();
 		if (reps.result) {
 			for (const rep of reps.result) {
 				representatives.push(rep);

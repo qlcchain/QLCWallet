@@ -1,72 +1,83 @@
 <div class="container">
-  <div class="row">
-    <div class="col-12 px-0">
-      <h1>{{ 'RECEIVE.receive_title' | translate }}</h1>
-    </div>
-  </div>
-  <div *ngIf="!(accounts).length" class="row defaultTable content">
-    <div class="col-12 text-center">
-        {{ 'NO_WALLET_CONFIGURED' | translate }}<a routerLink='/configure-wallet'>{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
-    </div>
-  </div>
-  <div *ngIf="(accounts).length" class="row defaultTable content">
-    <div class="col-12 text-center" [innerHTML]="'RECEIVE.receive_text' | translate">
-    </div>
-  </div>
-  <div *ngIf="(accounts).length" class="row defaultTable content">
-    <div class="col-12">
-      <div class="row align-items-center rowContent autoHP ">
-        
-        <div class="col-md-9 px-0 text-left">
-          <div class="form-group">
-            <select class="custom-select" [(ngModel)]="pendingAccountModel">
-              <option [value]="0">{{ 'RECEIVE.receive_title' | translate }}</option>
-              <option *ngFor="let account of accounts" [value]="account.id">{{ account.id }}</option>
-              
-            </select>
-          </div>
-        </div>
-        <div class="col-md-3 pt-3 pt-md-0 px-0 pl-md-3">
-          <button type="submit" class="btn btn-primary" (click)="getPending(pendingAccountModel)">{{ 'RECEIVE.find_pending' | translate }}</button>
-        </div>
-      </div>
-      
-      
-    </div>
-  </div>
-  <div *ngIf="(accounts).length" class="row defaultTable">
-    <div class="col-12">
-      <div class="row align-items-center rowTitles">
-        <div class="col-md-2 pl-0 col-2 d-none d-lg-block">{{ 'RECEIVE.account' | translate }}</div>
-        <div class="col-lg-5 px-0 col-md-6 col-4 text-left">{{ 'RECEIVE.sender' | translate }}</div>
-        <div class="col-3 col-md-2 price text-right">{{ 'RECEIVE.amount' | translate }}</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ 'RECEIVE.token' | translate }}</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">{{ 'RECEIVE.options' | translate }}</div>
-      </div>
-      <div class="row align-items-center rowContent" *ngFor="let block of pendingBlocks">
-        <div class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
-          <a [routerLink]="'/account/' + block.account" >
-            {{ block.account }}
-          </a>
-        </div>
-        <div class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}">
-          <a [routerLink]="'/account/' + block.source">
-            {{ block.source }}
-          </a>
-        </div>
-        <div class="col-3 col-md-2 price text-right">{{ block.amount | qlc: settings.settings.displayDenomination }}</div>
-        <div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ block.tokenName }}</div>
-        <div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate">
-          <button *ngIf="!block.loading" (click)="receivePending(block)" type="submit" class="btn btn-primary" >{{ 'RECEIVE.receive' | translate }}</button>
-          <button *ngIf="block.loading" type="submit" class="btn btn-primary" >{{ 'RECEIVE.loading' | translate }}</button>
-        </div>
-      </div>
-      <div *ngIf="!pendingBlocks.length" class="row align-items-center rowContent">
-        <div class="col-12 text-center">
-            {{ 'RECEIVE.no_pending_transactions' | translate }}
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-12 px-0">
+			<h1>{{ 'RECEIVE.receive_title' | translate }}</h1>
+		</div>
+	</div>
+	<div *ngIf="!accounts.length" class="row defaultTable content">
+		<div class="col-12 text-center">
+			{{ 'NO_WALLET_CONFIGURED' | translate
+			}}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+		</div>
+	</div>
+	<div *ngIf="accounts.length" class="row defaultTable content">
+		<div class="col-12 text-center" [innerHTML]="'RECEIVE.receive_text' | translate"></div>
+	</div>
+	<div *ngIf="accounts.length" class="row defaultTable content">
+		<div class="col-12">
+			<div class="row align-items-center rowContent autoHP ">
+				<div class="col-md-9 px-0 text-left">
+					<div class="form-group">
+						<select class="custom-select" [(ngModel)]="pendingAccountModel">
+							<option [value]="0">{{ 'RECEIVE.receive_title' | translate }}</option>
+							<option *ngFor="let account of accounts" [value]="account.id">{{ account.id }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-3 pt-3 pt-md-0 px-0 pl-md-3">
+					<button type="submit" class="btn btn-primary" (click)="getPending(pendingAccountModel)">
+						{{ 'RECEIVE.find_pending' | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="accounts.length" class="row defaultTable">
+		<div class="col-12">
+			<div class="row align-items-center rowTitles">
+				<div class="col-md-2 pl-0 col-2 d-none d-lg-block">{{ 'RECEIVE.account' | translate }}</div>
+				<div class="col-lg-5 px-0 col-md-6 col-4 text-left">{{ 'RECEIVE.sender' | translate }}</div>
+				<div class="col-3 col-md-2 price text-right">{{ 'RECEIVE.amount' | translate }}</div>
+				<div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ 'RECEIVE.token' | translate }}</div>
+				<div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right">{{ 'RECEIVE.options' | translate }}</div>
+			</div>
+			<div class="row align-items-center rowContent" *ngFor="let block of pendingBlocks">
+				<div
+					class="col-md-2 pl-0 col-2 d-none d-lg-block text-truncate"
+					tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}"
+				>
+					<a [routerLink]="'/account/' + block.account">
+						<span *ngIf="block.accountAddressBookName" class="name">{{ block.accountAddressBookName }} </span>
+						{{ block.account }}
+					</a>
+				</div>
+				<div
+					class="col-lg-5 px-0 col-md-6 col-4 text-left text-truncate"
+					tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}"
+				>
+					<a [routerLink]="'/account/' + block.source">
+						<span *ngIf="block.sourceAddressBookName" class="name">{{ block.sourceAddressBookName }} </span>
+						{{ block.source }}
+					</a>
+				</div>
+				<div class="col-3 col-md-2 price text-right">
+					{{ block.amount | qlc: settings.settings.displayDenomination }}
+				</div>
+				<div class="col-xl-1 col-lg-2 col-md-2 col-3 pricechange text-right">{{ block.tokenName }}</div>
+				<div class="col-xl-2 pr-0 col-lg-1 col-2 totalvalue text-right text-truncate">
+					<button *ngIf="!block.loading" (click)="receivePending(block)" type="submit" class="btn btn-primary">
+						{{ 'RECEIVE.receive' | translate }}
+					</button>
+					<button *ngIf="block.loading" type="submit" class="btn btn-primary">
+						{{ 'RECEIVE.loading' | translate }}
+					</button>
+				</div>
+			</div>
+			<div *ngIf="!pendingBlocks.length" class="row align-items-center rowContent">
+				<div class="col-12 text-center">
+					{{ 'RECEIVE.no_pending_transactions' | translate }}
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-

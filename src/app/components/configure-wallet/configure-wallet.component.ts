@@ -245,7 +245,7 @@ export class ConfigureWalletComponent implements OnInit {
 	}
 
 	async createNewWallet() {
-		const newSeed = this.walletService.createNewWallet();
+		const newSeed = await this.walletService.createNewWallet();
 		this.newWalletSeed = newSeed;
 		this.newWalletMnemonic = bip.entropyToMnemonic(newSeed);
 

@@ -4,7 +4,7 @@ import { ApiService } from '../../services/api.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import BigNumber from 'bignumber.js';
 import { AddressBookService } from '../../services/address-book.service';
-import { UtilService } from 'app/services/util.service';
+import { UtilService } from '../../services/util.service';
 
 @Component({
 	selector: 'app-transaction-details',
@@ -79,7 +79,7 @@ export class TransactionDetailsComponent implements OnInit {
 			this.token = tokenInfo.tokenSymbol;
 		}
 		this.token = this.token || hashData.tokenName;
-		this.blockType = hashData.subType;
+		this.blockType = hashData.type;
 
 		if (hashData.balance) {
 			this.amountRaw = new BigNumber(hashData.amount).mod(this.qlc);
@@ -90,11 +90,11 @@ export class TransactionDetailsComponent implements OnInit {
 		let fromAccount = '';
 		let toAccount = '';
 		switch (this.blockType) {
-			case 'send':
+			case 'Send':
 				fromAccount = this.transaction.address;
 				toAccount = this.util.account.getPublicAccountID(this.util.hex.toUint8(this.transaction.link));
 				break;
-			case 'open':
+			case 'Open':
 				const linkBlock = await this.api.blocksInfo([this.transaction.link]);
 				if (!linkBlock.error) {
 					fromAccount = linkBlock.result[0].address;
@@ -103,11 +103,11 @@ export class TransactionDetailsComponent implements OnInit {
 				}
 				toAccount = this.transaction.address;
 				break;
-			case 'receive':
+			case 'Receive':
 				fromAccount = this.util.account.getPublicAccountID(this.util.hex.toUint8(this.transaction.link));
 				toAccount = this.transaction.address;
 				break;
-			case 'change':
+			case 'Change':
 				fromAccount = this.transaction.address;
 				toAccount = this.transaction.representative;
 				break;
