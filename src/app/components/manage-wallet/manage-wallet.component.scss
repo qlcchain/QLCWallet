@@ -1,13 +1,14 @@
 .settings {
 	.content > div {
-		
 		@media (min-width: 992px) {
 			min-height: 190px;
-			
 		}
 	}
+	img {
+		width: 100%;
+	}
 	.content.nomin > div {
-		min-height: auto;	
+		min-height: auto;
 	}
 	.autoH {
 		padding-bottom: 20px;
@@ -15,7 +16,7 @@
 	}
 	.py {
 		padding-bottom: 20px;
-		padding-top: 20px;	
+		padding-top: 20px;
 	}
 	.qrcode {
 		height: 250px;
@@ -33,7 +34,7 @@
 		opacity: 0;
 		cursor: pointer;
 	}
-	
+
 	.rowContent:hover {
 		background: #fff;
 	}

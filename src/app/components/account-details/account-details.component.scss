@@ -1,12 +1,15 @@
-@import "~scss/mixins";
+@import '~scss/mixins';
 .accountDetails {
-
 	a .address {
 		color: $text;
-	}	
+	}
 	a:hover .address {
 		color: $default;
 	}
+}
+
+img {
+	width: 100%;
 }
 
 .rowAccountDetails {
@@ -30,8 +33,8 @@
 	}
 	.qrcode {
 		height: 133px;
-        width: 133px;
-        background-color: white;
+		width: 133px;
+		background-color: white;
 		margin: 0 auto;
 	}
 	p {

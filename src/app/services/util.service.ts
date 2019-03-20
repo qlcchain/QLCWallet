@@ -4,7 +4,9 @@ import { BigNumber } from 'bignumber.js';
 
 const nacl = window['nacl'];
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class UtilService {
 	constructor() {}
 

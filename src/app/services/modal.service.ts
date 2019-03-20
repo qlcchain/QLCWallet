@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class ModalService {
+	showAccount$ = new BehaviorSubject(null);
+	constructor() {}
 
-  showAccount$ = new BehaviorSubject(null);
-  constructor() { }
-
-  showAccount(account) {
-    this.showAccount$.next(account);
-  }
-
+	showAccount(account) {
+		this.showAccount$.next(account);
+	}
 }

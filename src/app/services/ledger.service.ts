@@ -39,7 +39,9 @@ export interface LedgerData {
 	transport: any | null;
 }
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class LedgerService {
 	walletPrefix = `44'/165'/`;
 

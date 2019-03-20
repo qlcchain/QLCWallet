@@ -5,9 +5,9 @@ import { AppSettingsService } from './services/app-settings.service';
 // import { WebsocketService } from './services/websocket.service';
 import { PriceService } from './services/price.service';
 import { NotificationService } from './services/notification.service';
-import { PowService } from './services/pow.service';
-import { WorkPoolService } from './services/work-pool.service';
-import { Router } from '@angular/router';
+//import { PowService } from './services/pow.service';
+//import { WorkPoolService } from './services/work-pool.service';
+import { Router, NavigationEnd } from '@angular/router';
 import { RepresentativeService } from './services/representative.service';
 import { NodeService } from './services/node.service';
 import { LangService } from './services/lang.service';
@@ -19,8 +19,8 @@ import { LangService } from './services/lang.service';
 })
 export class AppComponent implements OnInit {
 	wallet = this.walletService.wallet;
-	node = this.nodeService.node;
-	nanoPrice = this.price.price;
+	node = this.nodeService;
+	qlcPrice = this.price.price;
 	fiatTimeout = 5 * 60 * 1000; // Update fiat prices every 5 minutes
 	inactiveSeconds = 0;
 	windowHeight = 1000;
@@ -38,22 +38,29 @@ export class AppComponent implements OnInit {
 		public settings: AppSettingsService,
 		// private websocket: WebsocketService,
 		private notifications: NotificationService,
-		private pow: PowService,
+		//private pow: PowService,
 		public nodeService: NodeService,
 		private representative: RepresentativeService,
 		private router: Router,
-		private workPool: WorkPoolService,
+		//private workPool: WorkPoolService,
 		public price: PriceService,
 		private lang: LangService
 	) {
 		this.langService = lang;
+
+		this.router.events.subscribe(event => {
+			if (!(event instanceof NavigationEnd)) {
+				return;
+			}
+			window.scrollTo(0, 0);
+		});
 	}
 
 	async ngOnInit() {
 		this.windowHeight = window.innerHeight;
 		this.settings.loadAppSettings();
 		this.addressBook.loadAddressBook();
-		this.workPool.loadWorkCache();
+		//this.workPool.loadWorkCache();
 		await this.walletService.loadStoredWallet();
 		// this.websocket.connect();
 
@@ -138,7 +145,7 @@ export class AppComponent implements OnInit {
 		} else if (searchData.length === 64) {
 			this.router.navigate(['transaction', searchData]);
 		} else {
-			this.notifications.sendWarning(`Invalid Nano account or transaction hash!`);
+			this.notifications.sendWarning(`Invalid Qlc account or transaction hash!`);
 		}
 		this.searchData = '';
 	}

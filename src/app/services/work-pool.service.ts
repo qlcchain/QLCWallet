@@ -2,49 +2,51 @@ import { Injectable } from '@angular/core';
 import { PowService } from './pow.service';
 import { NotificationService } from './notification.service';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class WorkPoolService {
-  storeKey = `qlcwallet-workcache`;
+	storeKey = `qlcwallet-workcache`;
 
-  cacheLength = 25;
-  workCache = [];
+	cacheLength = 25;
+	workCache = [];
 
-  constructor(private pow: PowService, private notifications: NotificationService) { }
+	constructor(private pow: PowService, private notifications: NotificationService) {}
 
-  public workExists(hash) {
-    return !!this.workCache.find(p => p.hash === hash);
-  }
+	public workExists(hash) {
+		//return !!this.workCache.find(p => p.hash === hash);
+	}
 
-  // A simple helper, which doesn't wait for a response (Used for pre-loading work)
-  public addWorkToCache(hash) {
-    this.getWork(hash);
-  }
+	// A simple helper, which doesn't wait for a response (Used for pre-loading work)
+	public addWorkToCache(hash) {
+		//this.getWork(hash);
+	}
 
-  // Remove a hash from from the cache
-  public removeFromCache(hash) {
-    const cachedIndex = this.workCache.findIndex(p => p.hash === hash);
+	// Remove a hash from from the cache
+	public removeFromCache(hash) {
+		/*const cachedIndex = this.workCache.findIndex(p => p.hash === hash);
     if (cachedIndex === -1) {
       return;
     }
     this.workCache.splice(cachedIndex, 1);
+    this.saveWorkCache();*/
+	}
+
+	public clearCache() {
+		/*this.workCache = [];
     this.saveWorkCache();
-  }
 
-  public clearCache() {
-    this.workCache = [];
-    this.saveWorkCache();
+    return true;*/
+	}
 
-    return true;
-  }
+	public deleteCache() {
+		/*this.workCache = [];
+    localStorage.removeItem(this.storeKey);*/
+	}
 
-  public deleteCache() {
-    this.workCache = [];
-    localStorage.removeItem(this.storeKey);
-  }
-
-  // Get work for a hash.  Uses the cache, or the current setting for generating it.
-  public async getWork(hash) {
-    const cached = this.workCache.find(p => p.hash === hash);
+	// Get work for a hash.  Uses the cache, or the current setting for generating it.
+	public async getWork(hash) {
+		/*const cached = this.workCache.find(p => p.hash === hash);
     if (cached && cached.work) {
       return cached.work;
     }
@@ -60,35 +62,35 @@ export class WorkPoolService {
     }
     this.saveWorkCache();
 
-    return work;
-  }
+    return work;*/
+	}
 
-  /**
-   * Save the work cache to localStorage
-   */
-  private saveWorkCache() {
-    // Remove duplicates
-    this.workCache = this.workCache.reduce((previous, current) => {
+	/**
+	 * Save the work cache to localStorage
+	 */
+	private saveWorkCache() {
+		// Remove duplicates
+		/*this.workCache = this.workCache.reduce((previous, current) => {
       if (!previous.find(p => p.hash === current.hash)) {
         previous.push(current);
       }
       return previous;
     }, []);
 
-    localStorage.setItem(this.storeKey, JSON.stringify(this.workCache));
-  }
+    localStorage.setItem(this.storeKey, JSON.stringify(this.workCache));*/
+	}
 
-  /**
-   * Load the work cache from localStorage
-   */
-  public loadWorkCache() {
-    let workCache = [];
+	/**
+	 * Load the work cache from localStorage
+	 */
+	public loadWorkCache() {
+		/*let workCache = [];
     const workCacheStore = localStorage.getItem(this.storeKey);
     if (workCacheStore) {
       workCache = JSON.parse(workCacheStore);
     }
     this.workCache = workCache;
 
-    return this.workCache;
-  }
+    return this.workCache;*/
+	}
 }

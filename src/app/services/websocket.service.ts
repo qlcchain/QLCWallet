@@ -4,118 +4,120 @@ import { AppSettingsService } from './app-settings.service';
 import { NGXLogger } from 'ngx-logger';
 import { environment } from '../../environments/environment';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class WebsocketService {
-  queuedCommands = [];
+	queuedCommands = [];
 
-  keepaliveTimeout = 60 * 1000;
-  reconnectTimeout = 5 * 1000;
+	keepaliveTimeout = 60 * 1000;
+	reconnectTimeout = 5 * 1000;
 
-  keepaliveSet = false;
+	keepaliveSet = false;
 
-  socket = {
-    connected: false,
-    ws: null
-  };
+	socket = {
+		connected: false,
+		ws: null
+	};
 
-  subscribedAccounts = [];
+	subscribedAccounts = [];
 
-  newTransactions$ = new BehaviorSubject(null);
+	newTransactions$ = new BehaviorSubject(null);
 
-  constructor(private appSettings: AppSettingsService, private logger: NGXLogger) {}
+	constructor(private appSettings: AppSettingsService, private logger: NGXLogger) {}
 
-  connect() {
-    if (this.socket.connected && this.socket.ws) {
-      return;
-    }
-    delete this.socket.ws;
-    this.logger.debug(environment.wsUrl);
-    const ws = new WebSocket(environment.wsUrl);
-    this.socket.ws = ws;
+	connect() {
+		if (this.socket.connected && this.socket.ws) {
+			return;
+		}
+		delete this.socket.ws;
+		this.logger.debug(environment.wsUrl);
+		const ws = new WebSocket(environment.wsUrl);
+		this.socket.ws = ws;
 
-    ws.onopen = event => {
-      this.socket.connected = true;
-      this.queuedCommands.forEach(e => ws.send(JSON.stringify(e)));
+		ws.onopen = event => {
+			this.socket.connected = true;
+			this.queuedCommands.forEach(e => ws.send(JSON.stringify(e)));
 
-      // Resubscribe to accounts?
-      if (this.subscribedAccounts.length) {
-        this.subscribeAccounts(this.subscribedAccounts);
-      }
+			// Resubscribe to accounts?
+			if (this.subscribedAccounts.length) {
+				this.subscribeAccounts(this.subscribedAccounts);
+			}
 
-      if (!this.keepaliveSet) {
-        this.keepalive(); // Start keepalives!
-      }
-    };
-    ws.onerror = event => {
-      // this.socket.connected = false;
-      this.logger.error(`Socket error`, event);
-    };
-    ws.onclose = event => {
-      this.socket.connected = false;
-      this.logger.debug(`Socket close`, event);
+			if (!this.keepaliveSet) {
+				this.keepalive(); // Start keepalives!
+			}
+		};
+		ws.onerror = event => {
+			// this.socket.connected = false;
+			this.logger.error(`Socket error`, event);
+		};
+		ws.onclose = event => {
+			this.socket.connected = false;
+			this.logger.debug(`Socket close`, event);
 
-      // Start attempting to recconect
-      setTimeout(() => this.attemptReconnect(), this.reconnectTimeout);
-    };
-    ws.onmessage = event => {
-      try {
-        const newEvent = JSON.parse(event.data);
+			// Start attempting to recconect
+			setTimeout(() => this.attemptReconnect(), this.reconnectTimeout);
+		};
+		ws.onmessage = event => {
+			try {
+				const newEvent = JSON.parse(event.data);
 
-        if (newEvent.event === 'newTransaction') {
-          this.newTransactions$.next(newEvent.data);
-        }
-      } catch (err) {
-        this.logger.error(`Error parsing message`, err);
-      }
-    };
-  }
+				if (newEvent.event === 'newTransaction') {
+					this.newTransactions$.next(newEvent.data);
+				}
+			} catch (err) {
+				this.logger.error(`Error parsing message`, err);
+			}
+		};
+	}
 
-  attemptReconnect() {
-    this.connect();
-    if (this.reconnectTimeout < 30 * 1000) {
-      this.reconnectTimeout += 5 * 1000; // Slowly increase the timeout up to 30 seconds
-    }
-  }
+	attemptReconnect() {
+		this.connect();
+		if (this.reconnectTimeout < 30 * 1000) {
+			this.reconnectTimeout += 5 * 1000; // Slowly increase the timeout up to 30 seconds
+		}
+	}
 
-  keepalive() {
-    this.keepaliveSet = true;
-    if (this.socket.connected) {
-      this.socket.ws.send(JSON.stringify({ event: 'keepalive' }));
-    }
+	keepalive() {
+		this.keepaliveSet = true;
+		if (this.socket.connected) {
+			this.socket.ws.send(JSON.stringify({ event: 'keepalive' }));
+		}
 
-    setTimeout(() => {
-      this.keepalive();
-    }, this.keepaliveTimeout);
-  }
+		setTimeout(() => {
+			this.keepalive();
+		}, this.keepaliveTimeout);
+	}
 
-  subscribeAccounts(accountIDs: string[]) {
-    const event = { event: 'subscribe', data: accountIDs };
-    accountIDs.forEach(account => {
-      if (this.subscribedAccounts.indexOf(account) === -1) {
-        this.subscribedAccounts.push(account); // Keep a unique list of subscriptions for reconnecting
-      }
-    });
-    if (!this.socket.connected) {
-      this.queuedCommands.push(event);
-      if (this.queuedCommands.length >= 3) {
-        this.queuedCommands.shift(); // Prune queued commands
-      }
-      return;
-    }
-    this.socket.ws.send(JSON.stringify(event));
-  }
+	subscribeAccounts(accountIDs: string[]) {
+		const event = { event: 'subscribe', data: accountIDs };
+		accountIDs.forEach(account => {
+			if (this.subscribedAccounts.indexOf(account) === -1) {
+				this.subscribedAccounts.push(account); // Keep a unique list of subscriptions for reconnecting
+			}
+		});
+		if (!this.socket.connected) {
+			this.queuedCommands.push(event);
+			if (this.queuedCommands.length >= 3) {
+				this.queuedCommands.shift(); // Prune queued commands
+			}
+			return;
+		}
+		this.socket.ws.send(JSON.stringify(event));
+	}
 
-  unsubscribeAccounts(accountIDs: string[]) {
-    const event = { event: 'unsubscribe', data: accountIDs };
-    accountIDs.forEach(account => {
-      const existingIndex = this.subscribedAccounts.indexOf(account);
-      if (existingIndex !== -1) {
-        this.subscribedAccounts.splice(existingIndex, 1); // Remove from our internal subscription list
-      }
-    });
-    // If we aren't connected, we don't need to do anything.  On reconnect, it won't subscribe.
-    if (this.socket.connected) {
-      this.socket.ws.send(JSON.stringify(event));
-    }
-  }
+	unsubscribeAccounts(accountIDs: string[]) {
+		const event = { event: 'unsubscribe', data: accountIDs };
+		accountIDs.forEach(account => {
+			const existingIndex = this.subscribedAccounts.indexOf(account);
+			if (existingIndex !== -1) {
+				this.subscribedAccounts.splice(existingIndex, 1); // Remove from our internal subscription list
+			}
+		});
+		// If we aren't connected, we don't need to do anything.  On reconnect, it won't subscribe.
+		if (this.socket.connected) {
+			this.socket.ws.send(JSON.stringify(event));
+		}
+	}
 }

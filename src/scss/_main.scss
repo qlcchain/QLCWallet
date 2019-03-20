@@ -4,6 +4,12 @@ body {
 	height: 100%;
 	margin: 0;
 }
+body {
+	overflow-y: scroll;
+}
+a {
+	cursor: pointer;
+}
 .content {
 	padding-top: 40px;
 	padding-bottom: 40px;

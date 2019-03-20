@@ -1,4 +1,7 @@
 @import '~scss/mixins';
+a {
+	cursor: pointer;
+}
 .wallet-bar a {
 	color: #fff;
 }
