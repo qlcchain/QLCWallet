@@ -3,94 +3,182 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { NodeService } from './node.service';
 import { NGXLogger } from 'ngx-logger';
-import uuid = require('uuid');
 
-@Injectable()
+import { httpProvider } from 'qlc.js/provider/HTTP';
+import Client from 'qlc.js/client';
+import { methods } from 'qlc.js/common';
+import { timer } from 'rxjs';
+
+@Injectable({
+	providedIn: 'root'
+})
 export class ApiService {
 	rpcUrl = environment.apiUrl;
 
-	qlcTokenHash = '9bf0dd78eb52f56cf698990d7d3e4f0827de858f6bdabc7713c869482abfd914';
+	private HTTP_RPC = new httpProvider(this.rpcUrl);
+	private c = new Client(this.HTTP_RPC, () => {});
+
+	qlcTokenHash = '45dd217cd9ff89f7b64ceda4886cc68dde9dfa47a8a422d165e2ce6f9a834fad';
 	constructor(private http: HttpClient, private node: NodeService, private logger: NGXLogger) {
 		this.logger.debug(this.rpcUrl);
+		this.connect();
 	}
 
-	private async request(action, data): Promise<any> {
-		data.jsonrpc = '2.0';
-		data.method = action;
-		data.id = uuid.v4();
-
-		this.logger.debug('requesting' + JSON.stringify(data));
-		return await this.http
-			.post(this.rpcUrl, data)
-			.toPromise()
-			.then(res => {
+	async connect() {
+		const source = timer(200);
+		const connectionTimer = source.subscribe(async val => {
+			try {
+				const returns = await this.c.request(methods.ledger.blocksCount);
 				this.node.setOnline();
-				return res;
-			})
-			.catch(err => {
-				if (err.status === 500 || err.status === 0) {
-					this.node.setOffline(`${data.action}, ${err.message}: ${err.stack}`); // Hard error, node is offline
-				}
-				throw err;
-			});
+			} catch (error) {
+				this.logger.debug(error);
+				this.connect();
+			}
+		});
 	}
 
 	async accountsBalances(accounts: string[]): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_accountsBalances', { params: [accounts] });
+		try {
+			return await this.c.request(methods.ledger.accountsBalances, accounts);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async accountsFrontiers(accounts: string[]): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_accountsFrontiers', { params: [accounts] });
+		try {
+			return await this.c.request(methods.ledger.accountsFrontiers, accounts);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_accountsPending', { params: [accounts, count] });
+		try {
+			return await this.c.request(methods.ledger.accountsPending, accounts, count);
+		} catch (err) {
+			return err;
+		}
 	}
 
-	// Deprecated
 	async delegatorsCount(account: string): Promise<{ count: string }> {
-		return await this.request('delegators_count', { account });
+		try {
+			return await this.c.request(methods.ledger.delegatorsCount, account);
+		} catch (err) {
+			return err;
+		}
 	}
 
-	async representativesOnline(): Promise<{ result: any }> {
-		return await this.request('qlcclassic_getOnlineRepresentatives', {});
+	async onlineRepresentatives(): Promise<{ result: any }> {
+		try {
+			return await this.c.request(methods.net.onlineRepresentatives);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async representatives(order = true): Promise<{ result: any }> {
+		try {
+			return await this.c.request(methods.ledger.representatives, order);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountVotingWeight(account): Promise<{ result: any }> {
+		try {
+			return await this.c.request(methods.ledger.accountVotingWeight, account);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async blocksInfo(blocks): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_blocksInfo', { params: [blocks] });
+		try {
+			return await this.c.request(methods.ledger.blocksInfo, blocks);
+		} catch (err) {
+			return err;
+		}
 	}
 
-	// Deprecated
 	async blockCount(): Promise<{ count: number; unchecked: number }> {
-		return await this.request('qlcclassic_blockCount', {});
+		try {
+			return await this.c.request(methods.ledger.blocksCount);
+		} catch (err) {
+			return err;
+		}
 	}
 
-	async workGenerate(hash): Promise<{ work: string }> {
-		return await this.request('qlcclassic_workGenerate', { params: [hash] });
+	async generateReceiveBlock(block, key): Promise<{ count: number; unchecked: number }> {
+		try {
+			return await this.c.request(methods.ledger.generateReceiveBlock, block, key);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async generateSendBlock(block, key): Promise<{ count: number; unchecked: number }> {
+		try {
+			return await this.c.request(methods.ledger.generateSendBlock, block, key);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async generateChangeBlock(account, newRepresentative, key): Promise<{ count: number; unchecked: number }> {
+		try {
+			return await this.c.request(methods.ledger.generateChangeBlock, account, newRepresentative, key);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async process(block): Promise<{ result: string; error?: string }> {
-		return await this.request('qlcclassic_process', { params: [block] });
+		try {
+			return await this.c.request(methods.ledger.process, block);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async accountHistory(account, count = 25): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_accountHistoryTopn', { params: [account, count] });
+		try {
+			return await this.c.request(methods.ledger.accountHistoryTopn, account, count);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async accountInfo(account): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_accountInfo', { params: [account] });
+		try {
+			return await this.c.request(methods.ledger.accountInfo, account);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async validateAccountNumber(account): Promise<{ result: true | false }> {
-		return await this.request('qlcclassic_validateAccount', { params: [account] });
+		try {
+			return await this.c.request(methods.account.accountValidate, account);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async pending(account, count): Promise<{ result: any; error?: string }> {
-		return await this.accountsPending([account], count);
+		try {
+			return await this.accountsPending([account], count);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async tokens(): Promise<{ result: any; error?: string }> {
-		return await this.request('qlcclassic_tokens', {});
+		try {
+			return await this.c.request(methods.ledger.tokens);
+		} catch (err) {
+			return err;
+		}
 	}
 
 	async tokenByHash(tokenHash): Promise<any> {
@@ -116,5 +204,55 @@ export class ApiService {
 		const tokens = am.result.tokens;
 
 		return Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === tokenHash)[0] : null;
+	}
+
+	//account
+	async accountCreate(seed, index = 0): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.account.accountCreate, seed, index);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	//wallet
+	async getBalances(masterAccount, pass): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.wallet.getBalances, masterAccount, pass);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async getRawKey(account, pass): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.wallet.getRawKey, account, pass);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async newSeed(): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.wallet.newSeed);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async newWallet(pass, seed): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.wallet.newWallet, pass, seed);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async changePassword(masterAddress, oldPass, newPass): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.wallet.changePassword, masterAddress, oldPass, newPass);
+		} catch (err) {
+			return err;
+		}
 	}
 }
