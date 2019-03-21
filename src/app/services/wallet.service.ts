@@ -25,7 +25,6 @@ export interface WalletAccount {
 	balance: BigNumber;
 	// pending: BigNumber;
 	pendingCount: number;
-	privateKey: string;
 	// balanceRaw: BigNumber;
 	// pendingRaw: BigNumber;
 	// balanceFiat: number;
@@ -173,15 +172,7 @@ export class WalletService {
 	}
 
 	async getWalletAccount(accountID) {
-		const returnData: any = this.wallet.accounts.find(a => a.id === accountID);
-		if (returnData.privateKey === '' || returnData.privateKey == null) {
-			const keys = await this.api.accountCreate(this.wallet.seed, returnData.index);
-			if (keys.result) {
-				returnData.privateKey = keys.result.privKey;
-			}
-		}
-		return returnData;
-		//return this.wallet.accounts.find(a => a.id === accountID);
+		return this.wallet.accounts.find(a => a.id === accountID);
 	}
 
 	async loadStoredWallet() {
@@ -296,7 +287,6 @@ export class WalletService {
 		this.wallet.accounts.forEach(a => {
 			a.keyPair = null;
 			a.secret = null;
-			a.privateKey = null;
 		});
 
 		this.wallet.locked = true;
@@ -472,7 +462,6 @@ export class WalletService {
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
-			privateKey: '',
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -629,7 +618,6 @@ export class WalletService {
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
-			privateKey: '',
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,

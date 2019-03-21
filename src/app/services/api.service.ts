@@ -7,6 +7,7 @@ import { NGXLogger } from 'ngx-logger';
 import { httpProvider } from 'qlc.js/provider/HTTP';
 import Client from 'qlc.js/client';
 import { methods } from 'qlc.js/common';
+
 import { timer } from 'rxjs';
 
 @Injectable({
@@ -16,7 +17,7 @@ export class ApiService {
 	rpcUrl = environment.apiUrl;
 
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
-	private c = new Client(this.HTTP_RPC, () => {});
+	c = new Client(this.HTTP_RPC, () => {});
 
 	qlcTokenHash = '45dd217cd9ff89f7b64ceda4886cc68dde9dfa47a8a422d165e2ce6f9a834fad';
 	constructor(private http: HttpClient, private node: NodeService, private logger: NGXLogger) {
@@ -96,6 +97,14 @@ export class ApiService {
 	async blocksInfo(blocks): Promise<{ result: any; error?: string }> {
 		try {
 			return await this.c.request(methods.ledger.blocksInfo, blocks);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async blockHash(block): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.blockHash, block);
 		} catch (err) {
 			return err;
 		}

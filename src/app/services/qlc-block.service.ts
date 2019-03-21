@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-//import { UtilService } from './util.service';
+import { UtilService } from './util.service';
 //import * as blake from 'blakejs';
 //import BigNumber from 'bignumber.js';
-//import { WorkPoolService } from './work-pool.service';
+import { WorkPoolService } from './work-pool.service';
 import { NotificationService } from './notification.service';
 import { AppSettingsService } from './app-settings.service';
 //import { WalletService } from './wallet.service';
 // import { LedgerService } from './ledger.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-//import * as nacl from 'tweetnacl';
+
+const nacl = window['nacl'];
 
 //const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -31,11 +32,12 @@ export class QLCBlockService {
 	constructor(
 		private api: ApiService,
 		//private util: UtilService,
-		//private workPool: WorkPoolService,
+		private workPool: WorkPoolService,
 		private notifications: NotificationService,
 		// private ledgerService: LedgerService,
 		public settings: AppSettingsService,
-		private trans: TranslateService
+		private trans: TranslateService,
+		private util: UtilService
 	) {
 		this.loadLang();
 		this.trans.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -68,16 +70,14 @@ export class QLCBlockService {
 	}
 
 	async generateChange(walletAccount, representativeAccount, ledger = false) {
-		const changeBlock: any = await this.api.generateChangeBlock(
-			walletAccount.id,
-			representativeAccount,
-			walletAccount.privateKey
-		);
-		const processResponse = await this.api.process(changeBlock.result);
+		const changeBlock = await this.api.c.buildinLedger.generateChangeBlock(walletAccount.id, representativeAccount);
+		const processResponse = await this.api.process(await this.signBlockAndAddWork(changeBlock, walletAccount.keyPair));
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
 			walletAccount.header = header;
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
+			this.workPool.removeFromCache(changeBlock.previous);
 			return header;
 		} else {
 			return null;
@@ -92,12 +92,14 @@ export class QLCBlockService {
 			amount: rawAmount
 		};
 
-		const sendBlock: any = await this.api.generateSendBlock(blockData, walletAccount.privateKey);
-		const processResponse = await this.api.process(sendBlock.result);
+		const sendBlock = await this.api.c.buildinLedger.generateSendBlock(blockData);
+		const processResponse = await this.api.process(await this.signBlockAndAddWork(sendBlock, walletAccount.keyPair));
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
 			walletAccount.header = header;
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
+			this.workPool.removeFromCache(sendBlock.previous);
 			return header;
 		} else {
 			return null;
@@ -114,16 +116,35 @@ export class QLCBlockService {
 		}
 		const sendBlock = srcBlockInfo.result[0];
 
-		const receiveBlock: any = await this.api.generateReceiveBlock(sendBlock, walletAccount.privateKey);
-		const processResponse = await this.api.process(receiveBlock.result);
+		const receiveBlock = await this.api.c.buildinLedger.generateReceiveBlock(sendBlock);
+		const processResponse = await this.api.process(await this.signBlockAndAddWork(receiveBlock, walletAccount.keyPair));
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
 			walletAccount.header = header;
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
+			this.workPool.removeFromCache(receiveBlock.previous);
 			return header;
 		} else {
 			return null;
 		}
+	}
+
+	async signBlockAndAddWork(block, keyPair) {
+		const blockHash = await this.api.blockHash(block);
+		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
+		const signature = this.util.hex.fromUint8(signed);
+
+		block.signature = signature;
+
+		if (!this.workPool.workExists(block.previous)) {
+			this.notifications.sendInfo(this.msg3);
+		}
+		//console.log('generating work');
+		const work = await this.workPool.getWork(block.previous);
+		//console.log('work >>> ' + work);
+		block.work = work;
+		return block;
 	}
 
 	sendLedgerDeniedNotification() {
