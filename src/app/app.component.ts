@@ -6,7 +6,7 @@ import { AppSettingsService } from './services/app-settings.service';
 import { PriceService } from './services/price.service';
 import { NotificationService } from './services/notification.service';
 //import { PowService } from './services/pow.service';
-//import { WorkPoolService } from './services/work-pool.service';
+import { WorkPoolService } from './services/work-pool.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { RepresentativeService } from './services/representative.service';
 import { NodeService } from './services/node.service';
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
 		public nodeService: NodeService,
 		private representative: RepresentativeService,
 		private router: Router,
-		//private workPool: WorkPoolService,
+		private workPool: WorkPoolService,
 		public price: PriceService,
 		private lang: LangService
 	) {
@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
 		this.windowHeight = window.innerHeight;
 		this.settings.loadAppSettings();
 		this.addressBook.loadAddressBook();
-		//this.workPool.loadWorkCache();
+		this.workPool.loadWorkCache();
 		await this.walletService.loadStoredWallet();
 		// this.websocket.connect();
 
