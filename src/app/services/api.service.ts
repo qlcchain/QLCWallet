@@ -38,6 +38,14 @@ export class ApiService {
 		});
 	}
 
+	async accountPublicKey(account: string): Promise<{ result: string; error?: string }> {
+		try {
+			return await this.c.request(methods.account.accountPublicKey, account);
+		} catch (err) {
+			return err;
+		}
+	}
+
 	async accountsBalances(accounts: string[]): Promise<{ result: any; error?: string }> {
 		try {
 			return await this.c.request(methods.ledger.accountsBalances, accounts);
