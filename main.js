@@ -100,14 +100,19 @@ function createWindow() {
 	// Create our menu entries so that we can use MAC shortcuts
 	Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 }
-
+platform = process.platform;
 // start gqlc
 let configTemp = '';
 if (isDev) {
 	console.log('Running in development');
-	appPath = app.getAppPath();
-	global.resourcesPath = path.resolve(appPath, 'extra', process.platform, process.arch);
-	configTemp = path.join(appPath, 'extra/config.json');
+	if (platform == 'win32') {
+		configTemp = path.join(global.resourcesPath, '../../../../extra/config.json');
+		global.resourcesPath = path.resolve(global.resourcesPath, '../../../../extra/', process.platform, process.arch);
+	} else {
+		appPath = app.getAppPath();
+		global.resourcesPath = path.resolve(appPath, 'extra', process.platform, process.arch);
+		configTemp = path.join(appPath, 'extra/config.json');
+	}
 } else {
 	console.log('Running in production');
 	configTemp = path.join(global.resourcesPath, 'config.json');
