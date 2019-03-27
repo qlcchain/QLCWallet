@@ -8,6 +8,7 @@ const path = require('path');
 const crossSpawn = require('cross-spawn-with-kill');
 const signalExit = require('signal-exit');
 const isDev = require('electron-is-dev');
+const fs = require('fs');
 
 global.resourcesPath = process.resourcesPath;
 
@@ -100,17 +101,38 @@ function createWindow() {
 }
 
 // start gqlc
+let configTemp = '';
 if (isDev) {
 	console.log('Running in development');
-	global.resourcesPath = path.resolve(global.resourcesPath, '../../../../extra/', process.platform, process.arch);
+	appPath = app.getAppPath();
+	global.resourcesPath = path.resolve(appPath, 'extra', process.platform, process.arch);
+	configTemp = path.join(appPath, 'extra/config.json');
 } else {
 	console.log('Running in production');
+	configTemp = path.join(global.resourcesPath, 'config.json');
 }
-console.log(`path: ${global.resourcesPath}`);
+console.log(`path: ${global.resourcesPath}, config template ${configTemp}`);
 console.log(`path: ` + toExecutableName('gqlc'));
+
 const cmd = path.join(global.resourcesPath, toExecutableName('gqlc'));
+const userData = app.getPath('userData');
+const configDir = path.join(userData, isDev ? 'gqlc_dev' : 'gqlc');
+if (!fs.existsSync(configDir)) {
+	fs.mkdirSync(configDir);
+	console.log(`create gqlc data dir ${configDir}`);
+}
+console.log(`prepare gqlc data dir ${configDir}`);
+//read config template to set dataDir and save it to wallet user data dir
+let rawdata = fs.readFileSync(configTemp);
+let cfg = JSON.parse(rawdata);
+cfg.dataDir = configDir;
+console.log(`read config temp from resource ${configTemp}`);
+const config = path.join(configDir, 'glc_wallet.json');
+let data = JSON.stringify(cfg, null, 4);
+fs.writeFileSync(config, data);
+
 console.log(`start qglc ${cmd}`);
-const child = crossSpawn(cmd, {
+const child = crossSpawn(cmd, ['--config', config], {
 	windowsHide: true,
 	stdio: ['ignore', 'pipe', 'pipe']
 });

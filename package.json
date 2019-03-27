@@ -1,6 +1,6 @@
 {
 	"name": "qlcwallet",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"license": "MIT",
 	"description": "Wallet for interacting with QLC Chain",
 	"author": {
@@ -155,13 +155,19 @@
 				"dmg"
 			],
 			"type": "distribution",
-			"extraResources": {
-				"from": "./extra/darwin/",
-				"to": "./",
-				"filter": [
-					"**/*"
-				]
-			},
+			"extraResources": [
+				{
+					"from": "./extra/darwin/x64/",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				},
+				{
+					"from": "./extra/config.json",
+					"to": "./"
+				}
+			],
 			"binaries": [
 				"./dist-desktop/mac/QLCWallet.app/Contents/Resources/gqlc"
 			],
@@ -172,13 +178,22 @@
 				"nsis",
 				"portable"
 			],
-			"extraResources": {
-				"from": "./extra/win32/${arch}",
-				"to": "./",
-				"filter": [
-					"**/*"
-				]
-			}
+			"extraResources": [
+				{
+					"from": "./extra/win32/${arch}",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				},
+				{
+					"from": "./extra/config.json",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				}
+			]
 		},
 		"nsis": {
 			"oneClick": false,
@@ -192,13 +207,22 @@
 			"desktop": {
 				"Categories": "P2P;Finance;Security"
 			},
-			"extraResources": {
-				"from": "./extra/linux/",
-				"to": "./",
-				"filter": [
-					"**/*"
-				]
-			}
+			"extraResources": [
+				{
+					"from": "./extra/linux/x64/",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				},
+				{
+					"from": "./extra/config.json",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				}
+			]
 		},
 		"publish": [
 			{

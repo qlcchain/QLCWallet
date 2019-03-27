@@ -36,4 +36,4 @@ case "${tag}" in
 		;;
 esac
 
-docker build --build-arg TAG="${tag}" -t qlcwallet${release_tag}:latest .
+docker build --build-arg TAG="${tag}" -t qlcchain/qlcwallet${release_tag}:latest .
