@@ -138,7 +138,7 @@ async function run() {
 			let cfg = JSON.parse(rawdata);
 			cfg.dataDir = configDir;
 			//generate p2p Id
-			PeerId.create({ bits: 2048 }, (err, id) => {
+			await PeerId.create({ bits: 2048 }, (err, id) => {
 				if (err) {
 					throw err;
 				}
