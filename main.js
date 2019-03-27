@@ -8,7 +8,8 @@ const path = require('path');
 const crossSpawn = require('cross-spawn-with-kill');
 const signalExit = require('signal-exit');
 const isDev = require('electron-is-dev');
-const fs = require('fs');
+const fs = require('fs-extra');
+const PeerId = require('peer-id');
 
 global.resourcesPath = process.resourcesPath;
 
@@ -118,18 +119,30 @@ const cmd = path.join(global.resourcesPath, toExecutableName('gqlc'));
 const userData = app.getPath('userData');
 const configDir = path.join(userData, isDev ? 'gqlc_dev' : 'gqlc');
 if (!fs.existsSync(configDir)) {
-	fs.mkdirSync(configDir);
-	console.log(`create gqlc data dir ${configDir}`);
+	// create dir and parents
+	fs.ensureDirSync(configDir);
 }
 console.log(`prepare gqlc data dir ${configDir}`);
-//read config template to set dataDir and save it to wallet user data dir
-let rawdata = fs.readFileSync(configTemp);
-let cfg = JSON.parse(rawdata);
-cfg.dataDir = configDir;
-console.log(`read config temp from resource ${configTemp}`);
-const config = path.join(configDir, 'glc_wallet.json');
-let data = JSON.stringify(cfg, null, 4);
-fs.writeFileSync(config, data);
+
+const config = path.join(configDir, 'qlc_wallet.json');
+if (!fs.existsSync(config)) {
+	//read config template to set dataDir and save it to wallet user data dir
+	let rawdata = fs.readFileSync(configTemp);
+	let cfg = JSON.parse(rawdata);
+	cfg.dataDir = configDir;
+	//generate p2p Id
+	PeerId.create({ bits: 2048 }, (err, id) => {
+		if (err) {
+			throw err;
+		}
+		pid = id.toJSON();
+		cfg.p2p.identity.peerId = pid.id;
+		cfg.p2p.identity.privateKey = pid.privKey;
+	});
+	console.log(`read config temp from resource ${configTemp}`);
+	let data = JSON.stringify(cfg, null, 4);
+	fs.writeFileSync(config, data);
+}
 
 console.log(`start qglc ${cmd}`);
 const child = crossSpawn(cmd, ['--config', config], {
