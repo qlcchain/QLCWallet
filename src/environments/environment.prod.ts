@@ -5,6 +5,6 @@ export const environment = {
 		domain: 'auto',
 		trackingId: 'UA-123663128-2'
 	},
-	apiUrl: 'http://127.0.0.1:9735',
+	apiUrl: 'http://127.0.0.1:19735',
 	wsUrl: ''
 };

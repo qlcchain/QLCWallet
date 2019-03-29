@@ -1,6 +1,6 @@
 {
 	"name": "qlcwallet",
-	"version": "2.0.2",
+	"version": "2.0.3-test",
 	"license": "MIT",
 	"description": "Wallet for interacting with QLC Chain",
 	"author": {
@@ -82,7 +82,7 @@
 		"ngx-logger": "^3.3.12",
 		"peer-id": "^0.12.2",
 		"popper.js": "^1.14.7",
-		"qlc.js": "0.0.3",
+		"qlc.js": "0.0.4",
 		"qrcode": "^1.3.3",
 		"rxjs": "^6.4.0",
 		"signal-exit": "^3.0.2",
